@@ -164,3 +164,5 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 - [ ] Decide and review end-to-end messaging encryption before promising the operator cannot read conversations; current encryption is at rest.
 
 - [x] Shared circular map zoom dial for public preview/local lounge: click/tap reveal, turn/+/−/wheel zoom, drag enlarged view, one-tap reset and inactivity fade; keyboard/reduced-motion support. Zoom does not change search radius or location precision.
+
+- [x] Superseded temporary/fading circular control with a permanent steampunk brass half-dial. Ordinary wheel scrolling remains page navigation; wheel over the dial or Ctrl-wheel zooms.
