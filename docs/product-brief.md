@@ -2,11 +2,11 @@
 
 ## Proposition
 
-A deliberately simple, discreet adult dating service with a sexual focus. A description of who you are, a description of what you want, a public image that need not be identifiable, and private messaging. Membership is £10 per calendar month paid up front, followed by an explicit purchase for each new month. No automatic renewal or public free trial. A possible later day pass must cost no more than £1/day; it is not enabled.
+A deliberately simple, discreet adult dating service with a sexual focus. A description of who you are, a description of what you want, a configurable mouse avatar as the only public portrait, and private messaging. Membership is £50 for one calendar month, with a £10 introductory launch offer, all core features included and no automatic renewal or free trial. A new/lapsed month can start immediately or within seven days of purchase. See [the current membership offer](membership-offer.md) for timing, fair use and price transitions.
 
 ## Agreed essentials
 
-- Pseudonymous profiles and optional identifying images.
+- Pseudonymous profiles with mouse avatars only; no public real-photo uploads. Signup begins with choosing hair, fur, build, bust/chest, outfit and accessories. These optional choices can be fictional.
 - No validation of users' identity claims; patrons assess those claims themselves.
 - Private text and image exchanges.
 - Ordinary messages and attachments expire 14 days after sending.
@@ -47,7 +47,7 @@ These are implementation proposals, not yet final decisions.
 
 ## Pilot economics
 
-100 paying monthly patrons at £10 produce £1,000 gross receipts per month before provider fees, refunds, tax and operating costs. Renewal depends on explicit repeat purchases.
+100 paid months produce £1,000 gross at the launch price or £5,000 at the standard price, before provider fees, refunds, tax and operating costs. These are price scenarios, not forecasts of conversion or retention. Renewal depends on explicit repeat purchases.
 
 The proposed £100 experiment budget should be treated as an initial infrastructure spending cap with a defined stop/review point. It does not cap development time, support labour or all costs of launching an adult dating service.
 
@@ -57,7 +57,7 @@ Short retention bounds accumulated storage. It does not eliminate delivery costs
 
 ## Launch campaign proposal
 
-Commercial entrance: pay £10 before a calendar month of access. A patron chooses whether to buy another month; no automatic charges. Registration alone does not grant discovery or messaging access. The £1/day ceiling applies to a possible future day pass, subject to payment economics.
+Commercial entrance: £50 standard or the £10 introductory launch offer, bought upfront for one month with no automatic renewal. Choose immediate activation or a start within seven days. Registration alone does not grant discovery or messaging access. All core features and ordinary messaging are included, subject to disclosed fair-use/safety/storage limits.
 
 The founder proposes tailored launch outreach to every UK student union and every UK MP. This is a future launch plan, not an instruction to send the campaign before the real service is ready. No recipient list has been assembled and no messages have been sent.
 
@@ -75,7 +75,7 @@ Preserve this tone across the website, launch campaign and artwork: adult glamou
 
 ## Brand attitude
 
-Relaxed, sophisticated and open to possibilities, with an awareness of pitfalls. Designed for intelligent, experienced adults while welcoming younger adults too: 18+ throughout. Warmth, wit, clear boundaries and room for surprise.
+Relaxed, sophisticated and open to possibilities, with an awareness of pitfalls. Designed for intelligent, experienced adults while welcoming younger adults too: 18+ throughout. Warmth, wit, clear boundaries and room for surprise. A little fizz in your cocktail; check the ingredients mix before making it.
 
 See [the prioritised TODO list](../TODO.md) for the implementation and launch sequence.
 

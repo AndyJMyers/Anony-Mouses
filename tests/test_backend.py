@@ -70,6 +70,77 @@ class CoreTests(unittest.TestCase):
         second=self.s.record_month_payment(uid,'development','month-two',1000,'GBP');self.assertEqual(second['access_until'],advance_month(first['access_until']))
         self.now=second['access_until']+DAY
         renewed=self.s.record_month_payment(uid,'development','month-three',1000,'GBP');self.assertEqual(renewed['access_until'],advance_month(self.now))
+    def unpaid(self, name='future'):
+        return self.s.register(dict(login=name,password='A-long-test-passphrase',alias=name.title(),bio='Test adult',wants='Test hello',district='GU2',age_range='40s',adult=True,consent=True))['user_id']
+    def test_launch_and_standard_offers_validate_their_own_prices(self):
+        uid=self.unpaid()
+        self.s.record_month_payment(uid,'development','standard',5000,'GBP',offer_code='standard')
+        self.assertTrue(self.s.membership(uid)['active'])
+        for amount,offer in [(1000,'standard'),(5000,'launch'),(999,'launch')]:
+            with self.assertRaises(Problem) as caught:self.s.record_month_payment(uid,'development','bad-'+str(amount)+offer,amount,'GBP',offer_code=offer)
+            self.assertEqual(caught.exception.status,400)
+        with self.assertRaises(Problem):self.s.record_month_payment(uid,'development','unknown',1000,'GBP',offer_code='client-discount')
+    def test_deferred_month_blocks_discovery_until_exact_start(self):
+        uid=self.unpaid();start=self.now+7*DAY
+        purchase=self.s.record_month_payment(uid,'development','later',1000,'GBP',start_at=start)
+        self.assertEqual(purchase['access_until'],advance_month(start))
+        membership=self.s.membership(uid);self.assertFalse(membership['active']);self.assertTrue(membership['scheduled'])
+        self.problem(402,self.s.discover,uid,'GU2')
+        self.assertNotIn(uid,[p['id'] for p in self.s.discover(self.a['user_id'],'GU2')])
+        self.now=start-1;self.assertFalse(self.s.membership(uid)['active'])
+        self.now=start;self.assertTrue(self.s.membership(uid)['active'])
+        self.assertIn(uid,[p['id'] for p in self.s.discover(self.a['user_id'],'GU2')])
+        self.now=purchase['access_until'];self.assertFalse(self.s.membership(uid)['active'])
+    def test_deferred_purchase_replay_does_not_move_dates(self):
+        uid=self.unpaid();start=self.now+DAY
+        first=self.s.record_month_payment(uid,'development','replay-later',1000,'GBP',start_at=start)
+        self.now+=10*DAY
+        replay=self.s.record_month_payment(uid,'development','replay-later',1000,'GBP',start_at=start)
+        self.assertTrue(replay['duplicate']);self.assertEqual(replay['access_until'],first['access_until'])
+        with self.assertRaises(Problem) as caught:self.s.record_month_payment(uid,'development','replay-later',1000,'GBP',start_at=start+DAY)
+        self.assertEqual(caught.exception.status,409)
+    def test_start_window_and_renewal_gap_are_enforced(self):
+        uid=self.unpaid()
+        for start in (self.now-1,self.now+7*DAY+1,True,1.5):
+            with self.assertRaises(Problem):self.s.record_month_payment(uid,'development','invalid-'+str(start),1000,'GBP',start_at=start)
+        end=self.s.membership(self.a['user_id'])['access_until'];self.now=end-2*DAY;start=end+3*DAY
+        purchase=self.s.record_month_payment(self.a['user_id'],'development','gap',5000,'GBP',offer_code='standard',start_at=start)
+        self.assertEqual(purchase['starts_at'],start)
+        self.assertEqual(self.s.membership(self.a['user_id'])['access_until'],end)
+        self.now=end;self.assertFalse(self.s.membership(self.a['user_id'])['active']);self.assertTrue(self.s.membership(self.a['user_id'])['scheduled'])
+        self.now=start;self.assertTrue(self.s.membership(self.a['user_id'])['active'])
+    def test_early_renewal_preserves_time_and_original_requested_start(self):
+        uid=self.a['user_id'];end=self.s.membership(uid)['access_until'];requested=self.now+DAY
+        first=self.s.record_month_payment(uid,'development','early',1000,'GBP',start_at=requested)
+        replay=self.s.record_month_payment(uid,'development','early',1000,'GBP',start_at=requested)
+        self.assertEqual(first['starts_at'],end);self.assertEqual(first['access_until'],advance_month(end));self.assertTrue(replay['duplicate'])
+        self.assertEqual(self.s.membership(uid)['access_until'],first['access_until'])
+    def test_old_payment_schema_is_migrated_without_losing_access(self):
+        key=Fernet.generate_key();path=Path(self.tmp.name)/'legacy.sqlite3';service=Service(path,key,lambda:self.now)
+        service.seed_districts([('GU2',51.24,-.59)])
+        uid=service.register(dict(login='legacy',password='A-long-test-passphrase',alias='Legacy',bio='Test adult',wants='Test hello',district='GU2',age_range='40s',adult=True,consent=True))['user_id']
+        until=advance_month(self.now)
+        with service.db() as db:
+            db.execute('DROP TABLE payment_events')
+            db.execute('CREATE TABLE payment_events(provider TEXT,event_id TEXT,user_id TEXT,amount_minor INTEGER,currency TEXT,access_until INTEGER,PRIMARY KEY(provider,event_id))')
+            db.execute('INSERT INTO payment_events VALUES(?,?,?,?,?,?)',('development','legacy-event',uid,1000,'GBP',until))
+            db.execute('UPDATE users SET paid_until=? WHERE id=?',(until,uid))
+        reopened=Service(path,key,lambda:self.now)
+        self.assertTrue(reopened.membership(uid)['active'])
+        self.assertTrue(reopened.record_month_payment(uid,'development','legacy-event',1000,'GBP')['duplicate'])
+    def test_mouse_avatar_is_persisted_and_discovered_without_photo_urls(self):
+        uid=self.a['user_id'];data=self.s.profile(uid)
+        self.assertIn('avatar',data)
+        data['avatar'].update(hair='bob',chest='full',accessory='glasses')
+        updated=self.s.edit_profile(uid,data)
+        self.assertEqual(updated['avatar']['hair'],'bob')
+        found=next(p for p in self.s.discover(self.b['user_id'],'GU1',10) if p['id']==uid)
+        self.assertEqual(found['avatar'],updated['avatar']);self.assertNotIn('photo_url',found)
+        for bad in ({'hair':'https://example.invalid/photo.jpg'},{'image':'data:image/svg+xml,bad'},'<svg onload=bad>'):
+            data['avatar']=bad
+            self.problem(400,self.s.edit_profile,uid,data)
+        data=self.s.profile(uid);data['photo_url']='https://example.invalid/face.jpg'
+        self.problem(400,self.s.edit_profile,uid,data)
     def test_production_disabled(self):
         with self.assertRaises(RuntimeError):Service(Path(self.tmp.name)/'prod.sqlite3',Fernet.generate_key(),lambda:self.now,mode='production')
     def http(self,method,path,data=None,cookie='',csrf='',origin='http://127.0.0.1:8080',host='127.0.0.1:8080'):

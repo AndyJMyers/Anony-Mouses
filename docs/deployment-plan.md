@@ -16,9 +16,9 @@ Follow the [agreed non-explicit conduct/reporting policy](../README.md#conduct-p
 
 ## Commercial entry
 
-One page of details creates a pending account/profile draft, not public discovery access. The second entrance page explains the £10 month, age-check handoff and payment. Age assurance completes before sensitive content access; payment clears before membership becomes active. Failed/abandoned checks do not publish the profile. The provider handoffs may involve their own screens; do not promise literally two screens end-to-end.
+One page of details creates a pending account/profile draft, not public discovery access. The second entrance page explains the £50 standard month / £10 introductory launch month, age-check handoff and payment. Age assurance completes before sensitive content access; payment clears before membership becomes active. Failed/abandoned checks do not publish the profile. The provider handoffs may involve their own screens; do not promise literally two screens end-to-end.
 
-A server-validated £10 GBP single purchase grants a calendar month from the later of payment time and existing expiry. Month-end dates clip to the target month's last day. A new payment extends access; a duplicate event does not. Manual renewal only. The £1/day ceiling is recorded for later evaluation, not an enabled purchase.
+A server-validated offer-bound £50 standard or £10 introductory launch purchase grants one calendar month. A new/lapsed purchaser may choose a start up to seven days after payment; an early renewal preserves already-paid time. Month-end dates clip to the target month's last day. A new payment extends access; a duplicate event does not. Manual renewal only. The earlier £1/day ceiling is superseded by the [23 October offer](membership-offer.md). No automatic renewal; show the actual price/start/expiry before each purchase.
 
 ## Implementation order
 
@@ -32,7 +32,7 @@ A server-validated £10 GBP single purchase grants a calendar month from the lat
 
 ## Existing implementation checkpoint
 
-The local core now creates unpaid accounts and tracks £10 paid calendar months through an internal, idempotent payment ledger. The ledger is not a payment verification adapter. An operator-only local fixture command exercises it; no public API can grant access. Historical `trial_end` database fields are retained for compatibility but no longer confer membership.
+The local core now creates unpaid accounts and tracks £50 standard / £10 introductory launch calendar months and scheduled starts through an internal, idempotent payment ledger. The ledger is not a payment verification adapter. An operator-only local fixture command exercises it; no public API can grant access. Historical `trial_end` database fields are retained for compatibility but no longer confer membership.
 
 Before live payments the ledger needs durable provider/order reconciliation and refund/chargeback behavior, including retained/tombstoned financial event IDs after account deletion. The current development deletion behavior is not a production accounting policy.
 

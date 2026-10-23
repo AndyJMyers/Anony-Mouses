@@ -1,5 +1,7 @@
 # Provider decision and pilot cost — 14 October 2026
 
+> **Commercial update, 23 October 2026:** [Current offer](membership-offer.md) is £50 for one month, introductory launch price £10, all core features/ordinary messaging included, optional start within seven days, no automatic renewal. Earlier £10-standard and £1/day-ceiling assumptions below are superseded. Provider quotes must cover both £10 and £50 transactions.
+
 > **17 October 2026 review supersedes the earlier explicit-image and pricing assumptions below.** See [the current age/access assessment](age-access-assessment.md), [initial illegal-risk register](illegal-risk-register.md), [commercial-readiness decision](commercial-readiness.md) and [ready-to-submit enquiries](provider-enquiries.md). No supplier acceptance or complete quote has been obtained.
 
 ## Scope update — 17 October 2026

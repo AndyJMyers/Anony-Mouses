@@ -1,5 +1,7 @@
 # Commercial readiness: age, hosting and payments — 17 October 2026
 
+> **Commercial update, 23 October 2026:** [Current offer](membership-offer.md) is £50 for one month, introductory launch price £10, all core features/ordinary messaging included, optional start within seven days, no automatic renewal. Earlier £10-standard and £1/day-ceiling assumptions below are superseded. Provider quotes must cover both £10 and £50 transactions.
+
 ## Outcome
 
 **Research completed; commercial acceptance remains outstanding.** No account/application, enquiry, purchase, provider contract, KYC submission or live integration has been made. Public terms are evidence of possible fit, not approval of Anony-Mouses. We cannot honestly mark steps 1–2 fully closed until the operator reviews the assessment and providers answer the specific scope/cost/privacy questions.

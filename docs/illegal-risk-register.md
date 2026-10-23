@@ -1,5 +1,7 @@
 # Initial illegal-content risk register — 17 October 2026
 
+> **Commercial update, 23 October 2026:** [Current offer](membership-offer.md) is £50 for one month, introductory launch price £10, all core features/ordinary messaging included, optional start within seven days, no automatic renewal. Earlier £10-standard and £1/day-ceiling assumptions below are superseded. Provider quotes must cover both £10 and £50 transactions.
+
 Companion to the [age/access assessment](age-access-assessment.md). UK-linked adult introductions, non-explicit profiles/text/images, private accepted requests, district discovery, £10 manually purchased months. No real service/user evidence yet. These are conservative pre-launch design judgments, not an operator-signed completed compliance programme or measured residual risk.
 
 Method: consider likely misuse and possible severity on this specific ungated/unmoderated planned design. L/M/H likelihood and impact yield an initial risk, with uncertainty favouring caution. User-generated media, private stranger contact, pseudonyms, sexual intentions, sparse districts and planned rapid national growth matter. No algorithmic engagement feed, streaming, patron payouts or group messaging are planned. The absence of those features reduces some pathways; it does not exclude them.

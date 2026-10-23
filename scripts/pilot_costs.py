@@ -21,6 +21,7 @@ def main():
     p.add_argument('--fallback-usd',type=float,default=0.33,help='Additional fallback cost scenario; 0.33 full-KYC list price is not a guaranteed upper bound')
     p.add_argument('--credit-usd',type=float,default=0,help='Confirmed age-check credit only; default does not assume eligibility')
     p.add_argument('--both-scheme-fees',action='store_true',help='Model both fees conditionally; does not assert merchant classification')
+    p.add_argument('--membership-price-gbp',type=int,choices=[10,50],default=10,help='Launch offer 10 or standard 50; scenario only')
     p.add_argument('--paying-members',type=int,default=100)
     p.add_argument('--usd-gbp',type=float,help='Explicit planning GBP per USD, not a live rate')
     args=p.parse_args()
@@ -28,7 +29,8 @@ def main():
         result=estimate(args.attempts,args.fallback_fraction,args.credit_usd,args.both_scheme_fees,args.fallback_usd)
         if args.paying_members<0 or (args.usd_gbp is not None and args.usd_gbp<=0):raise ValueError('Invalid member count or planning conversion')
     except ValueError as e:p.error(str(e))
-    result['gross_monthly_receipts_gbp']=args.paying_members*10
+    result['gross_monthly_receipts_gbp']=args.paying_members*args.membership_price_gbp
+    result['membership_price_gbp']=args.membership_price_gbp
     if args.usd_gbp is not None:
         result['planning_gbp_per_usd']=args.usd_gbp
         result['known_subtotal_gbp']=round(result['known_subtotal_usd']*args.usd_gbp,2)

@@ -1,12 +1,12 @@
-# Provider enquiries — prepared 17 October 2026, not sent
+# Provider enquiries — updated 23 October 2026, not sent
 
 Use confirmed operator/reply details in the actual message or official sales form; those private details do not belong in this public file. These are pre-sales requests, not merchant applications or representations that compliance is implemented. No attachment contains patron or identity information. Read [commercial-readiness.md](commercial-readiness.md) for the evidence and closure gates.
 
 ## Common project facts
 
-Anony-Mouses (https://anonymouses.com/) is a proposed UK adults-only introductions/dating service with a sexual focus. The public site is a fictional concept preview, not live member registration. Patrons will use pseudonyms, an outward postcode district, short profiles and permitted non-explicit images. Private text and still images follow an accepted conversation request. Sexually explicit/pornographic images and text are prohibited throughout, including consensual DMs. There are no paid sexual services, creator-content sales, tips or patron payouts.
+Anony-Mouses (https://anonymouses.com/) is a proposed UK adults-only introductions/dating service with a sexual focus. The public site is a fictional concept preview, not live member registration. Patrons will use pseudonyms, an outward postcode district, short profiles and configurable clothed mouse avatars. Public portraits cannot be uploaded real photos. Permitted non-explicit real pictures can be shared only in accepted private conversations. Private text and still images follow an accepted conversation request. Sexually explicit/pornographic images and text are prohibited throughout, including consensual DMs. There are no paid sexual services, creator-content sales, tips or patron payouts.
 
-Membership is £10 per calendar month paid upfront, manually purchased each month, with no auto-renewal or free trial. A possible £1 day pass is not part of the initial integration. Ordinary messages expire after 14 days, up to 100 keepsakes per patron; reports and lawful evidence holds are separate. We intend prompt report/credible-concern review, removals, suspensions and lawful escalation, without routinely reading all private conversations. Production age assurance, moderation and retention operations remain to be implemented; no assertion of regulatory approval is made.
+Membership is £50 for one calendar month, with a £10 introductory launch offer, paid upfront and manually purchased each month with no automatic renewal or free trial. All core features and ordinary messaging are included with fair-use controls. A new/lapsed purchaser can choose activation up to seven days after purchase; the month then runs from activation. There is no initial day pass. Ordinary messages expire after 14 days, up to 100 keepsakes per patron; reports and lawful evidence holds are separate. We intend prompt report/credible-concern review, removals, suspensions and lawful escalation, without routinely reading all private conversations. Production age assurance, moderation and retention operations remain to be implemented; no assertion of regulatory approval is made.
 
 ## IO Zoom: scope, London availability and complete pilot price
 
@@ -37,15 +37,15 @@ Please assess the project described in Common project facts. We want age assuran
 
 We have not opened a production account. Please do not treat the enquiry as an instruction to enrol anyone or retain biometric data.
 
-## CCBill: classification and complete £10 manual-month quote
+## CCBill: classification and complete £50 / £10 launch manual-month quote
 
-Route: sales@ccbill.com, verified at https://ccbill.com/contact. Subject: “UK dating pre-sales: non-explicit content, £10 manually renewed membership”.
+Route: sales@ccbill.com, verified at https://ccbill.com/contact. Subject: “UK dating pre-sales: non-explicit content, £50 standard / £10 launch membership”.
 
 Please assess the project described in Common project facts, including its sexual focus, actual non-explicit policy and report-led private review. Please confirm:
 
 1. Do you accept the full model for a UK merchant, and can it operate as a sole trader or must it be a company? Which entity would contract with us and what MCC would apply?
 2. Quote all onboarding/application, annual and card-scheme registrations for that exact UK classification. Do the published $950 Visa and $1,000 Mastercard fees apply? Is the Visa initial application fee separate, additional or part of the annual charge? Include any per-transaction VIRP assessments without double-counting.
-3. Quote GBP £10 single purchases, manual renewal with no recurring mandate, minimum ticket, fixed/percentage/international/FX fees, reserves/holdback, payout timing and thresholds, chargebacks and refunds. State upfront cash required and recurring minimum charges.
+3. Quote both GBP £50 standard and GBP £10 launch single purchases, activation up to seven days after purchase, manual renewal with no recurring mandate, minimum ticket, fixed/percentage/international/FX fees, reserves/holdback, payout timing and thresholds, chargebacks and refunds. State upfront cash required and recurring minimum charges.
 4. Can your hosted checkout collect only necessary buyer details? Specify required email/name/address fields, their purpose/retention, the statement descriptor, our access to buyer information, DPA/controller roles and UK transfer terms.
 5. What age, depicted-person consent/identity, image review, response-time and content requirements apply to **non-explicit** private patron exchanges? Is the no-routine-reading, prompt investigation/removal approach acceptable? Please distinguish card rules, your policy and legal requirements.
 6. What campaign restrictions apply to national PR and lawful tailored outreach? We are not requesting bulk email from the host and no campaign has been sent.

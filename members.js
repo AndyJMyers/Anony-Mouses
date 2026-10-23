@@ -1,5 +1,7 @@
 'use strict';
 const $ = id => document.getElementById(id);
+const signupMouse=AnonyMouse.builder($('memberSignupMouse'));
+const editMouse=AnonyMouse.builder($('memberEditMouse'));
 let session = null, draft = null, activeThread = null, threads = [], matches = [], districts = [], refreshTimer = null, epoch = 0;
 let entranceAction = null, busy = false, previewUrl = null, renderedSignature = '';
 const revealedImages = new Set();
@@ -39,8 +41,9 @@ async function enter() {
   $('entrance').hidden = true; $('account').hidden = false; $('logout').hidden = false;
   $('recoveryCode').textContent = ''; draft = null;
   $('welcome').textContent = 'Welcome, ' + session.profile.alias + '.';
-  $('membership').textContent = session.membership.active ? 'Access until ' + date(session.membership.access_until) : 'Payment required · checkout is not connected in this test';
+  $('membership').textContent = session.membership.active ? 'Access until ' + date(session.membership.access_until) : session.membership.scheduled ? 'Your paid month starts ' + date(session.membership.starts_at) + ' · until ' + date(session.membership.access_until) : 'Payment required · launch month £10, planned standard £50 · checkout not connected';
   for (const field of ['alias','bio','wants','district','age_range']) $('editProfile').elements[field].value = session.profile[field];
+  editMouse.set(session.profile.avatar);
   $('editProfile').elements.visible.checked = session.profile.visible;
   $('search').elements.district.value = session.profile.district;
   status('Your local test account is signed in. A hello is only a hello.');
@@ -59,7 +62,7 @@ function showCode(code, action) { $('recoveryCode').textContent = code; tab('rec
 document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => tab(b.dataset.tab)));
 document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => run(() => view(b.dataset.view))));
 $('signin').addEventListener('submit', e => { e.preventDefault(); run(async () => { const data = formData(e.target); await api('login','POST',data); e.target.reset(); await enter(); }); });
-$('signup').addEventListener('submit', e => { e.preventDefault(); draft = { ...formData(e.target), adult:true, consent:true }; $('trialAlias').textContent = draft.alias; tab('trial'); });
+$('signup').addEventListener('submit', e => { e.preventDefault(); draft = { ...formData(e.target), avatar:signupMouse.get(), adult:true, consent:true }; $('trialAlias').textContent = draft.alias; tab('trial'); });
 $('backSignup').addEventListener('click', () => tab('signup'));
 $('startTrial').addEventListener('click', () => run(async () => {
   if (!draft) throw new Error('Please complete your details first.');
@@ -78,7 +81,7 @@ async function search() {
   const centre = districts.find(d => d.code === values.district);
   if (!found.length) $('matches').append(node('p','No sparks here yet. Create another fictional adult account in a separate browser session.'));
   for (const p of found) {
-    const card = node('article',undefined,'match'); card.append(node('h3',p.alias),node('small',p.age_range + ' · ' + p.district + ' · identity unverified'),node('p',p.bio),node('strong','What takes my fancy'),node('p',p.wants));
+    const card = node('article',undefined,'match'); const avatar=node('div',undefined,'mouse-mini');AnonyMouse.mountPortrait(avatar,p.avatar);card.append(avatar,node('h3',p.alias),node('small',p.age_range + ' · ' + p.district + ' · identity unverified'),node('p',p.bio),node('strong','What takes my fancy'),node('p',p.wants));
     card.append(button('Send a little hello ↗', async () => { const result = await api('conversations','POST',{target:p.id}); await view('inbox'); await openThread(result.id); status('Hello requested. Messages begin when the recipient accepts.'); },'gold'));
     $('matches').append(card);
     const pin = button('', async () => { card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'}); },'pin');
@@ -126,7 +129,7 @@ async function refreshKeepsakes() {
 $('block').addEventListener('click', () => run(async () => { if (!confirm('Block '+activeThread.other_alias+'? You will disappear from each other’s discovery and conversations.')) return; await api('block','POST',{target:activeThread.other}); activeThread = null; revealedImages.clear(); clearImageDraft(); renderedSignature=''; $('chat').hidden = true; $('messages').replaceChildren(); await refreshInbox(); await refreshKeepsakes(); status('Patron blocked.'); }));
 async function report(message_id) { const reason = prompt('Describe your concern. This stores a local test report; it does not alert a support team.'); if (!reason?.trim()) return; await api('report','POST',{target:activeThread.other,reason,message_id}); status('Local test report saved under the separate 90-day evidence rule.'); }
 $('report').addEventListener('click', () => run(() => report()));
-$('editProfile').addEventListener('submit', e => { e.preventDefault(); run(async () => { const profile = await api('profile','POST',{...formData(e.target),visible:e.target.elements.visible.checked}); session.profile = profile; $('welcome').textContent = 'Welcome, '+profile.alias+'.'; status('Your introduction is saved.'); }); });
+$('editProfile').addEventListener('submit', e => { e.preventDefault(); run(async () => { const profile = await api('profile','POST',{...formData(e.target),avatar:editMouse.get(),visible:e.target.elements.visible.checked}); session.profile = profile; $('welcome').textContent = 'Welcome, '+profile.alias+'.'; status('Your introduction is saved.'); }); });
 $('deleteAccount').addEventListener('click', () => run(async () => { if (!confirm('Permanently delete this test account, its shared conversations and keepsakes? Report evidence follows its separate retention rule.')) return; await api('account','DELETE'); signedOut(); status('Test account deleted. Separately retained report evidence expires under the development rule.'); }));
 async function boot() {
   if (location.protocol !== 'http:' || location.hostname !== '127.0.0.1') { $('unavailable').hidden = false; status('Public memberships are not open. This interface is for loopback-only testing.'); return; }

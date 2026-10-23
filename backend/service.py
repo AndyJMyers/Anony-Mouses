@@ -5,6 +5,8 @@ server-side at rest, not end-to-end. No external provider approvals are implied.
 """
 from __future__ import annotations
 import calendar
+import json
+from .avatars import validate as validate_avatar, DEFAULT as DEFAULT_AVATAR
 from contextlib import contextmanager
 import hashlib
 import hmac
@@ -17,6 +19,7 @@ from pathlib import Path
 from cryptography.fernet import Fernet
 
 DAY = 86400
+OFFER_PRICES = {'launch': 1000, 'standard': 5000}
 class Problem(Exception):
     def __init__(self, status, message): self.status, self.message = status, message
 
@@ -41,8 +44,10 @@ def distance(a, b):
     return 6371 * 2 * math.asin(min(1, math.sqrt(v)))
 
 class Service:
-    def __init__(self, db_path, key, clock, *, mode='development'):
+    def __init__(self, db_path, key, clock, *, mode='development', current_offer='launch'):
         if mode != 'development': raise RuntimeError('Production disabled: approved providers, age assurance and operational review are required.')
+        if current_offer not in OFFER_PRICES: raise ValueError('Unknown membership offer')
+        self.current_offer = current_offer
         self.db_path, self.clock, self.cipher = str(db_path), clock, Fernet(key)
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
         with self.db() as db:
@@ -76,6 +81,18 @@ class Service:
             CREATE INDEX IF NOT EXISTS message_expiry ON messages(expires);
             CREATE INDEX IF NOT EXISTS session_expiry ON sessions(expires);
             ''')
+            profile_columns={r['name'] for r in db.execute('PRAGMA table_info(profiles)')}
+            if 'avatar' not in profile_columns:
+                db.execute("ALTER TABLE profiles ADD COLUMN avatar TEXT NOT NULL DEFAULT '{}'")
+            # Additive migration: old test payments remain immediately eligible.
+            columns = {r['name'] for r in db.execute('PRAGMA table_info(payment_events)')}
+            if 'starts_at' not in columns:
+                db.execute('ALTER TABLE payment_events ADD COLUMN starts_at INTEGER NOT NULL DEFAULT 0')
+            if 'offer_code' not in columns:
+                db.execute("ALTER TABLE payment_events ADD COLUMN offer_code TEXT NOT NULL DEFAULT 'launch'")
+            if 'requested_start' not in columns:
+                db.execute('ALTER TABLE payment_events ADD COLUMN requested_start INTEGER')
+            db.execute('CREATE INDEX IF NOT EXISTS payment_access ON payment_events(user_id, starts_at, access_until)')
     @contextmanager
     def db(self):
         db = sqlite3.connect(self.db_path, timeout=10)
@@ -110,7 +127,7 @@ class Service:
                 db.execute('INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?)',
                     (uid,login,salt,password_hash(pw,salt),digest(recovery),now,0,0,'development-v2'))
             except sqlite3.IntegrityError: raise Problem(409,'That login is unavailable')
-            db.execute('INSERT INTO profiles VALUES(?,?,?,?,?,?,1)', (uid,*profile))
+            db.execute('INSERT INTO profiles(user_id,alias,bio,wants,district,age_range,avatar,visible) VALUES(?,?,?,?,?,?,?,1)', (uid,*profile))
         return {'user_id':uid,'recovery_code':recovery,'payment_required':True,'development_only':True}
     def validate_profile(self, data):
         alias = text(data.get('alias'), 'Chosen name', 1, 30)
@@ -123,7 +140,11 @@ class Service:
         with self.db() as db:
             if not db.execute('SELECT 1 FROM districts WHERE code=?',(district,)).fetchone():
                 raise Problem(400,'District is not in the imported postcode dataset')
-        return alias,self.enc(bio),self.enc(wants),district,age
+        if any(key in data for key in ('avatar_url','photo_url','profile_photo','portrait')):
+            raise Problem(400,'Public profiles use mouse avatars only; no photo uploads')
+        try: avatar=validate_avatar(data.get('avatar'))
+        except ValueError as exc: raise Problem(400,str(exc))
+        return alias,self.enc(bio),self.enc(wants),district,age,json.dumps(avatar,sort_keys=True)
     def login(self, login, password):
         login = text(login,'Login',3,40).lower(); password = text(password,'Password',1,128)
         with self.db() as db:
@@ -152,46 +173,74 @@ class Service:
             db.execute('DELETE FROM sessions WHERE user_id=?',(row['id'],))
         return {'recovery_code':new_code}
     def membership(self, uid):
-        with self.db() as db: row=db.execute('SELECT trial_end,paid_until FROM users WHERE id=?',(uid,)).fetchone()
-        if not row: raise Problem(401,'Account unavailable')
-        until=row['paid_until']
-        return {'active':until>self.clock(),'access_until':until,'paid_until':row['paid_until'],'monthly_price_minor':1000,'currency':'GBP','automatic_renewal':False}
-    def record_month_payment(self, uid, provider, event_id, amount_minor, currency):
-        """Trusted server-side ledger, not a payment-verification endpoint.
+        now = int(self.clock())
+        with self.db() as db:
+            row = db.execute('SELECT paid_until FROM users WHERE id=?',(uid,)).fetchone()
+            if not row: raise Problem(401,'Account unavailable')
+            periods = db.execute('SELECT starts_at,access_until FROM payment_events WHERE user_id=? AND access_until>? ORDER BY starts_at,access_until',(uid,now)).fetchall()
+        active = any(p['starts_at'] <= now < p['access_until'] for p in periods)
+        start = next((p['starts_at'] for p in periods if p['starts_at'] > now),None)
+        until = now
+        if active:
+            for p in periods:
+                if p['starts_at'] <= until: until = max(until,p['access_until'])
+        elif periods:
+            until = periods[0]['access_until']
+        else:
+            until = row['paid_until']
+        return {'active':active,'scheduled':not active and start is not None,'starts_at':start if not active else None,
+                'access_until':until,'paid_until':row['paid_until'],'monthly_price_minor':OFFER_PRICES[self.current_offer],
+                'standard_price_minor':5000,'launch_price_minor':1000,'offer_code':self.current_offer,
+                'currency':'GBP','automatic_renewal':False}
+    def record_month_payment(self, uid, provider, event_id, amount_minor, currency, *, offer_code='launch', start_at=None):
+        """Trusted development ledger; future adapters must verify a server-created order.
 
-        Future provider adapters must authenticate/reconcile payment and its order
-        before calling this. The loopback test operator uses development fixtures.
-        There is no browser/API path that can grant paid access.
+        The order must bind price/offer and chosen start before checkout. No public
+        payment-grant endpoint exists. A later callback must use the original order
+        and purchase time rather than revalidating a date against callback time.
         """
         provider=text(provider,'Provider',1,40);event_id=text(event_id,'Payment event',1,200)
-        if type(amount_minor) is not int or amount_minor!=1000 or currency!='GBP':
-            raise Problem(400,'Expected a confirmed GBP 10.00 monthly payment')
+        if not isinstance(offer_code,str) or offer_code not in OFFER_PRICES:
+            raise Problem(400,'Unknown membership offer')
+        if type(amount_minor) is not int or amount_minor!=OFFER_PRICES[offer_code] or currency!='GBP':
+            raise Problem(400,'Payment does not match the confirmed GBP membership offer')
+        if start_at is not None and type(start_at) is not int:
+            raise Problem(400,'Choose a valid membership start time')
         with self.db() as db:
             db.execute('BEGIN IMMEDIATE')
             existing=db.execute('SELECT * FROM payment_events WHERE provider=? AND event_id=?',(provider,event_id)).fetchone()
             if existing:
-                if existing['user_id']!=uid or existing['amount_minor']!=amount_minor or existing['currency']!=currency:
-                    raise Problem(409,'Payment event does not match this account')
-                return {'access_until':existing['access_until'],'duplicate':True}
+                if (existing['user_id']!=uid or existing['amount_minor']!=amount_minor or existing['currency']!=currency
+                    or existing['offer_code']!=offer_code or (start_at is not None and existing['requested_start']!=start_at)):
+                    raise Problem(409,'Payment event does not match this account or purchase')
+                return {'starts_at':existing['starts_at'],'access_until':existing['access_until'],'duplicate':True}
             user=db.execute('SELECT paid_until FROM users WHERE id=?',(uid,)).fetchone()
             if not user:raise Problem(404,'Account unavailable')
-            until=advance_month(max(int(self.clock()),user['paid_until']))
-            db.execute('INSERT INTO payment_events VALUES(?,?,?,?,?,?)',(provider,event_id,uid,amount_minor,currency,until))
+            now=int(self.clock())
+            if start_at is not None and not now <= start_at <= now+7*DAY:
+                raise Problem(400,'Start now or within seven days of purchase')
+            # A repeat purchase preserves already-bought time; it never overlaps it.
+            starts=max(now if start_at is None else start_at,user['paid_until'])
+            until=advance_month(starts)
+            db.execute('INSERT INTO payment_events(provider,event_id,user_id,amount_minor,currency,access_until,starts_at,offer_code,requested_start) VALUES(?,?,?,?,?,?,?,?,?)',
+                (provider,event_id,uid,amount_minor,currency,until,starts,offer_code,start_at))
             db.execute('UPDATE users SET paid_until=? WHERE id=?',(until,uid))
-        return {'access_until':until,'duplicate':False}
+        return {'starts_at':starts,'access_until':until,'duplicate':False}
 
     def active(self, uid):
-        if not self.membership(uid)['active']: raise Problem(402,'Membership has expired; manual renewal is required')
+        membership=self.membership(uid)
+        if not membership['active']:
+            raise Problem(402,'Your paid month has not started yet' if membership['scheduled'] else 'A paid month is required; renewal is manual')
     def profile(self, uid):
         with self.db() as db: p=db.execute('SELECT * FROM profiles WHERE user_id=?',(uid,)).fetchone()
         if not p: raise Problem(404,'Profile unavailable')
         return {'id':uid,'alias':p['alias'],'bio':self.dec(p['bio']),'wants':self.dec(p['wants']),
-                'district':p['district'],'age_range':p['age_range'],'visible':bool(p['visible']),'identity_verified':False}
+                'district':p['district'],'age_range':p['age_range'],'avatar':validate_avatar(json.loads(p['avatar'])),'visible':bool(p['visible']),'identity_verified':False}
     def edit_profile(self, uid, data):
         values=self.validate_profile(data)
         visible=data.get('visible',True)
         if not isinstance(visible,bool): raise Problem(400,'Visibility must be true or false')
-        with self.db() as db: db.execute('UPDATE profiles SET alias=?,bio=?,wants=?,district=?,age_range=?,visible=? WHERE user_id=?',(*values,int(visible),uid))
+        with self.db() as db: db.execute('UPDATE profiles SET alias=?,bio=?,wants=?,district=?,age_range=?,avatar=?,visible=? WHERE user_id=?',(*values,int(visible),uid))
         return self.profile(uid)
     def blocked(self, db, a, b):
         return bool(db.execute('SELECT 1 FROM blocks WHERE (user_id=? AND target=?) OR (user_id=? AND target=?)',(a,b,b,a)).fetchone())
@@ -203,7 +252,7 @@ class Service:
             centre=db.execute('SELECT lat,lon FROM districts WHERE code=?',(district,)).fetchone()
             if not centre: raise Problem(400,'District is not in the imported postcode dataset')
             rows=db.execute('''SELECT p.user_id,p.district,d.lat,d.lon FROM profiles p JOIN districts d ON p.district=d.code
-                JOIN users u ON p.user_id=u.id WHERE p.visible=1 AND p.user_id!=? AND u.paid_until>?''',(uid,int(self.clock()))).fetchall()
+                JOIN users u ON p.user_id=u.id WHERE p.visible=1 AND p.user_id!=? AND EXISTS (SELECT 1 FROM payment_events e WHERE e.user_id=u.id AND e.starts_at<=? AND e.access_until>?)''',(uid,int(self.clock()),int(self.clock()))).fetchall()
             found=[]
             for p in rows:
                 km=distance(centre,(p['lat'],p['lon']))

@@ -1,6 +1,6 @@
 # Anony-Mouses — priorities and TODO
 
-Reviewed 14 October 2026.
+Current offer updated 23 October 2026; earlier checkpoints below are dated history. See [the membership decision](docs/membership-offer.md).
 
 ## Goal
 
@@ -131,3 +131,21 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 - [ ] Operator review/sign-off, effective-control evidence and complete current-code applicability review; finalise age approach. Do not infer legal clearance from the research documents.
 - [ ] Obtain written supplier scope/privacy acceptance and complete hosting/payment quotes under confirmed legal operator/contact details. Not sent or obtained yet.
 - [ ] Resolve those gates before beginning later implementation/deployment/testing steps.
+
+## Current offer checkpoint — 23 October 2026
+
+- [x] £50 standard calendar month / £10 introductory launch month; upfront single purchase, no automatic renewal. Earlier price ceilings superseded.
+- [x] Public preview price/fair-use wording and 0–7-day illustrative start-date selector; no real payment.
+- [x] Local ledger validates offer-specific prices, preserves existing paid time, schedules a month up to seven days later and excludes not-yet-active patrons from discovery. Existing test-ledger migration and duplicate-event checks included.
+- [x] Provider enquiry brief, Android contract and cost scenarios align with the current offer. No enquiries sent.
+- [ ] Set and publish launch eligibility/end conditions before live sales; do not imply £50 is an established previous selling price.
+- [ ] Real server-created orders/callback reconciliation, cancellation/refunds and applicable express early-start request; exact receipt dates/timezone and production fair-use limits.
+- [ ] Validate the whole hosted journey and applicable safeguards before opening paid access.
+
+## Mouse-first public profiles — 23 October 2026
+
+- [x] Shared instant SVG mouse creator with hair/fur/build/bust-or-chest/outfit/accessory options, shown first in signup.
+- [x] Remove public photo-upload selector; fictional map/list/profile portraits use mice.
+- [x] Persist and edit validated mouse configuration in local profiles; older test accounts receive defaults. Reject arbitrary avatar URLs/markup.
+- [x] Keep real permitted picture messages private and separate from public mouse portraits; update privacy/provider/Android contract.
+- [ ] Match the shared avatar contract in the future native Android client.

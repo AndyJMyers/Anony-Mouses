@@ -1,5 +1,7 @@
 # Age and access assessment — 17 October 2026
 
+> **Commercial update, 23 October 2026:** [Current offer](membership-offer.md) is £50 for one month, introductory launch price £10, all core features/ordinary messaging included, optional start within seven days, no automatic renewal. Earlier £10-standard and £1/day-ceiling assumptions below are superseded. Provider quotes must cover both £10 and £50 transactions.
+
 ## Decision for the proposed service
 
 **Do not launch the member service on a checkbox/payment-only age gate.** Our pre-launch children's access assessment concludes that the proposed service, without effective age assurance, is likely to be accessed by children. The non-explicit policy is worthwhile but does not establish an exemption. This is an assessment of the planned product, not an Ofcom decision or certification.
@@ -12,7 +14,7 @@ This is our proportionate design recommendation, not a claim that every non-expl
 
 Assessment author: project development review; operator approval and named accountable owner remain to be recorded before launch. Evidence date: 17 October 2026. Scope: UK users of the future website and Android member service, considered together. The static GitHub Pages showcase has fictional demonstrations, no user-to-user backend and no real registrations. It is not evidence that the future service excludes children.
 
-Planned features: pseudonyms, brief bios/preferences, non-identifying profile images, outward-postcode district discovery, approximate map pins, accepted hello requests, private text and permitted non-explicit images, 14-day message expiry, 100 keepsakes, £10 manually renewed calendar months. No public activity feed, video, live streaming, monetised creator content, paid sexual services or patron-to-patron payments are planned. Discovery is filtering/sorting, not a behavioural content feed; recommender applicability must be rechecked against the eventual implementation.
+Planned features: pseudonyms, brief bios/preferences, configurable mouse-only profile portraits, outward-postcode district discovery, approximate map pins, accepted hello requests, private text and permitted non-explicit images, 14-day message expiry, 100 keepsakes, £10 manually renewed calendar months. No public activity feed, video, live streaming, monetised creator content, paid sexual services or patron-to-patron payments are planned. Discovery is filtering/sorting, not a behavioural content feed; recommender applicability must be rechecked against the eventual implementation.
 
 Evidence used: repository README/product brief and current local UI/API, founder's agreed non-explicit/no-routine-reading policy, the intended national campaign including adult students, Ofcom's access guidance and dating case study, children's risk profiles and current/upcoming codes listed below. There are no live-user age statistics, supplier effectiveness tests or operational report metrics. Do not invent them.
 
@@ -57,7 +59,7 @@ Method: qualitative likelihood of exposure on the proposed design **without a pr
 | Body stigma (non-designated) | H / M → H | Dating/appearance judgments and body-shaming; no harassment, block and sanctions. |
 | Depression/despair promotion (non-designated) | M / H → H | Manipulation, rejection and isolation; prohibit harmful promotion without banning support conversations. |
 
-Cross-cutting concerns also include grooming, adult impersonation of minors, sexual exploitation, sextortion, stalking, fraud and unsafe off-service meetings. These overlap illegal-content duties; the [illegal-risk register](illegal-risk-register.md) assesses those separately. A ban on messages does not remove contact/meeting risks. District-only location reduces precision but a sparse district, identifiable photo or bio can still expose someone.
+Cross-cutting concerns also include grooming, adult impersonation of minors, sexual exploitation, sextortion, stalking, fraud and unsafe off-service meetings. These overlap illegal-content duties; the [illegal-risk register](illegal-risk-register.md) assesses those separately. A ban on messages does not remove contact/meeting risks. District-only location reduces precision but a sparse district, identifying bio or privately shared real photo can still expose someone.
 
 Existing local controls (not production assurance): accepted requests, server-side participant isolation, blocking/report evidence, expiry and approximate district fixtures. Missing: real age gate, operator moderation/removal/suspension tools, response coverage, appeals, production anti-evasion/rate controls, nationwide location privacy, supplier acceptance and tested deletion/backups. Residual risks are **unproven**, not “low”.
 

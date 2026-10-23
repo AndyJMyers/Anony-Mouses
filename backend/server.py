@@ -29,7 +29,7 @@ class App:
             # Explicit assets only. Never expose source, runtime databases, keys or arbitrary paths.
             assets={'/':('index.html','text/html'),'/index.html':('index.html','text/html'),
                 '/members.html':('members.html','text/html'),'/members.js':('members.js','text/javascript'),
-                '/members.css':('members.css','text/css'),'/app.js':('app.js','text/javascript'),
+                '/members.css':('members.css','text/css'),'/app.js':('app.js','text/javascript'),'/mouse-avatar.js':('mouse-avatar.js','text/javascript'),
                 '/style.css':('style.css','text/css'),'/assets/anony-mouses-masthead.png':('assets/anony-mouses-masthead.png','image/png')}
             if method=='GET' and path in assets:
                 filename,mime=assets[path];body=(self.web_root/filename).read_bytes()
@@ -108,16 +108,16 @@ class QuietHandler(WSGIRequestHandler):
     def log_message(self,*args):pass
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--db',default='runtime/anony-mouse.sqlite3');p.add_argument('--port',type=int,default=8080);p.add_argument('--purge',action='store_true');p.add_argument('--seed-test-districts',action='store_true');p.add_argument('--grant-test-month',metavar='LOGIN',help='Operator-only fictional GBP 10 monthly payment fixture; no money moves');args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--db',default='runtime/anony-mouse.sqlite3');p.add_argument('--port',type=int,default=8080);p.add_argument('--purge',action='store_true');p.add_argument('--seed-test-districts',action='store_true');p.add_argument('--grant-test-month',metavar='LOGIN',help='Operator-only fictional monthly payment fixture; no money moves');p.add_argument('--offer',choices=['launch','standard'],default='launch');p.add_argument('--start-in-days',type=int,choices=range(8),default=0);args=p.parse_args()
     key=os.environ.get('ANONY_MOUSE_DATA_KEY')
     if not key:raise SystemExit('Set ANONY_MOUSE_DATA_KEY through your environment; never commit it.')
-    s=Service(args.db,key,time.time)
+    s=Service(args.db,key,time.time,current_offer=args.offer)
     if args.seed_test_districts:s.seed_districts([('GU2',51.24,-.59),('GU1',51.24,-.56),('SW1A',51.50,-.14)])
     if args.purge:print(s.purge());return
     if args.grant_test_month:
         with s.db() as db:row=db.execute('SELECT id FROM users WHERE login=?',(args.grant_test_month.strip().lower(),)).fetchone()
         if not row:raise SystemExit('Test login not found')
-        print(s.record_month_payment(row['id'],'development',secrets.token_hex(16),1000,'GBP'));return
+        print(s.record_month_payment(row['id'],'development',secrets.token_hex(16),1000 if args.offer=='launch' else 5000,'GBP',offer_code=args.offer,start_at=int(time.time())+args.start_in_days*86400 if args.start_in_days else None));return
     origin=f'http://127.0.0.1:{args.port}';print(f'Local member lounge: {origin}/members.html. Fictional test adults only; production disabled.')
     with make_server('127.0.0.1',args.port,App(s,origin),handler_class=QuietHandler) as server:server.serve_forever()
 if __name__=='__main__':main()
