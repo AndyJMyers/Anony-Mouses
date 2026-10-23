@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#151b20"><title>The chemistry dial — Anony-Mouses</title><meta name="description" content="Turn a brass dial to blend cool lagoon light and warm woodland sparks. An interactive artwork by Anony-Mouses."><link rel="stylesheet" href="chemistry.css?v=2"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#151b20"><title>The chemistry dial — Anony-Mouses</title><meta name="description" content="Turn a brass dial to blend cool lagoon light and warm woodland sparks. An interactive artwork by Anony-Mouses."><link rel="stylesheet" href="chemistry.css?v=3"></head>
 <body>
 <header><a class="brand" href="index.html">Anony-Mouses<span>ADULT, PLAYFUL AND A LITTLE LOUCHE.</span></a><a class="back" href="index.html#explore">Back to the little sparks ↗</a></header>
 <main>
@@ -24,17 +24,20 @@
 <button class="set-scene" id="setScene" type="button">Keep this blend · choose an atmosphere ↗</button>
 </div></div>
 <section id="atmosphere" hidden aria-labelledby="moodTitle">
-<p class="eyebrow">YOUR BLEND. YOUR ATMOSPHERE.</p><h2 id="moodTitle" tabindex="-1">How shall it <em>feel?</em></h2><p class="intro" id="moodIntro">Choose the colours and pace that suit you.</p>
+<p class="eyebrow">YOUR BLEND. YOUR PREFERENCE.</p><h2 id="moodTitle" tabindex="-1">How shall it <em>feel?</em></h2><p class="intro" id="moodIntro">Choose your style to see complementary fictional introductions nearby.</p>
 <div class="mood-options" aria-label="Choose an atmosphere">
 <button type="button" data-mood="sub-male" aria-pressed="false"><span class="swatch pink" aria-hidden="true"></span><span><strong>Submissive man</strong><small>Light pink · a very slow pulse</small></span></button>
 <button type="button" data-mood="dom-female" aria-pressed="false"><span class="swatch blue" aria-hidden="true"></span><span><strong>Dominant woman</strong><small>Deep blue · a slow, steady pulse</small></span></button>
 <button type="button" data-mood="trad-fem" aria-pressed="false"><span class="swatch pastel" aria-hidden="true"></span><span><strong>Traditional femininity</strong><small>Warm pastels · a gentle glow</small></span></button>
 </div>
-<p class="mood-status" id="moodStatus" role="status">Choose an atmosphere to begin.</p>
-<div class="scene-actions"><button type="button" id="editBlend">← Adjust the blend</button><button type="button" id="pauseGlow" aria-pressed="false" hidden>Pause glow</button></div>
-<p class="hint">Any atmosphere is yours to choose. This changes the artwork only; it does not set a profile, partner preference or permission.</p>
+<p class="mood-status" id="moodStatus" role="status">Choose your preference to see demo introductions.</p>
+<button class="set-scene" id="showMatches" type="button" hidden>Show my demo matches ↗</button><p class="session-note" id="sessionNote">Your choice is kept only in this tab. No account or public profile is created.</p><div class="scene-actions"><button type="button" id="editBlend">← Adjust the blend</button><button type="button" id="forgetChoice" hidden>Forget my choice</button><button type="button" id="pauseGlow" aria-pressed="false" hidden>Pause glow</button></div>
+<p class="hint">This is your own preferred style, not a demand on anyone else. Demo suggestions are illustrative, not a promise of compatibility or consent.</p>
 </section>
 <p class="footnote">An introduction. An imagination.<br>Every next step is yours to choose.</p>
 </section>
-</main><script src="chemistry.js?v=2"></script>
+</main>
+<section class="results-zone" id="chemistryResults" hidden aria-labelledby="matchesTitle"><div class="results-heading"><div><p class="eyebrow">A PREFERENCE. A FEW POSSIBILITIES.</p><h2 id="matchesTitle" tabindex="-1">Find a little <em>spark.</em></h2></div><button id="changePreference" type="button">← Change preference</button></div><p class="results-summary" id="resultsSummary" role="status"></p><form class="district-search" id="matchSearch"><label for="matchDistrict">Postcode district</label><div><input id="matchDistrict" name="district" value="GU2" maxlength="4" autocomplete="off" pattern="[A-Za-z]{1,2}[0-9]{1,2}[A-Za-z]?" required><button class="set-scene" type="submit">Find nearby demos ↗</button></div></form><p class="results-disclosure">All profiles below are invented adults. No real availability, meeting or person is represented. Distances are approximate, straight-line distances from district centres.</p><div class="result-grid" id="matchCards"></div><p class="results-empty" id="matchStatus" role="status"></p><p class="results-attribution">Approximate district locations: GeoNames · demo atlas. No GPS or home address used.</p></section>
+<dialog id="matchDialog" aria-labelledby="matchName"><button id="closeMatch" class="dialog-close" type="button" aria-label="Close demo profile">×</button><div id="matchDetail"></div></dialog>
+<script src="mouse-avatar.js?v=organic-map-11"></script><script src="demo-atlas-data.js?v=uk-1"></script><script src="demo-atlas.js?v=uk-1"></script><script src="chemistry.js?v=3"></script>
 </body></html>
