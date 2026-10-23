@@ -7,7 +7,7 @@
     facialHair:{label:'Facial hair',values:{none:'Clean shaven',stubble:'Stubble',moustache:'Moustache',beard:'Full beard'}},
     hairColour:{label:'Hair colour',values:{blonde:'Golden blonde',auburn:'Auburn',dark:'Espresso',silver:'Silver',pink:'Rose pink'}},
     outfit:{label:'Outfit',values:{jacket:'Evening jacket',dress:'Cocktail dress',knit:'Soft knit',shirt:'Open-neck shirt',leather:'Leather jacket'}},
-    colour:{label:'Outfit colour',values:{navy:'Midnight blue',red:'Rouge',green:'Emerald',gold:'Gold'}},
+    colour:{label:'Outfit shade',values:{navy:'Deep',red:'Rich',green:'Soft',gold:'Light'}},
     trim:{label:'Gold trim',values:{none:'None',gold:'A touch of gold'}},
     sparkles:{label:'Sparkles',values:{none:'None',stars:'A little sparkle'}},
     accessory:{label:'Finishing touch',values:{none:'Just me',pearls:'Pearls',glasses:'Spectacles',bow:'A little bow'}}
@@ -35,7 +35,7 @@
   ];
   const palette={cream:'#e1cbb0',silver:'#aeb7bd',cocoa:'#93664f',charcoal:'#62646e',rose:'#cfa4a0',blonde:'#d7aa4b',auburn:'#9b4b35',dark:'#3d3033',pink:'#ce879b',navy:'#29314c',red:'#ad4358',green:'#346d61',gold:'#b89245'};
   function normalise(value){const out={};for(const key of Object.keys(choices))out[key]=Object.hasOwn(choices[key].values,value?.[key])?value[key]:defaults[key];return out;}
-  function svg(value,kind='demo'){const v=normalise(value),accent=v.trim==='gold'?'#e4bf6c':kind==='real'?'#ee8298':'#83c9fa',frame=kind==='real'?'#511c31':'#153b61',status=kind==='real'?'MEMBER':'DEMO',fur=palette[v.fur],hair=palette[v.hairColour],cloth=palette[v.colour];const width=v.outfit==='dress'?76:90;
+  function svg(value,kind='demo'){const v=normalise(value),accent=v.trim==='gold'?'#e4bf6c':kind==='real'?'#ee8298':'#83c9fa',frame=kind==='real'?'#511c31':'#153b61',status=kind==='real'?'MEMBER':'DEMO',fur=palette[v.fur],hair=palette[v.hairColour],cloth=(kind==='real'?{navy:'#742c42',red:'#a83e59',green:'#c65c74',gold:'#d994a5'}:{navy:'#284d76',red:'#326f9f',green:'#538fb3',gold:'#8ab6d2'})[v.colour];const width=v.outfit==='dress'?76:90;
     const head=v.face==='soft'?'M98 108Q98 81 150 85Q202 81 202 108L208 158Q204 193 174 211Q150 226 126 211Q96 193 92 158Z':v.face==='square'?'M94 110Q95 80 150 84Q205 80 206 110L211 159L194 200L174 217L126 217L106 200L89 159Z':'M93 111Q94 79 150 83Q206 79 207 111L213 163L193 203L172 221L128 221L107 203L87 163Z';
     const facialHair={none:'',stubble:`<path d="M105 180L113 201L130 213L170 213L187 201L195 180" fill="none" stroke="${hair}" stroke-opacity=".65" stroke-width="9" stroke-dasharray="1 5" stroke-linecap="round"/>`,moustache:`<path d="M150 178Q135 169 115 188Q135 195 150 184Q165 195 185 188Q165 169 150 178Z" fill="${hair}"/>`,beard:`<path d="M101 166L116 185L131 192L150 198L169 192L184 185L199 166L190 207L173 226L150 237L127 226L110 207Z" fill="${hair}"/><path d="M130 199Q150 209 170 199" stroke="#f0dfc9" stroke-opacity=".6" stroke-width="3" fill="none"/>`}[v.facialHair];
     const eyes=v.face==='soft'?'<ellipse cx="123" cy="144" rx="7" ry="11"/><ellipse cx="177" cy="144" rx="7" ry="11"/>':'<path d="M112 141Q123 135 134 141L133 150Q123 155 113 150ZM166 141Q177 135 188 141L187 150Q177 155 167 150Z"/>';
