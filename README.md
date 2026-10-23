@@ -2,33 +2,67 @@
 
 # Anony-Mouses
 
-A super simple dating app for adults seeking flirtation, sex and connection.
+**Adult, playful and a little louche.**
 
-**A little about you. A little about what you want. See who answers.**
+A deliberately simple introductions service for consenting adults seeking flirtation, sex and connection. A little about you. A little about what you want. A hello, perhaps a drink—and every next step is yours to choose.
 
-**£50 for one calendar month. Website introductory offer: £20 for one month; example invitation code `KEELE_SU_10`: £10 if purchased by 30 November 2026, 23:59 UK time (one use per account, no stacking; no affiliation implied).** Paid upfront, all core features included, no automatic renewal or public free trial. Start now or choose a start within seven days; the full month runs from that date. Ordinary messaging has no conversation quota or per-message fees, subject to clear fair-use, safety and storage limits. See [the current membership offer](docs/membership-offer.md). The concept preview demonstrates this proposed business model; it does not create memberships or take payments.
+**[Explore the interactive preview →](https://anonymouses.com/)**
 
-## The idea
+> **Current status:** a public, fictional concept preview, plus a separate local development backend. No real memberships, payments or production messages are handled by the public website. The features below describe the intended service; the status table explains what works today.
 
-- Describe who you are and what you want.
-- First create your Anony Mouse: choose hair, fur, build, bust/chest, clothes and accessories. Every public portrait is a mouse; real-photo uploads are not accepted for profiles. Choose a pseudonym.
-- Enter a partial postcode such as GU2; explore gently pulsing potential matches and patron-written hints on a map.
-- Browse profiles and exchange private messages and images.
-- Messages and attachments automatically expire after two weeks unless saved as keepsakes.
-- Each patron may retain up to 100 keepsake messages.
-- Public identity claims remain unverified. Adults-only age checks are a separate requirement; see the data and privacy statement below.
+## A mouse of your own
 
-Discretion from the neighbours is the aim. Patrons control what they disclose, but other people may recognise them or copy what they receive. Identity claims are unverified; absolute anonymity is not promised.
+Your public face is always an **Anony Mouse**, never a real photograph. Start by choosing one of **18 ready-made adult mice**, then make it yours. A chosen name, an introduction and what takes your fancy complete the profile.
 
-## Project status
+![Eighteen customisable Anony-Mouses, including glamorous, rugged, bearded and dapper characters](assets/mouse-lineup.svg)
 
-Interactive static concept preview: fictional postcode matches, mood filters, surprise introductions, optional opening lines, scripted chat, session-only keepsakes and a two-step signup demo. No real accounts, payment collection or production messaging service yet.
+- **Proper bloke mice as well as glamour mice.** Racer, Woodsman, Bruiser, Professor, Rocker and Old School join a sharper Silver Fox, Copper and Dapper, alongside Velvet, Rouge, Pearl and the rest of the cast.
+- **More than a change of clothes.** Soft, strong-jawed or rugged faces; clean shaven, stubble, moustache or a full beard; crew cuts, swept-back hair, waves, bobs, long hair or bald.
+- **Style the whole character.** Fur and hair colours, slender/broad/athletic/curvy builds, bust/chest choices, cocktail dresses, evening jackets, open-neck shirts, leather jackets, knitwear and finishing touches.
+- **Instant previews and a surprise button.** Portraits are drawn in code, with the same creator used in the public demo and local member lounge. No photo upload or image-generation request is needed.
 
-Open `index.html` to explore the design. GitHub Pages publishes the project from the root of `main`. The commercial service will require suitable backend hosting; GitHub Pages is not the paid-service host.
+These are choices for an alter ego, not verified physical attributes or a requirement to disclose your real appearance. Tasteful and fully clothed: open-minded, never lewd or vulgar. Permitted non-explicit real pictures belong only in private conversations; recipients can still copy or republish them.
 
-The public preview uses no analytics or browser storage. Demo form details, mouse-avatar choices and keepsakes remain in page memory and disappear on reload. Hosting and font requests still disclose technical information to their providers; see the statement below.
+## Follow a little spark
 
-See [the product brief](docs/product-brief.md) for scope and [the prioritised TODO list](TODO.md) for implementation and national launch planning.
+- **A neighbourhood, not a house number.** Enter an outward postcode district such as `GU2`; explore an approximate map with gently pulsing introductions and patron-written hints. No full postcode or GPS is needed. Demo positions are illustrative and pulsing does not mean someone is online.
+- **A little atmosphere.** Mood filters, a list view, surprise introductions and suggested opening lines make a small interface feel alive. A still-sparks control respects people who prefer less motion.
+- **A conversation by mutual choice.** The local backend supports hello requests that the recipient accepts before messages can be exchanged, plus blocking and reporting.
+- **Less digital baggage.** Ordinary text and picture messages expire after **14 days**; each patron can keep up to **100 keepsake messages**. Evidence holds and deletion exceptions are explained below.
+- **Discretion by design.** Pseudonyms and mouse portraits keep real faces off profiles. Districts are approximate. Patrons choose what to disclose; identity claims remain unverified and absolute anonymity is not promised.
+
+An introduction is not an obligation. Membership buys access to the service, never another person's attention, affection or consent. Caveat emptor: go in with your eyes open and check that the ingredients mix before making the cocktail.
+
+## One month, one clear price
+
+| Offer | One calendar month | Conditions |
+| --- | ---: | --- |
+| Planned standard price | **£50** | A separate, explicit purchase each time. This is not a claim that £50 was previously charged. |
+| Website introductory offer | **£20** | No general offer deadline has been set; do not invent one. |
+| Example invitation: `KEELE_SU_10` | **£10** | Purchase by **30 November 2026, 23:59 UK time**; one use per account, no stacking. Demonstrator only: no student-union partnership is implied. |
+
+**Paid upfront. All core features included. No automatic renewal, free trial, per-message fees or ordinary conversation quota.** Fair-use, safety, file-size and storage limits apply; no spam, automation, harassment or traffic that overwhelms the service.
+
+Start now, or choose a start **up to seven days after purchase**. The full calendar month runs from that start; waiting does not consume it. No reason for the delay, moving itinerary or precise future address is requested. Early repeat purchases preserve already-paid time. Each later month costs the price shown when it is explicitly purchased.
+
+The preview demonstrates code entry and start/expiry dates without taking money. The local backend validates invitation prices, expiry and prior redemption, and records fictional payment fixtures idempotently. Codes alone never grant access. Real server-created orders, verified provider callbacks, refunds and cancellation handling remain to be implemented. See [the membership offer and voucher rules](docs/membership-offer.md).
+
+## What works today
+
+| Area | Current implementation |
+| --- | --- |
+| Public website | GitHub Pages preview at [anonymouses.com](https://anonymouses.com/): mouse creator, fictional map/list profiles, mood filters, surprise introductions, scripted chat, session-only keepsakes and two-step signup/payment demonstration. |
+| Mouse creator | 18 presets, editable styling and shared SVG rendering; enum-validated configurations persist in the local backend. Public real-photo profile uploads are excluded. |
+| Local member lounge | Persistent accounts, profile editing, approximate district discovery, accepted hellos, private text/non-explicit image attachments, keepsakes, blocking, local reports, recovery and deletion. |
+| Membership core | Unpaid accounts, scheduled paid-month test access, manual renewal, exact-price checks, example invitation expiry/single redemption and duplicate-event protection. No real charge or provider verification. |
+| Android | [Shared product and interface track](docs/android-track.md) documented; no Android build released. |
+| Production | Disabled. Hosting/provider approval, age assurance, real payments, operational moderation, retention/rights processes and launch terms remain outstanding. |
+
+The public preview uses **no analytics or browser storage**. Demo form details, mouse choices, messages and keepsakes remain in page memory and disappear on reload. Hosting and external font requests still disclose technical information to their providers, as explained in the privacy statement below.
+
+GitHub Pages publishes the root of `main`; open `index.html` for the static preview. For persistent fictional-account tests, follow the [local backend instructions](backend/README.md) and open `http://127.0.0.1:8080/members.html`. Use invented details. The commercial member service needs suitable backend hosting; GitHub Pages remains the public preview host.
+
+[Product brief](docs/product-brief.md) · [Priorities and TODOs](TODO.md) · [Membership decision](docs/membership-offer.md) · [Backend setup](backend/README.md) · [Android track](docs/android-track.md)
 
 ## Conduct, privacy and reporting policy
 
@@ -116,7 +150,7 @@ The linked guidance explains the rules; the retention targets described as propo
 
 ## Development foundation
 
-A separate [local backend](backend/README.md) now implements persistent accounts, district-based discovery and private text conversations. The connected member lounge at `http://127.0.0.1:8080/members.html` supports signup, sign-in, profile editing, schematic district discovery, accepted conversation requests, private text and image messages, keepsakes, blocking, local reports, recovery and deletion. Twenty-nine automated tests cover the core and the HTTP journey, including cookies, access isolation and static-file boundaries. Production use is disabled; the public mockup remains fictional.
+A separate [local backend](backend/README.md) now implements persistent accounts, district-based discovery and private text conversations. The connected member lounge at `http://127.0.0.1:8080/members.html` supports signup, sign-in, profile editing, schematic district discovery, accepted conversation requests, private text and image messages, keepsakes, blocking, local reports, recovery and deletion. **31 automated tests** cover the core and HTTP journey, including cookies, access isolation, static-file boundaries, scheduled membership, invitation-code pricing/expiry/redemption and saved mouse configurations. Production use is disabled; the public mockup remains fictional.
 
 See the [foundation review](docs/foundation-review.md) for hosting, payment, age assurance and privacy findings and unresolved provider requirements.
 
