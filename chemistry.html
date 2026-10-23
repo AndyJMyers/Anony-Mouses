@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#151b20"><title>The chemistry dial — Anony-Mouses</title><meta name="description" content="Turn a brass dial to blend cool lagoon light and warm woodland sparks. An interactive artwork by Anony-Mouses."><link rel="stylesheet" href="chemistry.css?v=1"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#151b20"><title>The chemistry dial — Anony-Mouses</title><meta name="description" content="Turn a brass dial to blend cool lagoon light and warm woodland sparks. An interactive artwork by Anony-Mouses."><link rel="stylesheet" href="chemistry.css?v=2"></head>
 <body>
 <header><a class="brand" href="index.html">Anony-Mouses<span>ADULT, PLAYFUL AND A LITTLE LOUCHE.</span></a><a class="back" href="index.html#explore">Back to the little sparks ↗</a></header>
 <main>
@@ -8,11 +8,11 @@
 <div class="exposure" id="exposure" role="img" aria-label="An equal double exposure of a woman beside a Tahitian lagoon and a man splitting wood with a cyber-lit axe.">
 <img class="portrait lagoon" src="assets/chemistry-lagoon.webp" alt="" width="1024" height="1536" fetchpriority="high">
 <img class="portrait woodland" id="woodland" src="assets/chemistry-woodland.webp" alt="" width="1024" height="1536">
-<div class="art-grain" aria-hidden="true"></div><div class="art-caption"><span>COOL WATER</span><span>WARM SPARKS</span></div>
+<div class="mood-wash" aria-hidden="true"></div><div class="art-grain" aria-hidden="true"></div><div class="art-caption"><span>COOL WATER</span><span>WARM SPARKS</span></div>
 </div>
 <p class="image-note">AI-created adult characters · illustrative artwork, never member profiles</p>
 </section>
-<section class="controls" aria-labelledby="title"><p class="eyebrow">THE CHEMISTRY DIAL / No. 01</p><h1>A little cool.<br>A little <em>fire.</em></h1><p class="intro">Lagoon light meets woodland sparks.<br>Turn the brass. Find your balance.</p>
+<section class="controls" aria-labelledby="title"><div id="composeScene"><p class="eyebrow">THE CHEMISTRY DIAL / No. 01</p><h1 id="title">A little cool.<br>A little <em>fire.</em></h1><p class="intro">Lagoon light meets woodland sparks.<br>Turn the brass. Find your balance.</p>
 <div class="instrument">
 <div class="instrument-label"><span>LAGOON</span><span>WOODLAND</span></div>
 <div class="dial" id="dial" role="slider" aria-label="Portrait blend" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50 percent lagoon, 50 percent woodland" tabindex="0">
@@ -21,8 +21,20 @@
 <output id="balance">50 / 50</output><p class="balance-label" id="blendName">A little of both</p>
 <div class="presets" aria-label="Blend presets"><button type="button" data-blend="0">Cool water</button><button type="button" data-blend="50" aria-pressed="true">Both</button><button type="button" data-blend="100">Warm sparks</button></div>
 <p class="hint" id="dialHelp">Drag the needle or tap the dial. Arrow keys fine-tune; Home and End show each portrait.</p>
+<button class="set-scene" id="setScene" type="button">Keep this blend · choose an atmosphere ↗</button>
+</div></div>
+<section id="atmosphere" hidden aria-labelledby="moodTitle">
+<p class="eyebrow">YOUR BLEND. YOUR ATMOSPHERE.</p><h2 id="moodTitle" tabindex="-1">How shall it <em>feel?</em></h2><p class="intro" id="moodIntro">Choose the colours and pace that suit you.</p>
+<div class="mood-options" aria-label="Choose an atmosphere">
+<button type="button" data-mood="sub-male" aria-pressed="false"><span class="swatch pink" aria-hidden="true"></span><span><strong>Submissive man</strong><small>Light pink · a very slow pulse</small></span></button>
+<button type="button" data-mood="dom-female" aria-pressed="false"><span class="swatch blue" aria-hidden="true"></span><span><strong>Dominant woman</strong><small>Deep blue · a slow, steady pulse</small></span></button>
+<button type="button" data-mood="trad-fem" aria-pressed="false"><span class="swatch pastel" aria-hidden="true"></span><span><strong>Traditional femininity</strong><small>Warm pastels · a gentle glow</small></span></button>
 </div>
+<p class="mood-status" id="moodStatus" role="status">Choose an atmosphere to begin.</p>
+<div class="scene-actions"><button type="button" id="editBlend">← Adjust the blend</button><button type="button" id="pauseGlow" aria-pressed="false" hidden>Pause glow</button></div>
+<p class="hint">Any atmosphere is yours to choose. This changes the artwork only; it does not set a profile, partner preference or permission.</p>
+</section>
 <p class="footnote">An introduction. An imagination.<br>Every next step is yours to choose.</p>
 </section>
-</main><script src="chemistry.js?v=1"></script>
+</main><script src="chemistry.js?v=2"></script>
 </body></html>

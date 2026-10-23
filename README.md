@@ -43,7 +43,7 @@ Your public face is always an **Anony Mouse**, never a real photograph. Start by
 
 ## The chemistry dial
 
-[Turn the interactive chemistry dial](https://anonymouses.com/chemistry.html): a brass steampunk control blends a cool lagoon portrait with warm woodland and a cyber-lit axe. Drag or tap the dial, use its keyboard controls, or choose either portrait or an equal double exposure. The AI-created adult characters are illustrative artwork, never member profiles. No settings are stored or transmitted.
+[Turn the interactive chemistry dial](https://anonymouses.com/chemistry.html): a brass steampunk control blends a cool lagoon portrait with warm woodland and a cyber-lit axe. Drag or tap the dial, use its keyboard controls, or choose either portrait or an equal double exposure. After choosing the blend, pick an atmosphere: a submissive man in softly pulsing light pink (18 seconds), a dominant woman in blue (14 seconds), or traditional femininity in warm pastels (22 seconds). Each changes the background, image lighting and surrounding glow; a pause control and reduced-motion support keep it comfortable. Atmosphere is an explicit artwork choice, independent of the image split, and sets no profile attributes, partner preferences or permissions. The AI-created adult characters are illustrative artwork, never member profiles. No settings are stored or transmitted.
 
 ## Follow a little spark
 
