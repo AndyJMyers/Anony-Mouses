@@ -157,3 +157,5 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 - [x] Public illustrative code entry; authenticated local quote; exact-price, expiry, per-account redemption and idempotency tests in the development ledger.
 - [ ] Agree real partner permission/campaign conditions; do not imply Keele affiliation. Bind campaigns to real server-created orders and implement payment/refund reconciliation before live sales.
 - [ ] Set a genuine end condition for the general website offer before advertising a deadline.
+
+- [x] Expanded to eighteen mouse presets with stronger masculine faces, beards/moustaches, athletic builds, shirts and leather jackets; shared public/member renderer and backend validation.

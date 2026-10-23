@@ -34,3 +34,5 @@ Use one backend and one entitlement model. Native authentication, provider hando
 Two fictional adults on separate devices create profiles, discover by district, request and accept a hello, then exchange a message. A third account cannot read it. Logout removes access; blocking stops contact; expiry and 100-keepsake semantics match the website.
 
 The Android app must not ship a client-only age assertion, production credentials or an unreviewed payment workaround. The present loopback service is development-only and cannot be exposed as a mobile production server.
+
+Avatar parity: use the shared eighteen presets and enum contract, including strong/rugged jaws, clean-shaven/stubble/moustache/beard choices, crew/swept cuts, athletic builds, open-neck shirts and leather jackets. These are styling choices, not verified sex or gender information. Existing saved avatars default to soft face/clean shaven.

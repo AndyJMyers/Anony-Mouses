@@ -29,7 +29,7 @@ Safety and technical limits remain: accepted conversation requests, rate limits,
 
 ## Mouse-first profiles
 
-Before entering other details, patrons choose from twelve ready-made adult mouse avatars and customise their mouse using optional hair, colouring, build, bust/chest, clothing and accessory choices. All public profile portraits are mice; public real-photo upload is not offered. All portraits are fully clothed and tasteful: open-minded, never lewd or vulgar. The default is ready to use, and styling need not reflect the patron's real appearance. Store configuration choices, not a generated identity photograph. Real permitted non-explicit pictures remain private conversation attachments; recipients can still copy them.
+Before entering other details, patrons choose from eighteen ready-made adult mouse avatars and customise their mouse using optional hair, face shape, facial hair, colouring, build, bust/chest, clothing and accessory choices. All public profile portraits are mice; public real-photo upload is not offered. All portraits are fully clothed and tasteful: open-minded, never lewd or vulgar. The default is ready to use, and styling need not reflect the patron's real appearance. Store configuration choices, not a generated identity photograph. Real permitted non-explicit pictures remain private conversation attachments; recipients can still copy them.
 
 ## Tone
 

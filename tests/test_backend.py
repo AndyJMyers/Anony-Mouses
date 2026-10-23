@@ -151,9 +151,12 @@ class CoreTests(unittest.TestCase):
     def test_mouse_avatar_is_persisted_and_discovered_without_photo_urls(self):
         uid=self.a['user_id'];data=self.s.profile(uid)
         self.assertIn('avatar',data)
-        data['avatar'].update(hair='bob',chest='full',accessory='glasses')
+        data['avatar'].update(hair='crew',face='rugged',facialHair='beard',build='athletic',chest='flat',outfit='leather',accessory='glasses')
         updated=self.s.edit_profile(uid,data)
-        self.assertEqual(updated['avatar']['hair'],'bob')
+        self.assertEqual(updated['avatar']['hair'],'crew')
+        self.assertEqual(updated['avatar']['face'],'rugged')
+        self.assertEqual(updated['avatar']['facialHair'],'beard')
+        self.assertEqual(updated['avatar']['outfit'],'leather')
         found=next(p for p in self.s.discover(self.b['user_id'],'GU1',10) if p['id']==uid)
         self.assertEqual(found['avatar'],updated['avatar']);self.assertNotIn('photo_url',found)
         for bad in ({'hair':'https://example.invalid/photo.jpg'},{'image':'data:image/svg+xml,bad'},'<svg onload=bad>'):
