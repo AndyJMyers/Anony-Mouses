@@ -22,3 +22,17 @@ body{background-image:radial-gradient(ellipse at 87% 9%,#63304d42,transparent 34
 
 /* Organic group sizes and geographic centres, rather than evenly spaced cells. */
 .atlas-cluster{width:var(--cluster-diameter,48px);height:var(--cluster-diameter,48px);min-width:0;min-height:0;border-radius:49% 51% 47% 53%;padding:4px;display:grid;align-content:center;justify-items:center;gap:1px;line-height:1}.atlas-cluster strong{font-size:12px;font-weight:600}.atlas-cluster small{font-size:6px;letter-spacing:.09em}.pin .pin-hint{max-width:125px;overflow:hidden;text-overflow:ellipsis}@media(max-width:550px){.pin .pin-hint{max-width:95px}}
+
+/* Shared adult mouse introduction, with a motion-free accessible preview switch. */
+.mouse-introduction{width:min(100%,340px);margin:0 auto 22px;text-align:center}
+.mouse-reveal-art{width:190px;max-width:65%;margin:auto;filter:drop-shadow(0 10px 16px #153b6133);animation:mouse-arrival .55s ease-out both}
+.mouse-reveal-art svg{display:block;width:100%;height:auto}
+.mouse-reveal-caption{font:italic 1.1rem Georgia,serif;line-height:1.45;margin:12px 0}
+.mouse-reveal-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:12px 0 8px}
+.mouse-reveal-controls button{font:inherit;font-size:.76rem;padding:8px 10px;border:1px solid #7c98af;border-radius:20px;background:#153b61;color:#e1f2ff;cursor:pointer;min-height:38px}
+.mouse-reveal-controls button[aria-pressed=true]{background:#d3edff;color:#153b61;border-color:#477aa1;box-shadow:0 0 0 2px #83c9fa33}
+.mouse-reveal-controls button:focus-visible{outline:3px solid #be8738;outline-offset:3px}
+.mouse-introduction small{display:block;font-size:.7rem;line-height:1.5;opacity:.8}
+@keyframes mouse-arrival{from{opacity:0;transform:translateY(12px) rotate(-3deg) scale(.94)}to{opacity:1;transform:none}}
+.still .mouse-reveal-art{animation:none}
+@media(prefers-reduced-motion:reduce){.mouse-reveal-art{animation:none}}
