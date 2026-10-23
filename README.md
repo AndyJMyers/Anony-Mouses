@@ -41,6 +41,10 @@ Your public face is always an **Anony Mouse**, never a real photograph. Start by
 
 **Blue means DEMO; red is reserved for real members.** Written DEMO labels appear on cards, pins and profile details as well as the blue treatment. No real members are live. Gold trim and sparkles are optional creator choices and never change demo/member status. These are choices for an alter ego, not verified physical attributes or a requirement to disclose your real appearance. Tasteful and fully clothed: open-minded, never lewd or vulgar. Permitted non-explicit real pictures belong only in private conversations; recipients can still copy or republish them.
 
+## The chemistry dial
+
+[Turn the interactive chemistry dial](https://anonymouses.com/chemistry.html): a brass steampunk control blends a cool lagoon portrait with warm woodland and a cyber-lit axe. Drag or tap the dial, use its keyboard controls, or choose either portrait or an equal double exposure. The AI-created adult characters are illustrative artwork, never member profiles. No settings are stored or transmitted.
+
 ## Follow a little spark
 
 - **A neighbourhood, not a house number.** Enter an outward postcode district such as `GU2`; explore an approximate map with gently pulsing introductions and patron-written hints. No full postcode or GPS is needed. Demo positions are illustrative and pulsing does not mean someone is online.

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#151b20"><title>The chemistry dial — Anony-Mouses</title><meta name="description" content="Turn a brass dial to blend cool lagoon light and warm woodland sparks. An interactive artwork by Anony-Mouses."><link rel="stylesheet" href="chemistry.css?v=1"></head>
+<body>
+<header><a class="brand" href="index.html">Anony-Mouses<span>ADULT, PLAYFUL AND A LITTLE LOUCHE.</span></a><a class="back" href="index.html#explore">Back to the little sparks ↗</a></header>
+<main>
+<section class="art" aria-label="Interactive double exposure">
+<div class="exposure" id="exposure" role="img" aria-label="An equal double exposure of a woman beside a Tahitian lagoon and a man splitting wood with a cyber-lit axe.">
+<img class="portrait lagoon" src="assets/chemistry-lagoon.webp" alt="" width="1024" height="1536" fetchpriority="high">
+<img class="portrait woodland" id="woodland" src="assets/chemistry-woodland.webp" alt="" width="1024" height="1536">
+<div class="art-grain" aria-hidden="true"></div><div class="art-caption"><span>COOL WATER</span><span>WARM SPARKS</span></div>
+</div>
+<p class="image-note">AI-created adult characters · illustrative artwork, never member profiles</p>
+</section>
+<section class="controls" aria-labelledby="title"><p class="eyebrow">THE CHEMISTRY DIAL / No. 01</p><h1>A little cool.<br>A little <em>fire.</em></h1><p class="intro">Lagoon light meets woodland sparks.<br>Turn the brass. Find your balance.</p>
+<div class="instrument">
+<div class="instrument-label"><span>LAGOON</span><span>WOODLAND</span></div>
+<div class="dial" id="dial" role="slider" aria-label="Portrait blend" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50 percent lagoon, 50 percent woodland" tabindex="0">
+<svg viewBox="0 0 300 300" aria-hidden="true"><defs><radialGradient id="brass"><stop stop-color="#e9ce86"/><stop offset=".55" stop-color="#ac7d36"/><stop offset=".8" stop-color="#dfbd70"/><stop offset="1" stop-color="#715025"/></radialGradient><radialGradient id="face"><stop stop-color="#344036"/><stop offset="1" stop-color="#121d1c"/></radialGradient></defs><circle cx="150" cy="150" r="143" fill="url(#brass)"/><circle cx="150" cy="150" r="133" fill="#372c1b" stroke="#eed494" stroke-width="1"/><circle cx="150" cy="150" r="127" fill="url(#face)" stroke="#956b32" stroke-width="3"/><g id="ticks"></g><text x="150" y="104" text-anchor="middle" class="dial-script">CHEMISTRY</text><text x="150" y="218" text-anchor="middle" class="dial-small">TURN TO TASTE</text><g id="needle"><path d="M145 150 L150 35 L155 150 Z" fill="#eed291" stroke="#8c622c"/><circle cx="150" cy="150" r="30" fill="url(#brass)" stroke="#f3dc9b" stroke-width="2"/><circle cx="150" cy="150" r="19" fill="#423824" stroke="#b68d47"/><path d="M137 150 H163" stroke="#d7b46c" stroke-width="3"/></g><g fill="url(#brass)" stroke="#684b26"><circle cx="53" cy="53" r="5"/><circle cx="247" cy="53" r="5"/><circle cx="53" cy="247" r="5"/><circle cx="247" cy="247" r="5"/></g></svg>
+</div>
+<output id="balance">50 / 50</output><p class="balance-label" id="blendName">A little of both</p>
+<div class="presets" aria-label="Blend presets"><button type="button" data-blend="0">Cool water</button><button type="button" data-blend="50" aria-pressed="true">Both</button><button type="button" data-blend="100">Warm sparks</button></div>
+<p class="hint" id="dialHelp">Drag the needle or tap the dial. Arrow keys fine-tune; Home and End show each portrait.</p>
+</div>
+<p class="footnote">An introduction. An imagination.<br>Every next step is yours to choose.</p>
+</section>
+</main><script src="chemistry.js?v=1"></script>
+</body></html>

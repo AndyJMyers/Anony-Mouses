@@ -27,7 +27,7 @@ class App:
             if env.get('HTTP_HOST')!=self.origin.split('://',1)[1]:raise Problem(403,'Unexpected host')
             if method not in ('GET','POST','DELETE'):raise Problem(405,'Method not allowed')
             # Explicit assets only. Never expose source, runtime databases, keys or arbitrary paths.
-            assets={'/':('index.html','text/html'),'/index.html':('index.html','text/html'),
+            assets={'/chemistry.html':('chemistry.html','text/html'),'/chemistry.css':('chemistry.css','text/css'),'/chemistry.js':('chemistry.js','text/javascript'),'/assets/chemistry-lagoon.webp':('assets/chemistry-lagoon.webp','image/webp'),'/assets/chemistry-woodland.webp':('assets/chemistry-woodland.webp','image/webp'),'/':('index.html','text/html'),'/index.html':('index.html','text/html'),
                 '/members.html':('members.html','text/html'),'/members.js':('members.js','text/javascript'),
                 '/members.css':('members.css','text/css'),'/app.js':('app.js','text/javascript'),'/mouse-avatar.js':('mouse-avatar.js','text/javascript'),
                 '/demo-atlas-data.js':('demo-atlas-data.js','text/javascript'),'/demo-atlas.js':('demo-atlas.js','text/javascript'),'/map-geography.js':('map-geography.js','text/javascript'),'/map-layout.js':('map-layout.js','text/javascript'),'/map-zoom.js':('map-zoom.js','text/javascript'),'/style.css':('style.css','text/css'),'/assets/anony-mouses-masthead.png':('assets/anony-mouses-masthead.png','image/png')}
