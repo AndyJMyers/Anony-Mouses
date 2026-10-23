@@ -37,15 +37,15 @@ Please assess the project described in Common project facts. We want age assuran
 
 We have not opened a production account. Please do not treat the enquiry as an instruction to enrol anyone or retain biometric data.
 
-## CCBill: classification and complete £50 / £10 launch manual-month quote
+## CCBill: classification and complete £50 / £20 website / £10 invitation manual-month quote
 
-Route: sales@ccbill.com, verified at https://ccbill.com/contact. Subject: “UK dating pre-sales: non-explicit content, £50 standard / £10 launch membership”.
+Route: sales@ccbill.com, verified at https://ccbill.com/contact. Subject: “UK dating pre-sales: non-explicit content, £50 standard / £20 website / £10 invitation membership”.
 
 Please assess the project described in Common project facts, including its sexual focus, actual non-explicit policy and report-led private review. Please confirm:
 
 1. Do you accept the full model for a UK merchant, and can it operate as a sole trader or must it be a company? Which entity would contract with us and what MCC would apply?
 2. Quote all onboarding/application, annual and card-scheme registrations for that exact UK classification. Do the published $950 Visa and $1,000 Mastercard fees apply? Is the Visa initial application fee separate, additional or part of the annual charge? Include any per-transaction VIRP assessments without double-counting.
-3. Quote both GBP £50 standard and GBP £10 launch single purchases, activation up to seven days after purchase, manual renewal with no recurring mandate, minimum ticket, fixed/percentage/international/FX fees, reserves/holdback, payout timing and thresholds, chargebacks and refunds. State upfront cash required and recurring minimum charges.
+3. Quote GBP £50 standard, GBP £20 website and GBP £10 invitation single purchases, activation up to seven days after purchase, manual renewal with no recurring mandate, minimum ticket, fixed/percentage/international/FX fees, reserves/holdback, payout timing and thresholds, chargebacks and refunds. State upfront cash required and recurring minimum charges.
 4. Can your hosted checkout collect only necessary buyer details? Specify required email/name/address fields, their purpose/retention, the statement descriptor, our access to buyer information, DPA/controller roles and UK transfer terms.
 5. What age, depicted-person consent/identity, image review, response-time and content requirements apply to **non-explicit** private patron exchanges? Is the no-routine-reading, prompt investigation/removal approach acceptable? Please distinguish card rules, your policy and legal requirements.
 6. What campaign restrictions apply to national PR and lawful tailored outreach? We are not requesting bulk email from the host and no campaign has been sent.

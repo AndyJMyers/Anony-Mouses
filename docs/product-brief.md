@@ -47,7 +47,7 @@ These are implementation proposals, not yet final decisions.
 
 ## Pilot economics
 
-100 paid months produce £1,000 gross at the launch price or £5,000 at the standard price, before provider fees, refunds, tax and operating costs. These are price scenarios, not forecasts of conversion or retention. Renewal depends on explicit repeat purchases.
+100 paid months produce £1,000 gross at the invitation price, £2,000 at the website offer or £5,000 at the standard price, before provider fees, refunds, tax and operating costs. These are price scenarios, not forecasts of conversion or retention. Renewal depends on explicit repeat purchases.
 
 The proposed £100 experiment budget should be treated as an initial infrastructure spending cap with a defined stop/review point. It does not cap development time, support labour or all costs of launching an adult dating service.
 
