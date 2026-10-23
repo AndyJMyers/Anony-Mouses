@@ -10,6 +10,24 @@ A deliberately simple introductions service for consenting adults seeking flirta
 
 > **Current status:** a public, fictional concept preview, plus a separate local development backend. No real memberships, payments or production messages are handled by the public website. The features below describe the intended service; the status table explains what works today.
 
+## Christmas launch target board
+
+**Target: Friday 11 December 2026. Christmas contingency: 25 December 2026.** These are delivery targets, not an announcement that memberships are already available. The website is the first release; Android follows after the website is working reliably.
+
+| Target date (UK) | Milestone | Completion evidence | Status |
+| --- | --- | --- | --- |
+| **6 November 2026** | Select suitable commercial hosting, payment and age-assurance providers; begin onboarding. | Provider acceptance requirements understood, applications submitted, and infrastructure approach agreed. | Planned — provider acceptance is the main external dependency. |
+| **20 November 2026** | Complete the production member journey. | Signup, required age assurance, verified upfront payment, mouse profile, district discovery, mutually accepted messaging, remembered sign-in and sign-out work together on staging. Manual renewal only. | Planned |
+| **27 November 2026** | Complete operational tools and data handling. | Reporting/review tools, blocking, account deletion, 14-day message expiry, 100-keepsake limit, evidence handling, encrypted backups and a successful restore test; finished launch terms/privacy notice and support route. | Planned |
+| **30 November–6 December 2026** | Run a private adult pilot, load tests and fixes. | Test the complete journey with invited adults; measure latency, errors and cost; load-test at twice the intended launch peak and resolve launch-blocking defects. | Planned |
+| **7–10 December 2026** | Make the launch decision. | Confirm provider approvals, production payment/age checks, security, restore/retention tests, report handling and registration limits are ready. Defer opening if a required gate fails. | Planned |
+| **11 December 2026** | Open paid website memberships. | Controlled initial registrations, monitored service and clear pricing, no automatic renewal; real members remain distinct from clearly labelled demos. | Target |
+| **12–25 December 2026** | Contingency window if launch needs to move. | Resolve outstanding launch blockers and repeat affected checks before opening. No date overrides readiness. | Reserved |
+
+**Scope:** a small, complete introductions service: join, pay, find someone, exchange an accepted hello, return easily and leave easily. Expand registrations against measured performance; capacity figures remain engineering targets until load-tested. Move the commercial service to suitable hosting before opening; GitHub remains the source repository.
+
+The existing `KEELE_SU_10` code is a demonstration expiring before the target launch. Agree any real launch campaign, partner permission, price and deadline separately; this board does not extend or activate that code. Provider onboarding may move the schedule independently of engineering progress. See [deployment work](docs/deployment-plan.md) and [the full TODO list](TODO.md).
+
 ## A mouse of your own
 
 Your public face is always an **Anony Mouse**, never a real photograph. Start by choosing one of **18 ready-made adult mice**, then make it yours. A chosen name and two open descriptions complete the introduction: **“Tell us a bit about yourself”** and **“Tell us a bit about what you’re looking for.”** There are no bust, body-size or partner-measurement questions; state your intentions clearly and honestly in your own words.
