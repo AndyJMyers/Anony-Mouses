@@ -63,6 +63,10 @@ Cross-cutting concerns also include grooming, adult impersonation of minors, sex
 
 Existing local controls (not production assurance): accepted requests, server-side participant isolation, blocking/report evidence, expiry and approximate district fixtures. Missing: real age gate, operator moderation/removal/suspension tools, response coverage, appeals, production anti-evasion/rate controls, nationwide location privacy, supplier acceptance and tested deletion/backups. Residual risks are **unproven**, not “low”.
 
+## Decision accepted 23 October 2026
+
+The founder accepted the minimal-data over-18 gate before access to real profiles and messaging. The operating principle is to comply with the law while collecting and retaining as little personal data as possible. Use an age result and minimum evidence rather than an identity dossier; explain separately what the selected provider processes and how quickly it deletes it. The provider, method, lawful basis, retention deadlines and effectiveness remain subject to validation. This acceptance is a product decision, not production clearance or a claim that every introduction service legally requires identity documents.
+
 ## Minimal-data implementation specification, subject to provider acceptance
 
 1. Anonymous visitor reads public information. Create an unpublished pending account using private login, password and recovery code; no mandatory email/phone for the app itself.
@@ -76,7 +80,7 @@ Age-only checking is an architectural preference, not “no personal data”: a 
 
 ## Release gate and accountable review
 
-**Not cleared for real member launch.** This document completes the pre-launch access reasoning and initial children's risk analysis; it does not complete implementation validation or operator sign-off. Keep the public fictional showcase available. Do not start steps 3–5 of the launch plan until the founder has reviewed this conclusion and provider acceptance/costs are resolved.
+**Not cleared for real member launch.** This document completes the pre-launch access reasoning and initial children's risk analysis; it does not complete implementation validation or operator sign-off. Keep the public fictional showcase available. The founder accepted the age-only design on 23 October 2026. Provider acceptance/costs and the remaining release evidence must still be resolved before real member launch.
 
 Required evidence: named responsible operator; reviewed risk records and terms; validated age/access controls or a documented viable alternative; adequate report coverage with no promise of continuous availability unless staffed; provider deletion contract/tests; fair appeal route; and a reassessment on the actual hosted implementation. No regulatory filing or application for an exemption has been submitted.
 
