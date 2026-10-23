@@ -36,3 +36,10 @@ body{background-image:radial-gradient(ellipse at 87% 9%,#63304d42,transparent 34
 @keyframes mouse-arrival{from{opacity:0;transform:translateY(12px) rotate(-3deg) scale(.94)}to{opacity:1;transform:none}}
 .still .mouse-reveal-art{animation:none}
 @media(prefers-reduced-motion:reduce){.mouse-reveal-art{animation:none}}
+
+/* A contact marker preserves the blue DEMO / red member portrait colours. */
+.pin.has-squeaked,.atlas-cluster.has-squeaked{overflow:visible}
+.squeak-badge{position:absolute;right:-8px;top:-8px;z-index:3;min-width:25px;padding:4px 6px;border:2px solid #e4f3ff;border-radius:20px;background:#153b61;color:#fff;font:700 12px/1.2 system-ui,sans-serif;box-shadow:0 2px 7px #0005;pointer-events:none;white-space:nowrap}
+.squeak-label{display:inline-block;padding:4px 9px;border-radius:20px;background:#dceeff;color:#153b61;font:600 .75rem/1.4 system-ui,sans-serif}
+
+.list-card>.squeak-label{font-size:.75rem;display:inline-block;margin-bottom:8px}

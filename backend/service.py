@@ -264,10 +264,20 @@ class Service:
                 WHERE p.visible=1 AND p.user_id!=? AND EXISTS(SELECT 1 FROM payment_events e WHERE e.user_id=p.user_id AND e.starts_at<=? AND e.access_until>?)
                 AND NOT EXISTS(SELECT 1 FROM blocks b WHERE (b.user_id=? AND b.target=p.user_id) OR (b.target=? AND b.user_id=p.user_id))
                 AND a.km<=?{seek} ORDER BY band,p.user_id LIMIT ?''',tuple(args)).fetchall()
+            # Use only this patron's existing conversations; no extra contact history.
+            contacted=set()
+            page_ids=[row['user_id'] for row in rows[:limit]]
+            if page_ids:
+                slots=','.join('?' for _ in page_ids)
+                contacts=db.execute(f"""SELECT c.sender,c.recipient FROM conversations c
+                    WHERE ((c.sender=? AND c.recipient IN ({slots})) OR (c.recipient=? AND c.sender IN ({slots})))
+                    AND (c.sender=? OR EXISTS(SELECT 1 FROM messages m WHERE m.conversation=c.id AND m.sender=?))""",
+                    (uid,*page_ids,uid,*page_ids,uid,uid)).fetchall()
+                contacted={c['recipient'] if c['sender']==uid else c['sender'] for c in contacts}
             items=[]
             for row in rows[:limit]:
                 profile=self.profile_row(row);seed=int(hashlib.sha256(row['user_id'].encode()).hexdigest()[:8],16)
-                profile.update(district_centre={'lat':row['lat'],'lon':row['lon']},marker_offset={'x':seed%21-10,'y':seed//21%21-10},distance_band_km=int(row['band'])*5);items.append(profile)
+                profile.update(squeaked=row['user_id'] in contacted,district_centre={'lat':row['lat'],'lon':row['lon']},marker_offset={'x':seed%21-10,'y':seed//21%21-10},distance_band_km=int(row['band'])*5);items.append(profile)
             last=rows[limit-1] if len(rows)>limit else None
             return {'items':items,'next_cursor':encode_cursor(scope,[int(last['band']),last['user_id']]) if last else None}
     def request(self, uid, target):

@@ -35,6 +35,24 @@ class StorageTests(unittest.TestCase):
         page=self.s.discover_page(self.a,'GU2',10,limit=1)
         self.problem(400,self.s.discover_page,self.a,'GU1',10,cursor=page['next_cursor'])
         self.problem(400,self.s.discover_page,self.a,'GU2',limit=True)
+    def test_discovery_squeaks_are_private_and_come_from_existing_contact(self):
+        def marked(viewer,target,district='GU2'):
+            return next(p['squeaked'] for p in self.s.discover(viewer,district,200) if p['id']==target)
+        self.assertFalse(marked(self.a,self.b))
+        cid=self.s.request(self.a,self.b)['id']
+        self.assertTrue(marked(self.a,self.b))
+        self.assertFalse(marked(self.b,self.a))
+        self.assertFalse(marked(self.c,self.b,'GU2'))
+        self.s.accept(self.b,cid)
+        self.assertFalse(marked(self.b,self.a))
+        self.s.send(self.b,cid,'A little reply')
+        self.assertTrue(marked(self.b,self.a))
+        # The marker is derived, not an independent retention exception.
+        with self.s.db() as db:
+            db.execute('DELETE FROM conversations WHERE id=?',(cid,))
+        self.assertFalse(marked(self.a,self.b))
+        self.assertFalse(marked(self.b,self.a))
+
     def test_message_pages_ties_access_expiry_and_keepsakes(self):
         cid=self.s.request(self.a,self.b)['id'];self.s.accept(self.b,cid)
         ids=[self.s.send(self.a,cid,str(i))['id'] for i in range(7)]

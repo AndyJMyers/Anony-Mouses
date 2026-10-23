@@ -85,10 +85,11 @@ async function search(cursor=null) {
   if (!found.length) $('matches').append(node('p','No sparks here yet. Create another fictional adult account in a separate browser session.'));
   for (const p of found) {
     const card = node('article',undefined,'match profile-demo'); const avatar=node('div',undefined,'mouse-mini');AnonyMouse.mountPortrait(avatar,p.avatar,p.profile_kind);card.append(avatar,node('h3',p.alias),node('small','DEMO · fictional test account · '+p.age_range+' · '+p.district),node('p',p.bio),node('strong','What I’m looking for'),node('p',p.wants));
-    card.append(button('Send a little hello ↗', async () => { const result = await api('conversations','POST',{target:p.id}); await view('inbox'); await openThread(result.id); status('Hello requested. Messages begin when the recipient accepts.'); },'gold'));
+    if(p.squeaked)card.append(node('span','💬 Squeaked','squeak-label'));
+    card.append(button(p.squeaked?'Squeak again ↗':'Send a little hello ↗', async () => { const result = await api('conversations','POST',{target:p.id}); await view('inbox'); await openThread(result.id); status('Hello requested. Messages begin when the recipient accepts.'); },'gold'));
     $('matches').append(card);
     const pin = button('', async () => { card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'}); },'pin profile-demo');
-    pin.setAttribute('aria-label','DEMO, '+p.alias+', '+p.district+', '+p.wants);
+    if(p.squeaked){pin.classList.add('has-squeaked');pin.append(node('span','💬','squeak-badge'));}pin.setAttribute('aria-label','DEMO, '+p.alias+', '+p.district+', '+p.wants+(p.squeaked?', Squeaked — you have sent a hello':''));
     // Stable decorative spacing uses district centres, never a home position.
     const pos=positions.get(p.id);pin.style.left=pos.x+'%';pin.style.top=pos.y+'%';
     const pinPortrait=node('span',undefined,'pin-avatar');AnonyMouse.mountPortrait(pinPortrait,p.avatar,p.profile_kind);pin.append(pinPortrait,node('span','DEMO · '+p.alias + ' · ' + p.wants.slice(0,55),'pin-hint')); $('memberMapWorld').append(pin);
