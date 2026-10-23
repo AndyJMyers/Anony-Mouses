@@ -115,10 +115,13 @@ class QuietHandler(WSGIRequestHandler):
     def log_message(self,*args):pass
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--db',default='runtime/anony-mouse.sqlite3');p.add_argument('--port',type=int,default=8080);p.add_argument('--purge',action='store_true');p.add_argument('--seed-test-districts',action='store_true');p.add_argument('--grant-test-month',metavar='LOGIN',help='Operator-only fictional monthly payment fixture; no money moves');p.add_argument('--voucher',default='',help='Development invitation code');p.add_argument('--offer',choices=['website','launch','standard'],default='website');p.add_argument('--start-in-days',type=int,choices=range(8),default=0);args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--db',default='runtime/anony-mouse.sqlite3');p.add_argument('--port',type=int,default=8080);p.add_argument('--purge',action='store_true');p.add_argument('--seed-test-districts',action='store_true');p.add_argument('--import-demo-districts',action='store_true');p.add_argument('--grant-test-month',metavar='LOGIN',help='Operator-only fictional monthly payment fixture; no money moves');p.add_argument('--voucher',default='',help='Development invitation code');p.add_argument('--offer',choices=['website','launch','standard'],default='website');p.add_argument('--start-in-days',type=int,choices=range(8),default=0);args=p.parse_args()
     key=os.environ.get('ANONY_MOUSE_DATA_KEY')
     if not key:raise SystemExit('Set ANONY_MOUSE_DATA_KEY through your environment; never commit it.')
     s=Service(os.environ.get('ANONY_MOUSE_DATABASE_URL') or args.db,key,time.time,current_offer=args.offer)
+    if args.import_demo_districts:
+        from .districts import bundled_districts
+        s.seed_districts(bundled_districts())
     if args.seed_test_districts:s.seed_districts([('GU2',51.24,-.59),('GU1',51.24,-.56),('SW1A',51.50,-.14)])
     if args.purge:print(s.purge());return
     if args.grant_test_month:
@@ -127,5 +130,8 @@ def main():
         quote=s.quote_month(row['id'],args.voucher,offer_code=args.offer)
         print(s.record_month_payment(row['id'],'development',secrets.token_hex(16),quote['amount_minor'],'GBP',offer_code=args.offer,voucher_code=quote['voucher_code'],start_at=int(time.time())+args.start_in_days*86400 if args.start_in_days else None));return
     origin=f'http://127.0.0.1:{args.port}';print(f'Local member lounge: {origin}/members.html. Fictional test adults only; production disabled.')
-    with make_server('127.0.0.1',args.port,App(s,origin),handler_class=QuietHandler) as server:server.serve_forever()
+    from .maintenance import cleaner
+    try:
+        with cleaner(s),make_server('127.0.0.1',args.port,App(s,origin),handler_class=QuietHandler) as server:server.serve_forever()
+    finally:s.close()
 if __name__=='__main__':main()

@@ -29,7 +29,7 @@ python -m backend.server --seed-test-districts
 
 Keep the same data key if reusing the database; losing it makes encrypted data unreadable. The key is supplied through the environment, not committed. Put persistent runtime state outside the repository. Never use this developer key setup for public deployment.
 
-The server listens only at `http://127.0.0.1:8080`; it serves the website and JSON API from the same origin. Open **http://127.0.0.1:8080/members.html** for the connected member lounge. Cookies and CSRF remain on this origin; no cross-origin API URL is accepted. The public Pages copy of the lounge is disabled. `--seed-test-districts` imports three deliberately approximate fixtures: GU2, GU1 and SW1A. Nationwide district lookup coverage is still required, through a small outward-code table or cached district lookups. No full postcode/address database is needed. These fixture coordinates must not be presented as production geography.
+The server listens only at `http://127.0.0.1:8080`; it serves the website and JSON API from the same origin. Open **http://127.0.0.1:8080/members.html** for the connected member lounge. Cookies and CSRF remain on this origin; no cross-origin API URL is accepted. The public Pages copy of the lounge is disabled. `--seed-test-districts` imports three deliberately approximate fixtures: GU2, GU1 and SW1A. Add `--import-demo-districts` to import the 2,988 approximate bundled outward-district centres for staging. The lounge offers those districts as typed suggestions. Validate a maintained production source before launch; no full postcode/address database is needed. These fixture coordinates must not be presented as production geography.
 
 Tests:
 
@@ -43,7 +43,7 @@ Cleanup:
 python -m backend.server --purge
 ```
 
-Reads also run expiry cleanup, but a real service needs a scheduled cleanup task. Report evidence has a separate **development-only 90-day rule**. Production report retention and backup expiry are unresolved. Account deletion removes shared conversation data and keepsakes via cascading deletion; independently retained report evidence is anonymised and follows its own expiry. These semantics need product review before real use.
+Expired content is hidden by reads without running a global sweep. The local server runs a bounded cleanup worker every 60 seconds; a separately supervised worker is available for staging. Report evidence has a separate **development-only 90-day rule**. Production report retention and backup expiry are unresolved. Account deletion removes shared conversation data and keepsakes via cascading deletion; independently retained report evidence is anonymised and follows its own expiry. These semantics need product review before real use.
 
 ## Try the connected lounge
 
@@ -128,8 +128,10 @@ SQLite remains the default for quick fictional tests. PostgreSQL is selectable t
 
 The `/api/discover/page` POST, `/api/conversations/page` GET and `/api/conversations/{id}/messages/page` GET return `{items, next_cursor}`. Default pages are 24 introductions/conversations and 50 messages, with a hard maximum of 100. `cursor` is a keyset cursor, scoped to the query and re-authorised on every request. Message pages return the newest page in chronological display order; its cursor requests the preceding page. Existing list endpoints are capped at 100 for compatibility. The member lounge has More/Earlier/Latest controls. Polling fetches only the latest 50 messages, pauses while inspecting an earlier page, and still runs every ten seconds (push updates are not implemented).
 
-Discovery bounds district coordinates first, checks exact great-circle distance in SQL, excludes hidden/unpaid/not-yet-active/blocked accounts before limiting, then returns five-kilometre distance bands and decorative offsets. It does not scan/decrypt every public profile. Text/media fetches no longer sweep expired records; authorisation and expiry conditions still hide inaccessible data immediately. Run the bounded cleanup worker separately; `purge(limit=500)` removes at most that many rows per record class per batch. The separate 90-day development evidence rule remains unsuitable for production statutory reporting.
+Discovery bounds district coordinates first, checks exact great-circle distance in SQL, excludes hidden/unpaid/not-yet-active/blocked accounts before limiting, then returns five-kilometre distance bands and decorative offsets. It does not scan/decrypt every public profile. Text/media fetches no longer sweep expired records; authorisation and expiry conditions still hide inaccessible data immediately. The local server starts a bounded worker; a separate staging worker is also available; `purge(limit=500)` removes at most that many rows per record class per batch. The separate 90-day development evidence rule remains unsuitable for production statutory reporting.
 
 Rate limits use fixed UTC-hour windows shared through the selected database. Keys are HMAC-derived with the service data key; IPs are not stored in this table. The window boundary can allow two adjacent-window bursts. Production trusted-proxy handling, edge protection and response policy still need deployment testing.
 
 `.github/workflows/backend.yml` runs the same service, image, concurrency and HTTP tests against SQLite and an isolated PostgreSQL 16 service. Test schemas are unique and removed after each test. No capacity claim follows from functional tests.
+
+See [storage operations](../docs/storage-operations.md) for encrypted snapshots, empty-destination restore, the SQLite-to-PostgreSQL drill, nationwide district import and remaining production limits.

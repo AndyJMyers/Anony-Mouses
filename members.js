@@ -111,7 +111,7 @@ async function readMessages(cursor=null) {
   if (version !== epoch || activeThread?.id !== current.id) return;
   messageCursor=page.next_cursor;historyMode=Boolean(cursor);$('olderMessages').hidden=!messageCursor;$('latestMessages').hidden=!historyMode;
   $('chat').hidden = false; $('chatTitle').textContent = current.other_alias;
-  $('chatNote').textContent = current.status === 'accepted' ? 'Private text and picture conversation · messages expire after 14 days unless you keep your copy. Refreshes every 10 seconds while this view is open.' : current.incoming ? 'Accept only if you fancy a conversation. You can block at any time.' : 'Your hello is waiting for their acceptance.';
+  $('chatNote').textContent = current.status === 'accepted' ? 'Private text and picture conversation · messages expire after 14 days unless you keep your copy. Shows 50 messages at a time. Latest view refreshes every 10 seconds; earlier pages stay still until you return to latest.' : current.incoming ? 'Accept only if you fancy a conversation. You can block at any time.' : 'Your hello is waiting for their acceptance.';
   $('accept').hidden = current.status === 'accepted' || !current.incoming; $('send').hidden = current.status !== 'accepted'; $('sendImage').hidden=current.status!=='accepted'; const signature=JSON.stringify([current.id,current.status,cursor,messages]);if(signature===renderedSignature)return;renderedSignature=signature; $('messages').replaceChildren();
   for (const m of messages) {
     const bubble = node('article',undefined,'bubble' + (m.sender === session.profile.id ? ' mine' : '')); if(m.body)bubble.append(node('p',m.body));appendImage(bubble,m);bubble.append(node('small',m.saved ? 'Kept by you' : 'Expires ' + date(m.expires)));
@@ -138,7 +138,7 @@ $('editProfile').addEventListener('submit', e => { e.preventDefault(); run(async
 $('deleteAccount').addEventListener('click', () => run(async () => { if (!confirm('Permanently delete this test account, its shared conversations and keepsakes? Report evidence follows its separate retention rule.')) return; await api('account','DELETE'); signedOut(); status('Test account deleted. Separately retained report evidence expires under the development rule.'); }));
 async function boot() {
   if (location.protocol !== 'http:' || location.hostname !== '127.0.0.1') { $('unavailable').hidden = false; status('Public memberships are not open. This interface is for loopback-only testing.'); return; }
-  try { const health = await api('health'); if (health.production_enabled !== false || health.status !== 'local-development') throw new Error('Expected local development service.'); districts = await api('districts'); }
+  try { const health = await api('health'); if (health.production_enabled !== false || health.status !== 'local-development') throw new Error('Expected local development service.'); districts = await api('districts');$('districtOptions').replaceChildren(...districts.map(d=>{const option=document.createElement('option');option.value=d.code;return option;})); }
   catch (e) { $('unavailable').hidden = false; status('Local service unavailable: '+e.message); return; }
   try { session = await api('session'); await enter(); }
   catch (e) { signedOut(); status(e.message === 'Sign in required' ? 'Use invented adult test details. Your accounts persist in the local database.' : e.message); }

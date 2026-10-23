@@ -66,7 +66,7 @@ class Service:
         with self.db() as db:
             for code, lat, lon in districts:
                 if not re.fullmatch(r'[A-Z]{1,2}\d{1,2}[A-Z]?', code): raise ValueError('Invalid outward postcode')
-                if not (-90 <= lat <= 90 and -180 <= lon <= 180): raise ValueError('Invalid district centre')
+                if type(lat) not in (int,float) or type(lon) not in (int,float) or not math.isfinite(lat) or not math.isfinite(lon) or not (-90 <= lat <= 90 and -180 <= lon <= 180): raise ValueError('Invalid district centre')
                 db.execute('INSERT INTO districts VALUES(?,?,?) ON CONFLICT(code) DO UPDATE SET lat=excluded.lat,lon=excluded.lon', (code,lat,lon))
     def register(self, data):
         login = text(data.get('login'), 'Login', 3, 40).lower()

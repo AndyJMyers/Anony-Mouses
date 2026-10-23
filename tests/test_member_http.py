@@ -82,6 +82,22 @@ class MemberHTTPTests(unittest.TestCase):
         self.assertEqual(self.request(client,'/api/session')[0],401)
         self.assertEqual(self.request(client,'/api/login','POST',{**credentials,'remember':'false'})[0],400)
 
+    def test_paged_http_endpoints_validate_and_isolate_cursors(self):
+        alice,bob,stranger=self.clients
+        aid,ac=self.create(alice,'alice','GU2');bid,bc=self.create(bob,'bob','GU1');self.create(stranger,'carol','GU1')
+        code,page,_=self.request(alice,'/api/discover/page','POST',{'district':'GU2','radius_km':10,'limit':1},ac)
+        self.assertEqual(code,200);self.assertEqual(len(page['items']),1);self.assertIsNotNone(page['next_cursor'])
+        self.assertEqual(self.request(alice,'/api/discover/page','POST',{'district':'GU2','limit':1000},ac)[0],400)
+        cid=self.request(alice,'/api/conversations','POST',{'target':bid},ac)[1]['id']
+        self.request(bob,f'/api/conversations/{cid}/accept','POST',{},bc)
+        for i in range(3):self.request(alice,f'/api/conversations/{cid}/messages','POST',{'body':'Hello '+str(i)},ac)
+        code,page,_=self.request(bob,f'/api/conversations/{cid}/messages/page?limit=2')
+        self.assertEqual(code,200);self.assertEqual(len(page['items']),2);self.assertTrue(page['next_cursor'])
+        self.assertEqual(self.request(stranger,f'/api/conversations/{cid}/messages/page?limit=2')[0],404)
+        self.assertEqual(self.request(bob,f'/api/conversations/{cid}/messages/page?limit=2&limit=3')[0],400)
+        self.assertEqual(self.request(bob,'/api/conversations/page?limit=0')[0],400)
+        code,page,_=self.request(alice,'/api/conversations/page?limit=1');self.assertEqual(code,200);self.assertEqual(page['items'][0]['id'],cid)
+
     def test_assets_are_allowlisted_and_no_secrets_are_served(self):
         client=self.clients[0]
         for path in ['/members.html','/members.js','/members.css','/style.css','/assets/anony-mouses-masthead.png']:
