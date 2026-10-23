@@ -2,7 +2,7 @@
 
 ## Proposition
 
-A deliberately simple, discreet adult dating service with a sexual focus. A description of who you are, a description of what you want, a configurable mouse avatar as the only public portrait, and private messaging. Membership is £50 for one calendar month, with a £10 introductory launch offer, all core features included and no automatic renewal or free trial. A new/lapsed month can start immediately or within seven days of purchase. See [the current membership offer](membership-offer.md) for timing, fair use and price transitions.
+A deliberately simple, discreet adult dating service with a sexual focus. A description of who you are, a description of what you want, a configurable mouse avatar as the only public portrait, and private messaging. Membership is £50 for one calendar month, with a £20 website introductory offer and £10 example invitation code, all core features included and no automatic renewal or free trial. A new/lapsed month can start immediately or within seven days of purchase. See [the current membership offer](membership-offer.md) for timing, fair use and price transitions.
 
 ## Agreed essentials
 
@@ -57,7 +57,7 @@ Short retention bounds accumulated storage. It does not eliminate delivery costs
 
 ## Launch campaign proposal
 
-Commercial entrance: £50 standard or the £10 introductory launch offer, bought upfront for one month with no automatic renewal. Choose immediate activation or a start within seven days. Registration alone does not grant discovery or messaging access. All core features and ordinary messaging are included, subject to disclosed fair-use/safety/storage limits.
+Commercial entrance: £50 standard or the £20 website introductory offer and £10 example invitation code, bought upfront for one month with no automatic renewal. Choose immediate activation or a start within seven days. Registration alone does not grant discovery or messaging access. All core features and ordinary messaging are included, subject to disclosed fair-use/safety/storage limits.
 
 The founder proposes tailored launch outreach to every UK student union and every UK MP. This is a future launch plan, not an instruction to send the campaign before the real service is ready. No recipient list has been assembled and no messages have been sent.
 

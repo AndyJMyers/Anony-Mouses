@@ -41,7 +41,7 @@ async function enter() {
   $('entrance').hidden = true; $('account').hidden = false; $('logout').hidden = false;
   $('recoveryCode').textContent = ''; draft = null;
   $('welcome').textContent = 'Welcome, ' + session.profile.alias + '.';
-  $('membership').textContent = session.membership.active ? 'Access until ' + date(session.membership.access_until) : session.membership.scheduled ? 'Your paid month starts ' + date(session.membership.starts_at) + ' · until ' + date(session.membership.access_until) : 'Payment required · launch month £10, planned standard £50 · checkout not connected';
+  $('membership').textContent = session.membership.active ? 'Access until ' + date(session.membership.access_until) : session.membership.scheduled ? 'Your paid month starts ' + date(session.membership.starts_at) + ' · until ' + date(session.membership.access_until) : 'Payment required · website month £20, planned standard £50 · checkout not connected';
   for (const field of ['alias','bio','wants','district','age_range']) $('editProfile').elements[field].value = session.profile[field];
   editMouse.set(session.profile.avatar);
   $('editProfile').elements.visible.checked = session.profile.visible;
@@ -142,3 +142,5 @@ boot();
 
 $('imageFile').addEventListener('change',()=>{if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('imagePreview').hidden=true;$('imagePreview').removeAttribute('src');$('imageConsent').checked=false;const file=$('imageFile').files[0];if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024){$('imageFile').value='';status('Choose a still JPG, PNG or WebP up to 5 MB.');return;}previewUrl=URL.createObjectURL(file);$('imagePreview').src=previewUrl;$('imagePreview').hidden=false;});
 $('sendImage').addEventListener('submit',e=>{e.preventDefault();run(async()=>{const file=$('imageFile').files[0];if(!file||!$('imageConsent').checked)return;await api('conversations/'+activeThread.id+'/images','POST',file);clearImageDraft();await readMessages();status('Picture sent. The stored copy has no source metadata.');});});
+
+$('quoteForm').addEventListener('submit',e=>{e.preventDefault();run(async()=>{try{const q=await api('/api/quote','POST',{voucher_code:$('memberVoucher').value});$('memberQuote').textContent='£'+(q.amount_minor/100).toFixed(2)+' for one calendar month. No automatic renewal.'+(q.expires_at?' Example invitation expires 30 November 2026, 23:59 UK time. One use per account. No affiliation implied.':'')+' Quote only; no payment taken or price reserved.';}catch(error){$('memberQuote').textContent=error.message;}});});

@@ -4,7 +4,7 @@ from pathlib import Path
 from collections import defaultdict, deque
 from http.cookies import SimpleCookie
 from wsgiref.simple_server import make_server, WSGIRequestHandler
-from .service import Service, Problem, digest
+from .service import Service, Problem, digest, OFFER_PRICES
 
 class App:
     def __init__(self,service,origin='http://127.0.0.1:8080'):
@@ -73,6 +73,7 @@ class App:
             elif path=='/api/health' and method=='GET':result={'status':'local-development','production_enabled':False}
             elif path=='/api/districts' and method=='GET':
                 with s.db() as db:result=[dict(row) for row in db.execute('SELECT code,lat,lon FROM districts ORDER BY code')]
+            elif path=='/api/quote' and method=='POST':self.throttle(uid,'quote',30);result=s.quote_month(uid,data.get('voucher_code',''))
             elif path=='/api/register' and method=='POST':self.throttle(peer,'register',10);result=s.register(data)
             elif path=='/api/login' and method=='POST':
                 self.throttle(peer,'login',30);token,result=s.login(data.get('login'),data.get('password'))
@@ -108,7 +109,7 @@ class QuietHandler(WSGIRequestHandler):
     def log_message(self,*args):pass
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--db',default='runtime/anony-mouse.sqlite3');p.add_argument('--port',type=int,default=8080);p.add_argument('--purge',action='store_true');p.add_argument('--seed-test-districts',action='store_true');p.add_argument('--grant-test-month',metavar='LOGIN',help='Operator-only fictional monthly payment fixture; no money moves');p.add_argument('--offer',choices=['launch','standard'],default='launch');p.add_argument('--start-in-days',type=int,choices=range(8),default=0);args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--db',default='runtime/anony-mouse.sqlite3');p.add_argument('--port',type=int,default=8080);p.add_argument('--purge',action='store_true');p.add_argument('--seed-test-districts',action='store_true');p.add_argument('--grant-test-month',metavar='LOGIN',help='Operator-only fictional monthly payment fixture; no money moves');p.add_argument('--voucher',default='',help='Development invitation code');p.add_argument('--offer',choices=['website','launch','standard'],default='website');p.add_argument('--start-in-days',type=int,choices=range(8),default=0);args=p.parse_args()
     key=os.environ.get('ANONY_MOUSE_DATA_KEY')
     if not key:raise SystemExit('Set ANONY_MOUSE_DATA_KEY through your environment; never commit it.')
     s=Service(args.db,key,time.time,current_offer=args.offer)
@@ -117,7 +118,8 @@ def main():
     if args.grant_test_month:
         with s.db() as db:row=db.execute('SELECT id FROM users WHERE login=?',(args.grant_test_month.strip().lower(),)).fetchone()
         if not row:raise SystemExit('Test login not found')
-        print(s.record_month_payment(row['id'],'development',secrets.token_hex(16),1000 if args.offer=='launch' else 5000,'GBP',offer_code=args.offer,start_at=int(time.time())+args.start_in_days*86400 if args.start_in_days else None));return
+        quote=s.quote_month(row['id'],args.voucher,offer_code=args.offer)
+        print(s.record_month_payment(row['id'],'development',secrets.token_hex(16),quote['amount_minor'],'GBP',offer_code=args.offer,voucher_code=quote['voucher_code'],start_at=int(time.time())+args.start_in_days*86400 if args.start_in_days else None));return
     origin=f'http://127.0.0.1:{args.port}';print(f'Local member lounge: {origin}/members.html. Fictional test adults only; production disabled.')
     with make_server('127.0.0.1',args.port,App(s,origin),handler_class=QuietHandler) as server:server.serve_forever()
 if __name__=='__main__':main()

@@ -14,7 +14,7 @@ This is the Android development track, not a released app. No Android binary, si
 - Cream cards, midnight navy, warm gold and small rose accents. Use the established mice artwork, readable type and generous spacing.
 - Gentle pulses and a restrained kiss sparkle supply movement. Honour Android system reduced-animation settings and the website's reduced-motion preference. No flashing, autoplay sound or fake online counts.
 - Mood choices, surprise introductions and suggested opening lines are optional shortcuts. Patrons author public hints. Messages are sent only after the patron taps Send.
-- The same truthful copy on both: adults only, identity claims unverified, no obligation, £50 per calendar month with a £10 introductory launch offer, all core features included, optional start within seven days and explicit manual renewal. Discretion has limits.
+- The same truthful copy on both: adults only, identity claims unverified, no obligation, £50 per calendar month with a £20 website introductory offer and £10 example invitation code, all core features included, optional start within seven days and explicit manual renewal. Discretion has limits.
 - Permission requests only when needed: a system photo picker for images, optional notifications after an accepted conversation. No contacts, precise location or background tracking.
 
 ## Delivery order

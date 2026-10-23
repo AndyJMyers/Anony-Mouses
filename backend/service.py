@@ -19,7 +19,11 @@ from pathlib import Path
 from cryptography.fernet import Fernet
 
 DAY = 86400
-OFFER_PRICES = {'launch': 1000, 'standard': 5000}
+# 'launch' retained only to reconcile historical development fixtures.
+OFFER_PRICES = {'launch': 1000, 'website': 2000, 'standard': 5000}
+VOUCHERS = {'KEELE_SU_10': {'amount_minor':1000, 'expires_at':1796083200}}
+# 1 December 2026 00:00 UTC = end of 30 November in Europe/London.
+
 class Problem(Exception):
     def __init__(self, status, message): self.status, self.message = status, message
 
@@ -44,7 +48,7 @@ def distance(a, b):
     return 6371 * 2 * math.asin(min(1, math.sqrt(v)))
 
 class Service:
-    def __init__(self, db_path, key, clock, *, mode='development', current_offer='launch'):
+    def __init__(self, db_path, key, clock, *, mode='development', current_offer='website'):
         if mode != 'development': raise RuntimeError('Production disabled: approved providers, age assurance and operational review are required.')
         if current_offer not in OFFER_PRICES: raise ValueError('Unknown membership offer')
         self.current_offer = current_offer
@@ -92,6 +96,9 @@ class Service:
                 db.execute("ALTER TABLE payment_events ADD COLUMN offer_code TEXT NOT NULL DEFAULT 'launch'")
             if 'requested_start' not in columns:
                 db.execute('ALTER TABLE payment_events ADD COLUMN requested_start INTEGER')
+            if 'voucher_code' not in columns:
+                db.execute("ALTER TABLE payment_events ADD COLUMN voucher_code TEXT NOT NULL DEFAULT ''")
+            db.execute('CREATE UNIQUE INDEX IF NOT EXISTS voucher_once ON payment_events(user_id,voucher_code) WHERE voucher_code != \'\'')
             db.execute('CREATE INDEX IF NOT EXISTS payment_access ON payment_events(user_id, starts_at, access_until)')
     @contextmanager
     def db(self):
@@ -190,9 +197,29 @@ class Service:
             until = row['paid_until']
         return {'active':active,'scheduled':not active and start is not None,'starts_at':start if not active else None,
                 'access_until':until,'paid_until':row['paid_until'],'monthly_price_minor':OFFER_PRICES[self.current_offer],
-                'standard_price_minor':5000,'launch_price_minor':1000,'offer_code':self.current_offer,
+                'standard_price_minor':5000,'website_price_minor':2000,'offer_code':self.current_offer,
                 'currency':'GBP','automatic_renewal':False}
-    def record_month_payment(self, uid, provider, event_id, amount_minor, currency, *, offer_code='launch', start_at=None):
+    def quote_month(self, uid, voucher_code='', *, offer_code=None):
+        """Development quote only; not a reserved order or proof of payment."""
+        offer_code = self.current_offer if offer_code is None else offer_code
+        if not isinstance(offer_code,str) or offer_code not in OFFER_PRICES:
+            raise Problem(400,'Unknown membership offer')
+        if not isinstance(voucher_code,str) or len(voucher_code)>40:
+            raise Problem(400,'Invalid invitation code')
+        code=voucher_code.strip().upper()
+        amount=OFFER_PRICES[offer_code];expires=None
+        if code:
+            campaign=VOUCHERS.get(code)
+            if offer_code!='website' or not campaign or int(self.clock())>=campaign['expires_at']:
+                raise Problem(400,'Invitation code unavailable or expired')
+            with self.db() as db:
+                if db.execute('SELECT 1 FROM payment_events WHERE user_id=? AND voucher_code=?',(uid,code)).fetchone():
+                    raise Problem(409,'Invitation code already used on this account')
+            amount=campaign['amount_minor'];expires=campaign['expires_at']
+        return {'amount_minor':amount,'currency':'GBP','offer_code':offer_code,'voucher_code':code,
+                'expires_at':expires,'automatic_renewal':False}
+
+    def record_month_payment(self, uid, provider, event_id, amount_minor, currency, *, offer_code='launch', start_at=None, voucher_code=''):
         """Trusted development ledger; future adapters must verify a server-created order.
 
         The order must bind price/offer and chosen start before checkout. No public
@@ -202,7 +229,9 @@ class Service:
         provider=text(provider,'Provider',1,40);event_id=text(event_id,'Payment event',1,200)
         if not isinstance(offer_code,str) or offer_code not in OFFER_PRICES:
             raise Problem(400,'Unknown membership offer')
-        if type(amount_minor) is not int or amount_minor!=OFFER_PRICES[offer_code] or currency!='GBP':
+        if not isinstance(voucher_code,str) or len(voucher_code)>40:raise Problem(400,'Invalid invitation code')
+        voucher_code=voucher_code.strip().upper()
+        if type(amount_minor) is not int or currency!='GBP':
             raise Problem(400,'Payment does not match the confirmed GBP membership offer')
         if start_at is not None and type(start_at) is not int:
             raise Problem(400,'Choose a valid membership start time')
@@ -211,9 +240,11 @@ class Service:
             existing=db.execute('SELECT * FROM payment_events WHERE provider=? AND event_id=?',(provider,event_id)).fetchone()
             if existing:
                 if (existing['user_id']!=uid or existing['amount_minor']!=amount_minor or existing['currency']!=currency
-                    or existing['offer_code']!=offer_code or (start_at is not None and existing['requested_start']!=start_at)):
+                    or existing['offer_code']!=offer_code or existing['voucher_code']!=voucher_code or (start_at is not None and existing['requested_start']!=start_at)):
                     raise Problem(409,'Payment event does not match this account or purchase')
                 return {'starts_at':existing['starts_at'],'access_until':existing['access_until'],'duplicate':True}
+            quote=self.quote_month(uid,voucher_code,offer_code=offer_code)
+            if amount_minor!=quote['amount_minor']:raise Problem(400,'Payment does not match the confirmed GBP membership offer')
             user=db.execute('SELECT paid_until FROM users WHERE id=?',(uid,)).fetchone()
             if not user:raise Problem(404,'Account unavailable')
             now=int(self.clock())
@@ -222,8 +253,8 @@ class Service:
             # A repeat purchase preserves already-bought time; it never overlaps it.
             starts=max(now if start_at is None else start_at,user['paid_until'])
             until=advance_month(starts)
-            db.execute('INSERT INTO payment_events(provider,event_id,user_id,amount_minor,currency,access_until,starts_at,offer_code,requested_start) VALUES(?,?,?,?,?,?,?,?,?)',
-                (provider,event_id,uid,amount_minor,currency,until,starts,offer_code,start_at))
+            db.execute('INSERT INTO payment_events(provider,event_id,user_id,amount_minor,currency,access_until,starts_at,offer_code,requested_start,voucher_code) VALUES(?,?,?,?,?,?,?,?,?,?)',
+                (provider,event_id,uid,amount_minor,currency,until,starts,offer_code,start_at,voucher_code))
             db.execute('UPDATE users SET paid_until=? WHERE id=?',(until,uid))
         return {'starts_at':starts,'access_until':until,'duplicate':False}
 

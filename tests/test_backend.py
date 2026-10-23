@@ -26,6 +26,26 @@ class CoreTests(unittest.TestCase):
         mid=self.s.send(a,cid,'Hello from Alice')['id'];self.assertEqual(self.s.messages(b,cid)[0]['body'],'Hello from Alice');self.s.send(b,cid,'Hello back');self.assertEqual(len(self.s.messages(a,cid)),2)
         self.problem(404,self.s.messages,self.c['user_id'],cid);self.problem(404,self.s.keep,self.c['user_id'],mid)
         with self.s.db() as db:self.assertNotIn(b'Hello from Alice',db.execute('SELECT body FROM messages WHERE id=?',(mid,)).fetchone()[0])
+    def test_voucher_price_expiry_single_use_and_replay(self):
+        uid=self.a['user_id'];self.now=int(datetime(2026,11,30,23,59,59,tzinfo=timezone.utc).timestamp())
+        q=self.s.quote_month(uid,' keele_su_10 ');self.assertEqual(q['amount_minor'],1000)
+        self.assertEqual(self.s.quote_month(uid)['amount_minor'],2000)
+        with self.assertRaises(Problem):self.s.record_month_payment(uid,'development','bad-discount',2000,'GBP',offer_code='website',voucher_code='KEELE_SU_10')
+        paid=self.s.record_month_payment(uid,'development','voucher',1000,'GBP',offer_code='website',voucher_code='keele_su_10',start_at=self.now+7*DAY)
+        self.problem(409,self.s.quote_month,uid,'KEELE_SU_10')
+        self.now+=1
+        self.problem(400,self.s.quote_month,self.b['user_id'],'KEELE_SU_10')
+        replay=self.s.record_month_payment(uid,'development','voucher',1000,'GBP',offer_code='website',voucher_code='KEELE_SU_10')
+        self.assertTrue(replay['duplicate']);self.assertEqual(paid['access_until'],replay['access_until'])
+        with self.assertRaises(Problem):self.s.record_month_payment(uid,'development','voucher',2000,'GBP',offer_code='website')
+    def test_voucher_rejects_unknown_stacking_and_price_tampering(self):
+        uid=self.a['user_id']
+        for code in ['INVALID','KEELE_SU_10,OTHER',[],1000]:
+            self.problem(400,self.s.quote_month,uid,code)
+        with self.assertRaises(Problem):self.s.quote_month(uid,'KEELE_SU_10',offer_code='standard')
+        with self.assertRaises(Problem):self.s.record_month_payment(uid,'development','cheap',1000,'GBP',offer_code='website')
+        self.assertEqual(self.s.quote_month(uid,offer_code='standard')['amount_minor'],5000)
+
     def test_recovery_revokes_sessions_and_rotates_code(self):
         token,session=self.s.login('alice','A-long-test-passphrase');self.problem(403,self.s.authenticate,token,'wrong',True)
         self.assertEqual(self.s.authenticate(token,session['csrf'],True),self.a['user_id'])

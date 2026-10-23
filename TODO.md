@@ -149,3 +149,11 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 - [x] Persist and edit validated mouse configuration in local profiles; older test accounts receive defaults. Reject arbitrary avatar URLs/markup.
 - [x] Keep real permitted picture messages private and separate from public mouse portraits; update privacy/provider/Android contract.
 - [ ] Match the shared avatar contract in the future native Android client.
+
+## 23 October — ready-made mice and invitation codes
+
+- [x] Twelve tasteful, fully clothed adult mouse presets with editable styling, shared by public and local member interfaces. Public real photos remain excluded.
+- [x] Current offer supersedes the earlier £10 general launch price: £50 planned standard, £20 website offer, £10 example KEELE_SU_10 invitation through 30 November 2026 (UK time).
+- [x] Public illustrative code entry; authenticated local quote; exact-price, expiry, per-account redemption and idempotency tests in the development ledger.
+- [ ] Agree real partner permission/campaign conditions; do not imply Keele affiliation. Bind campaigns to real server-created orders and implement payment/refund reconciliation before live sales.
+- [ ] Set a genuine end condition for the general website offer before advertising a deadline.

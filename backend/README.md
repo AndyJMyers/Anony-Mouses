@@ -12,7 +12,7 @@ This Python API is for fictional adult test accounts on your own computer. The m
 - Access checks preventing a third account from reading or saving another conversation.
 - Server-side encryption at rest for profile descriptions, text messages and report evidence. **Not end-to-end encryption**; the server holds the key.
 - Blocking, reporting (including after blocking), and account deletion.
-- Accounts start unpaid. A trusted internal offer-bound GBP £50 standard / £10 introductory launch monthly-payment ledger grants a calendar month, clips month-end dates and ignores duplicate provider events. A new/lapsed month may start up to seven days later, with no active access/discovery visibility before that start. Early renewals preserve existing paid time. No payment-grant HTTP endpoint exists. The ledger does not verify actual provider payments.
+- Accounts start unpaid. A trusted internal offer-bound GBP £50 standard / £20 website offer / £10 example invitation monthly-payment ledger grants a calendar month, clips month-end dates and ignores duplicate provider events. A new/lapsed month may start up to seven days later, with no active access/discovery visibility before that start. Early renewals preserve existing paid time. No payment-grant HTTP endpoint exists. The ledger does not verify actual provider payments.
 - Text and image messages expire after 14 days. Only the individual patron who saves an expired message can read their keepsake; saving does not retain it in the other person's inbox. Limit: 100 per patron.
 
 ## Run locally
@@ -104,12 +104,16 @@ An `adult=true` flag is only a fictional-test assertion. It is **not** productio
 
 ## Current offer and deferred development fixtures — 23 October 2026
 
-See [the membership decision](../docs/membership-offer.md). The default local offer is `launch` (£10); `standard` is £50. All ordinary messaging is included subject to the disclosed technical/fair-use limits; no per-message charging is added.
+See [the membership decision](../docs/membership-offer.md). The default local offer is `website` (£20); `standard` is £50. All ordinary messaging is included subject to the disclosed technical/fair-use limits; no per-message charging is added.
 
-Use `python -m backend.server --grant-test-month LOGIN --offer standard --start-in-days 7` to record a fictional standard-price month with a delayed start. Omit the last two options for an immediate launch-price fixture. The same database and key are required. No money moves. Existing payment rows are migrated additively; old fixtures retain access. Membership responses distinguish scheduled, active and expired access. Only active periods appear in discovery.
+Use `python -m backend.server --grant-test-month LOGIN --offer standard --start-in-days 7` to record a fictional standard-price month with a delayed start. Omit the last two options for an immediate website-price fixture. The same database and key are required. No money moves. Existing payment rows are migrated additively; old fixtures retain access. Membership responses distinguish scheduled, active and expired access. Only active periods appear in discovery.
 
 The real provider must validate a server-created order's price/offer/start and purchase time, then reconcile signed callbacks idempotently. The local helper checks its chosen start relative to fixture time; it is not an implementation of delayed real callbacks, cancellation/refunds or commercial launch eligibility. No HTTP parameter can grant membership.
 
 ## Public mouse portraits — 23 October 2026
 
 Signup starts with the mouse creator. Profiles persist only enumerated avatar choices: fur, hair, hairColour, build, chest, outfit, colour and accessory. A shared SVG renderer serves website and local UI; Android must use the same option contract. Defaults migrate older test accounts. The server rejects unknown avatar values and public photo-URL fields; it has no public-profile image upload route. Editing the profile saves the selected mouse. These choices are an optional alter ego, not verified physical attributes. Permitted private picture messages remain isolated from discovery/profile portraits. Twenty-nine automated checks cover the local core/HTTP journey.
+
+### Development invitation codes
+
+Authenticated `POST /api/quote` with `{"voucher_code":"KEELE_SU_10"}` returns £10 before 1 December 2026 UTC, or rejects an expired/already-redeemed code. This sample implies no union affiliation and is not a reserved order. `python -m backend.server --grant-test-month LOGIN --offer website --voucher KEELE_SU_10` records a fictional discounted payment; it never charges money. Codes are one use per account, cannot stack, and do not enable access before the chosen start. `launch` is retained for historical fixtures only. See the membership offer for real-order, reversal and retention work still required.
