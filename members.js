@@ -79,7 +79,7 @@ $('logout').addEventListener('click', () => run(async () => { await api('logout'
 async function search() {
   const values = formData($('search')); const found = await api('discover','POST',{district:values.district,radius_km:Number(values.radius_km)});
   matches = found; $('matches').replaceChildren(); $('memberMapWorld').replaceChildren();mapZoom.reset();
-  const centre = districts.find(d => d.code === values.district);
+  const centre = districts.find(d => d.code === values.district);mapZoom.setDistrict(values.district,centre);mapZoom.setCount(found.length);
   if (!found.length) $('matches').append(node('p','No sparks here yet. Create another fictional adult account in a separate browser session.'));
   for (const p of found) {
     const card = node('article',undefined,'match'); const avatar=node('div',undefined,'mouse-mini');AnonyMouse.mountPortrait(avatar,p.avatar);card.append(avatar,node('h3',p.alias),node('small',p.age_range + ' · ' + p.district + ' · identity unverified'),node('p',p.bio),node('strong','What I’m looking for'),node('p',p.wants));

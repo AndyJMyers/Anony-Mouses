@@ -166,3 +166,6 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 - [x] Shared circular map zoom dial for public preview/local lounge: click/tap reveal, turn/+/−/wheel zoom, drag enlarged view, one-tap reset and inactivity fade; keyboard/reduced-motion support. Zoom does not change search radius or location precision.
 
 - [x] Superseded temporary/fading circular control with a permanent steampunk brass half-dial. Ordinary wheel scrolling remains page navigation; wheel over the dial or Ctrl-wheel zooms.
+
+- [x] District starting view with county, regional and whole-UK zoom-out scales; bundled Natural Earth geographic context and grouped current-search profiles.
+- [ ] Connect nationwide discovery to viewport/search scope with the production district index and privacy-preserving aggregation. Wider demo views do not fabricate extra profiles or exceed the local backend search radius.

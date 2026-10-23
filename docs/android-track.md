@@ -40,3 +40,5 @@ Avatar parity: use the shared eighteen presets and enum contract, including stro
 Current profile scope: shared avatar creator has no body-size or bust/chest fields. Use the same two open introduction prompts as the website; do not add a partner-measurement questionnaire. No routine reading of conversations is policy; technical server blindness is not implemented.
 
 Map interaction parity: a permanently displayed brass half-dial, turn or use +/−, drag when enlarged, tap reset to fit. No inactivity fade; support keyboard access. Zoom changes the view, not search radius or privacy precision.
+
+Geographic scale parity: start at District, with dial stops Country → Region → County → District → Close. Reset returns to the selected district. Wider context uses bundled coastline data and groups the current search results; zooming the view does not silently widen the search. Nationwide viewport-based discovery is a separate backend task.
