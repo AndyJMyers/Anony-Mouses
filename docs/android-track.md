@@ -38,3 +38,5 @@ The Android app must not ship a client-only age assertion, production credential
 Avatar parity: use the shared eighteen presets and enum contract, including strong/rugged jaws, clean-shaven/stubble/moustache/beard choices, crew/swept cuts, open-neck shirts and leather jackets. These are styling choices, not verified sex or gender information. Existing saved avatars default to soft face/clean shaven.
 
 Current profile scope: shared avatar creator has no body-size or bust/chest fields. Use the same two open introduction prompts as the website; do not add a partner-measurement questionnaire. No routine reading of conversations is policy; technical server blindness is not implemented.
+
+Map interaction parity: tap to reveal a circular zoom dial, turn or use +/−, drag when enlarged, tap reset to fit. Fade after inactivity; keep controls visible during keyboard focus and respect reduced motion. Zoom changes the view, not search radius or privacy precision.

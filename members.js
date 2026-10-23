@@ -1,5 +1,6 @@
 'use strict';
 const $ = id => document.getElementById(id);
+const mapZoom=AnonyMapZoom.attach($('memberMap'),$('memberMapWorld'));
 const signupMouse=AnonyMouse.builder($('memberSignupMouse'));
 const editMouse=AnonyMouse.builder($('memberEditMouse'));
 let session = null, draft = null, activeThread = null, threads = [], matches = [], districts = [], refreshTimer = null, epoch = 0;
@@ -77,7 +78,7 @@ $('recovery').addEventListener('submit', e => { e.preventDefault(); run(async ()
 $('logout').addEventListener('click', () => run(async () => { await api('logout','POST',{}); signedOut(); status('Signed out.'); }));
 async function search() {
   const values = formData($('search')); const found = await api('discover','POST',{district:values.district,radius_km:Number(values.radius_km)});
-  matches = found; $('matches').replaceChildren(); $('memberMap').replaceChildren();
+  matches = found; $('matches').replaceChildren(); $('memberMapWorld').replaceChildren();mapZoom.reset();
   const centre = districts.find(d => d.code === values.district);
   if (!found.length) $('matches').append(node('p','No sparks here yet. Create another fictional adult account in a separate browser session.'));
   for (const p of found) {
@@ -91,7 +92,7 @@ async function search() {
     const x = centre ? (p.district_centre.lon-centre.lon)*lonScale/span*32 : 0;
     const y = centre ? -(p.district_centre.lat-centre.lat)*latScale/span*32 : 0;
     pin.style.left = Math.max(15,Math.min(85,50+x+p.marker_offset.x)) + '%'; pin.style.top = Math.max(20,Math.min(80,50+y+p.marker_offset.y)) + '%';
-    pin.append(node('span','✦','pin-avatar'),node('span',p.alias + ' · ' + p.wants.slice(0,55),'pin-hint')); $('memberMap').append(pin);
+    pin.append(node('span','✦','pin-avatar'),node('span',p.alias + ' · ' + p.wants.slice(0,55),'pin-hint')); $('memberMapWorld').append(pin);
   }
   status(found.length + ' test profile' + (found.length === 1 ? '' : 's') + ' near ' + values.district + '.');
 }

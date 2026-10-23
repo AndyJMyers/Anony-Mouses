@@ -162,3 +162,5 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 
 - [x] Simplified profile to two open introduction prompts; removed body-size/bust selectors and retired stored avatar fields.
 - [ ] Decide and review end-to-end messaging encryption before promising the operator cannot read conversations; current encryption is at rest.
+
+- [x] Shared circular map zoom dial for public preview/local lounge: click/tap reveal, turn/+/−/wheel zoom, drag enlarged view, one-tap reset and inactivity fade; keyboard/reduced-motion support. Zoom does not change search radius or location precision.
