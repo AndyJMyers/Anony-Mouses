@@ -4,9 +4,9 @@ The brass half-dial starts at **District**, with useful stops **Country → Regi
 
 ## What is real and what is illustrative
 
-Country coastlines come from Natural Earth; place labels use approximate representative coordinates. The local street/park/river drawing, six public profiles and their decorative positions remain fictional. Wide views group those current results around their selected district; they never scatter fake patrons across Britain. Clicking the group returns to the district. Mood filters update the grouped count.
+Country coastlines come from Natural Earth; place labels use approximate representative coordinates. The local street/park/river drawing and profile pin layout remain illustrative. The nationwide atlas contains 5,988 openly labelled fictional adult characters: two at each of 2,988 approximate postcode-district centres, two at each of three additional coverage areas, plus the six original GU2 characters. All demo cards, pins and clusters are blue and explicitly labelled. Red is reserved for real members, of which none are live. Gold/sparkles are optional decoration, not status.
 
-GU2/GU1/SW1A are the current example district centres. Public searches for other districts keep the fictional profiles and explicitly label wider geography as an example near GU2, rather than pretending to geocode the input. The member lounge uses the centre from its three-district local fixture index. Zoom changes the view, not the radius or result set returned by the backend. Nationwide discovery still needs a production district index, viewport queries/explicit search scope and privacy-preserving aggregation.
+The public search uses a bundled GeoNames outward-code index. It returns up to twelve nearby demo characters within 30 great-circle miles of the selected district centre. Wider views cluster the fictional atlas geographically; clicking a cluster moves towards that area. Zoom alone changes the view, not the local list. The member lounge still has its separate three-district development fixture index and does not import these characters as accounts. See [the atlas and coverage method](demo-atlas.md).
 
 ## Data and privacy
 

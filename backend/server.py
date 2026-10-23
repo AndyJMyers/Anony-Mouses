@@ -30,7 +30,7 @@ class App:
             assets={'/':('index.html','text/html'),'/index.html':('index.html','text/html'),
                 '/members.html':('members.html','text/html'),'/members.js':('members.js','text/javascript'),
                 '/members.css':('members.css','text/css'),'/app.js':('app.js','text/javascript'),'/mouse-avatar.js':('mouse-avatar.js','text/javascript'),
-                '/map-geography.js':('map-geography.js','text/javascript'),'/map-zoom.js':('map-zoom.js','text/javascript'),'/style.css':('style.css','text/css'),'/assets/anony-mouses-masthead.png':('assets/anony-mouses-masthead.png','image/png')}
+                '/demo-atlas-data.js':('demo-atlas-data.js','text/javascript'),'/demo-atlas.js':('demo-atlas.js','text/javascript'),'/map-geography.js':('map-geography.js','text/javascript'),'/map-zoom.js':('map-zoom.js','text/javascript'),'/style.css':('style.css','text/css'),'/assets/anony-mouses-masthead.png':('assets/anony-mouses-masthead.png','image/png')}
             if method=='GET' and path in assets:
                 filename,mime=assets[path];body=(self.web_root/filename).read_bytes()
                 start('200 OK',[('Content-Type',mime),('Content-Length',str(len(body))),('Cache-Control','no-store'),

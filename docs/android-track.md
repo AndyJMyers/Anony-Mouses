@@ -42,3 +42,5 @@ Current profile scope: shared avatar creator has no body-size or bust/chest fiel
 Map interaction parity: a permanently displayed brass half-dial, turn or use +/−, drag when enlarged, tap reset to fit. No inactivity fade; support keyboard access. Zoom changes the view, not search radius or privacy precision.
 
 Geographic scale parity: start at District, with dial stops Country → Region → County → District → Close. Reset returns to the selected district. Wider context uses bundled coastline data and groups the current search results; zooming the view does not silently widen the search. Nationwide viewport-based discovery is a separate backend task.
+
+Profile status parity: blue with explicit DEMO labels for fictional/test profiles, red reserved for server-classified real members. Optional gold trim and sparkles never change classification. The public site now includes the nationwide fictional atlas described in demo-atlas.md; do not pass these characters off as live patrons or import them as real accounts.

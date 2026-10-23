@@ -151,12 +151,16 @@ class CoreTests(unittest.TestCase):
     def test_mouse_avatar_is_persisted_and_discovered_without_photo_urls(self):
         uid=self.a['user_id'];data=self.s.profile(uid)
         self.assertIn('avatar',data)
-        data['avatar'].update(hair='crew',face='rugged',facialHair='beard',outfit='leather',accessory='glasses')
+        data['avatar'].update(hair='crew',face='rugged',facialHair='beard',outfit='leather',accessory='glasses',trim='gold',sparkles='stars')
         updated=self.s.edit_profile(uid,data)
         self.assertEqual(updated['avatar']['hair'],'crew')
         self.assertEqual(updated['avatar']['face'],'rugged')
         self.assertEqual(updated['avatar']['facialHair'],'beard')
         self.assertEqual(updated['avatar']['outfit'],'leather')
+        self.assertEqual(updated['avatar']['trim'],'gold')
+        self.assertEqual(updated['avatar']['sparkles'],'stars')
+        data['profile_kind']='real'
+        self.assertEqual(self.s.edit_profile(uid,data)['profile_kind'],'demo')
         found=next(p for p in self.s.discover(self.b['user_id'],'GU1',10) if p['id']==uid)
         self.assertEqual(found['avatar'],updated['avatar']);self.assertNotIn('photo_url',found)
         for bad in ({'hair':'https://example.invalid/photo.jpg'},{'image':'data:image/svg+xml,bad'},'<svg onload=bad>'):

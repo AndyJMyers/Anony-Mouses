@@ -1,0 +1,12 @@
+{
+  "districts": 2988,
+  "extra_areas": 3,
+  "fictional_profiles": 5982,
+  "land_samples": 53962,
+  "sample_spacing_degrees": 0.025,
+  "furthest_sample_miles": 20.19,
+  "target_miles": 30,
+  "distance": "great-circle, not road or ferry distance",
+  "scope": "Natural Earth UK land sample and coastline vertices; approximate coverage, not a population/address guarantee",
+  "geonames_sha256": "592602ec5e42b6e77b54f849f89c13fddf8af2ad1a8bfd944da5dc60b3f14122"
+}

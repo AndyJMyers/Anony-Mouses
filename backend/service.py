@@ -272,7 +272,7 @@ class Service:
         with self.db() as db: p=db.execute('SELECT * FROM profiles WHERE user_id=?',(uid,)).fetchone()
         if not p: raise Problem(404,'Profile unavailable')
         return {'id':uid,'alias':p['alias'],'bio':self.dec(p['bio']),'wants':self.dec(p['wants']),
-                'district':p['district'],'age_range':p['age_range'],'avatar':validate_avatar(json.loads(p['avatar'])),'visible':bool(p['visible']),'identity_verified':False}
+                'district':p['district'],'age_range':p['age_range'],'avatar':validate_avatar(json.loads(p['avatar'])),'visible':bool(p['visible']),'identity_verified':False,'profile_kind':'demo'}
     def edit_profile(self, uid, data):
         values=self.validate_profile(data)
         visible=data.get('visible',True)

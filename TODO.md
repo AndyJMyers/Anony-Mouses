@@ -169,3 +169,6 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 
 - [x] District starting view with county, regional and whole-UK zoom-out scales; bundled Natural Earth geographic context and grouped current-search profiles.
 - [ ] Connect nationwide discovery to viewport/search scope with the production district index and privacy-preserving aggregation. Wider demo views do not fabricate extra profiles or exceed the local backend search radius.
+
+- [x] Nationwide fictional atlas: 5,988 demo adults; blue demos/red reserved for real members; optional gold/sparkles. Approximate 30-mile straight-line coverage checked against 53,962 UK land/coast samples (furthest 20.19 miles). See docs/demo-atlas.md for limits.
+- [ ] Replace approximate postcode centres as needed with a maintained production district index; validate real member classification and operational privacy before live access.
