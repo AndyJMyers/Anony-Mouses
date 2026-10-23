@@ -6,12 +6,12 @@ Current offer updated 23 October 2026; earlier checkpoints below are dated histo
 
 Marketing preparation is deferred while the technical work proceeds. The dated checkpoints below remain history; current pricing is £50 planned standard, £20 website offer and the planned £10 student campaign, with no automatic renewal.
 
-- [x] Implement a pooled PostgreSQL adapter alongside SQLite development storage, versioned migrations and per-operation transaction locks. The core 40-test checkpoint passed against actual PostgreSQL 16 and SQLite in CI.
+- [x] Implement a pooled PostgreSQL adapter alongside SQLite development storage, versioned migrations and per-operation transaction locks. All 47 tests pass against actual PostgreSQL 16 and SQLite in CI.
 - [x] Bound discovery, inbox and message queries with keyset pages; filter district distance and blocks in SQL; add supporting indexes and member UI page controls.
 - [x] Share rate limits in the database across app instances; store keyed hashes rather than raw peer addresses in rate records.
 - [x] Remove expiry sweeps from chat reads and image fetches; implement bounded cleanup batches. A local scheduled worker and separately supervised staging worker are implemented; encrypted restore drills reapply expiry.
 - [x] Verify the core storage/HTTP tests against actual PostgreSQL.
-- [x] Implement encrypted portable snapshot/restore and SQLite-to-PostgreSQL rehearsal tests; expanded CI verification in progress.
+- [x] Implement encrypted portable snapshot/restore and SQLite-to-PostgreSQL rehearsal tests; verified on SQLite and actual PostgreSQL 16 in CI, including re-export and a second restore.
 - [x] Add idempotent import of 2,988 bundled approximate outward-district centres and typed suggestions in the connected lounge. Maintained production geography remains to be selected.
 - [ ] Portable external private media and isolated image processing; deploy/monitor retention workers and backup expiry, then test hosted recovery. See [storage operations](docs/storage-operations.md).
 - [ ] Production HTTP/TLS deployment, final provider adapters, payment reconciliation/refunds, age assurance, operator report/review and applicable evidence/rights controls.

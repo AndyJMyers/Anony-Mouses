@@ -34,6 +34,6 @@ The snapshot includes private encrypted message/media payloads, financial fixtur
 
 ## Evidence and remaining work
 
-The CI workflow runs the full functional/concurrency/HTTP suite on SQLite and PostgreSQL 16. Backup drills test round-trip private pictures/keepsakes, wrong keys, missing footer, archive reordering, refusal to overwrite/nonempty restore, expiry after restoration and cross-engine portability. These tests do not measure production throughput, failover or disaster recovery at national scale.
+The full 47-test functional/concurrency/HTTP/backup suite passed on SQLite and PostgreSQL 16 in [CI](https://github.com/AndyJMyers/Anony-Mouses/actions/runs/40015755571), including restoring the SQLite source into PostgreSQL and re-exporting/restoring it again. Backup drills test round-trip private pictures/keepsakes, wrong keys, missing footer, archive reordering, refusal to overwrite/nonempty restore, expiry after restoration and cross-engine portability. These tests do not measure production throughput, failover or disaster recovery at national scale.
 
 Next: external private media and isolated decoding; a production server/TLS/secret setup; final payment/age adapters and provider acceptance; restricted reports, accounting/deletion and evidence policy; load testing and a hosted adult pilot. Production remains disabled throughout this checkpoint.

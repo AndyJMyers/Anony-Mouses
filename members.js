@@ -34,7 +34,7 @@ function tab(name) {
 function signedOut() {
   discoveryCursor=null;inboxCursor=null;messageCursor=null;historyMode=false;for(const id of ['moreMatches','moreThreads','olderMessages','latestMessages'])$(id).hidden=true;
   epoch++; revealedImages.clear(); renderedSignature=''; clearImageDraft(); clearInterval(refreshTimer); refreshTimer = null; session = null; activeThread = null; threads = []; matches = []; draft = null; entranceAction = null;
-  for (const id of ['matches','memberMap','threads','messages','kept']) $(id).replaceChildren();
+  for (const id of ['matches','memberMapWorld','threads','messages','kept']) $(id).replaceChildren();
   $('recoveryCode').textContent = ''; $('messageBody').value = ''; $('account').hidden = true; $('entrance').hidden = false; $('logout').hidden = true; $('chat').hidden = true; $('keepCount').textContent = '0';
   $('signupRemember').checked=false; $('signup').reset(); $('signin').reset(); $('recovery').reset(); tab('signin');
 }

@@ -7,7 +7,6 @@ from __future__ import annotations
 import calendar
 import json
 from .avatars import validate as validate_avatar, DEFAULT as DEFAULT_AVATAR
-from contextlib import contextmanager
 import hashlib
 import hmac
 import math
@@ -15,9 +14,7 @@ import re
 import secrets
 from .database import Database, IntegrityError
 from .paging import page_limit, encode_cursor, decode_cursor
-import base64
 from datetime import datetime, timezone
-from pathlib import Path
 from cryptography.fernet import Fernet
 
 DAY = 86400
