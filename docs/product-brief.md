@@ -6,7 +6,7 @@ A deliberately simple, discreet adult dating service with a sexual focus. A desc
 
 ## Agreed essentials
 
-- Pseudonymous profiles with mouse avatars only; no public real-photo uploads. Signup begins with choosing hair, fur, build, bust/chest, outfit and accessories. These optional choices can be fictional.
+- Pseudonymous profiles with mouse avatars only; no public real-photo uploads. Signup begins with choosing hair, fur, face shape, facial hair, outfit and accessories. These optional choices can be fictional.
 - No validation of users' identity claims; patrons assess those claims themselves.
 - Private text and image exchanges.
 - Ordinary messages and attachments expire 14 days after sending.

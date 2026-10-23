@@ -29,7 +29,7 @@ Safety and technical limits remain: accepted conversation requests, rate limits,
 
 ## Mouse-first profiles
 
-Before entering other details, patrons choose from eighteen ready-made adult mouse avatars and customise their mouse using optional hair, face shape, facial hair, colouring, build, bust/chest, clothing and accessory choices. All public profile portraits are mice; public real-photo upload is not offered. All portraits are fully clothed and tasteful: open-minded, never lewd or vulgar. The default is ready to use, and styling need not reflect the patron's real appearance. Store configuration choices, not a generated identity photograph. Real permitted non-explicit pictures remain private conversation attachments; recipients can still copy them.
+Before entering other details, patrons choose from eighteen ready-made adult mouse avatars and customise their mouse using optional hair, face shape, facial hair, colouring, clothing and accessory choices. All public profile portraits are mice; public real-photo upload is not offered. All portraits are fully clothed and tasteful: open-minded, never lewd or vulgar. The default is ready to use, and styling need not reflect the patron's real appearance. Store configuration choices, not a generated identity photograph. Real permitted non-explicit pictures remain private conversation attachments; recipients can still copy them.
 
 ## Tone
 
@@ -48,3 +48,9 @@ A seven-day deferred start does not remove statutory cancellation rights or rese
 The public preview calculates illustrative prices only. The authenticated local `/api/quote` endpoint checks the price, expiry and previous use. The trusted development payment ledger records the normalised code, checks the exact amount, serialises writes and enforces a unique account/code redemption. A duplicate payment event remains idempotent after expiry. Purchase deadline and activation are separate: an eligible purchase may start up to seven days later. Codes never grant access by themselves.
 
 Before real payments: bind the normalised campaign, final price, eligibility, chosen start, quote/order expiry and original purchase context to a server-created order; implement provider verification, refund/reversal handling and reconciliation. The present helper cannot accept delayed callbacks as real orders. No live union offer, checkout, bulk voucher import, single-use gift vouchers, prepaid balances or payout system is claimed. Account deletion removes local fixtures, so this is one use per account, not guaranteed one per person; production financial/legal retention and anti-abuse rules remain to be settled. Store only the campaign reference with necessary purchase records, not inferred student membership, life plans or a reason for delay.
+
+## Simple introductions, not a body questionnaire
+
+Profile copy uses “Tell us a bit about yourself” and “Tell us a bit about what you’re looking for.” No bust/chest, body-size or partner-measurement selectors are offered or stored as avatar choices. Existing development body-size fields are removed on database migration. Patrons describe their intentions openly and honestly in their own words, subject to the existing non-graphic conduct rules. Mouse appearance remains an optional fictional style choice. No new sex, gender, orientation or partner-body questionnaire is introduced.
+
+We facilitate the introduction and do not routinely read private conversations. The current server can decrypt stored messages; technical inability to read them would require a separately designed and reviewed end-to-end encryption implementation. That is a future privacy architecture decision, not an existing feature. Reports, credible concerns and lawful duties remain subject to the documented policy.

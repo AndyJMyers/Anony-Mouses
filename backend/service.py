@@ -88,6 +88,12 @@ class Service:
             profile_columns={r['name'] for r in db.execute('PRAGMA table_info(profiles)')}
             if 'avatar' not in profile_columns:
                 db.execute("ALTER TABLE profiles ADD COLUMN avatar TEXT NOT NULL DEFAULT '{}'")
+            # Remove retired body-size avatar data from old development profiles.
+            for row in db.execute('SELECT user_id,avatar FROM profiles').fetchall():
+                avatar=json.loads(row['avatar'])
+                if 'build' in avatar or 'chest' in avatar:
+                    avatar.pop('build',None);avatar.pop('chest',None)
+                    db.execute('UPDATE profiles SET avatar=? WHERE user_id=?',(json.dumps(avatar),row['user_id']))
             # Additive migration: old test payments remain immediately eligible.
             columns = {r['name'] for r in db.execute('PRAGMA table_info(payment_events)')}
             if 'starts_at' not in columns:

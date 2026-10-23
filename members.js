@@ -81,7 +81,7 @@ async function search() {
   const centre = districts.find(d => d.code === values.district);
   if (!found.length) $('matches').append(node('p','No sparks here yet. Create another fictional adult account in a separate browser session.'));
   for (const p of found) {
-    const card = node('article',undefined,'match'); const avatar=node('div',undefined,'mouse-mini');AnonyMouse.mountPortrait(avatar,p.avatar);card.append(avatar,node('h3',p.alias),node('small',p.age_range + ' · ' + p.district + ' · identity unverified'),node('p',p.bio),node('strong','What takes my fancy'),node('p',p.wants));
+    const card = node('article',undefined,'match'); const avatar=node('div',undefined,'mouse-mini');AnonyMouse.mountPortrait(avatar,p.avatar);card.append(avatar,node('h3',p.alias),node('small',p.age_range + ' · ' + p.district + ' · identity unverified'),node('p',p.bio),node('strong','What I’m looking for'),node('p',p.wants));
     card.append(button('Send a little hello ↗', async () => { const result = await api('conversations','POST',{target:p.id}); await view('inbox'); await openThread(result.id); status('Hello requested. Messages begin when the recipient accepts.'); },'gold'));
     $('matches').append(card);
     const pin = button('', async () => { card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'}); },'pin');

@@ -151,7 +151,7 @@ class CoreTests(unittest.TestCase):
     def test_mouse_avatar_is_persisted_and_discovered_without_photo_urls(self):
         uid=self.a['user_id'];data=self.s.profile(uid)
         self.assertIn('avatar',data)
-        data['avatar'].update(hair='crew',face='rugged',facialHair='beard',build='athletic',chest='flat',outfit='leather',accessory='glasses')
+        data['avatar'].update(hair='crew',face='rugged',facialHair='beard',outfit='leather',accessory='glasses')
         updated=self.s.edit_profile(uid,data)
         self.assertEqual(updated['avatar']['hair'],'crew')
         self.assertEqual(updated['avatar']['face'],'rugged')
@@ -164,6 +164,23 @@ class CoreTests(unittest.TestCase):
             self.problem(400,self.s.edit_profile,uid,data)
         data=self.s.profile(uid);data['photo_url']='https://example.invalid/face.jpg'
         self.problem(400,self.s.edit_profile,uid,data)
+    def test_retired_body_fields_are_removed_without_losing_mouse_style(self):
+        key=Fernet.generate_key();path=Path(self.tmp.name)/'old-avatar.sqlite3'
+        old=Service(path,key,lambda:self.now)
+        old.seed_districts([('GU2',51.24,-.59)])
+        uid=old.register(dict(login='oldmouse',password='A-long-test-passphrase',alias='Old Mouse',bio='Test adult',wants='Test conversation',district='GU2',age_range='40s',adult=True,consent=True))['user_id']
+        avatar=old.profile(uid)['avatar'];avatar.update(face='rugged',facialHair='beard',build='athletic',chest='full')
+        with old.db() as db:db.execute('UPDATE profiles SET avatar=? WHERE user_id=?',(json.dumps(avatar),uid))
+        reopened=Service(path,key,lambda:self.now)
+        profile=reopened.profile(uid)
+        self.assertEqual(profile['avatar']['facialHair'],'beard')
+        self.assertNotIn('build',profile['avatar']);self.assertNotIn('chest',profile['avatar'])
+        with reopened.db() as db:
+            saved=json.loads(db.execute('SELECT avatar FROM profiles WHERE user_id=?',(uid,)).fetchone()[0])
+            self.assertNotIn('chest',saved);self.assertNotIn('build',saved)
+        profile['avatar']['chest']='full'
+        self.problem(400,reopened.edit_profile,uid,profile)
+
     def test_production_disabled(self):
         with self.assertRaises(RuntimeError):Service(Path(self.tmp.name)/'prod.sqlite3',Fernet.generate_key(),lambda:self.now,mode='production')
     def http(self,method,path,data=None,cookie='',csrf='',origin='http://127.0.0.1:8080',host='127.0.0.1:8080'):

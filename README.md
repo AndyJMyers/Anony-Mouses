@@ -12,13 +12,13 @@ A deliberately simple introductions service for consenting adults seeking flirta
 
 ## A mouse of your own
 
-Your public face is always an **Anony Mouse**, never a real photograph. Start by choosing one of **18 ready-made adult mice**, then make it yours. A chosen name, an introduction and what takes your fancy complete the profile.
+Your public face is always an **Anony Mouse**, never a real photograph. Start by choosing one of **18 ready-made adult mice**, then make it yours. A chosen name and two open descriptions complete the introduction: **“Tell us a bit about yourself”** and **“Tell us a bit about what you’re looking for.”** There are no bust, body-size or partner-measurement questions; state your intentions clearly and honestly in your own words.
 
 ![Eighteen customisable Anony-Mouses, including glamorous, rugged, bearded and dapper characters](assets/mouse-lineup.svg)
 
 - **Proper bloke mice as well as glamour mice.** Racer, Woodsman, Bruiser, Professor, Rocker and Old School join a sharper Silver Fox, Copper and Dapper, alongside Velvet, Rouge, Pearl and the rest of the cast.
 - **More than a change of clothes.** Soft, strong-jawed or rugged faces; clean shaven, stubble, moustache or a full beard; crew cuts, swept-back hair, waves, bobs, long hair or bald.
-- **Style the whole character.** Fur and hair colours, slender/broad/athletic/curvy builds, bust/chest choices, cocktail dresses, evening jackets, open-neck shirts, leather jackets, knitwear and finishing touches.
+- **Style the whole character.** Fur and hair colours, cocktail dresses, evening jackets, open-neck shirts, leather jackets, knitwear and finishing touches.
 - **Instant previews and a surprise button.** Portraits are drawn in code, with the same creator used in the public demo and local member lounge. No photo upload or image-generation request is needed.
 
 These are choices for an alter ego, not verified physical attributes or a requirement to disclose your real appearance. Tasteful and fully clothed: open-minded, never lewd or vulgar. Permitted non-explicit real pictures belong only in private conversations; recipients can still copy or republish them.
@@ -27,7 +27,7 @@ These are choices for an alter ego, not verified physical attributes or a requir
 
 - **A neighbourhood, not a house number.** Enter an outward postcode district such as `GU2`; explore an approximate map with gently pulsing introductions and patron-written hints. No full postcode or GPS is needed. Demo positions are illustrative and pulsing does not mean someone is online.
 - **A little atmosphere.** Mood filters, a list view, surprise introductions and suggested opening lines make a small interface feel alive. A still-sparks control respects people who prefer less motion.
-- **A conversation by mutual choice.** The local backend supports hello requests that the recipient accepts before messages can be exchanged, plus blocking and reporting.
+- **A conversation by mutual choice.** Private exchanges are not routinely read or used to infer preferences; reported content and credible concerns may be reviewed. The local prototype is encrypted at rest, not end to end, so it cannot promise technical blindness to message contents. The local backend supports hello requests that the recipient accepts before messages can be exchanged, plus blocking and reporting.
 - **Less digital baggage.** Ordinary text and picture messages expire after **14 days**; each patron can keep up to **100 keepsake messages**. Evidence holds and deletion exceptions are explained below.
 - **Discretion by design.** Pseudonyms and mouse portraits keep real faces off profiles. Districts are approximate. Patrons choose what to disclose; identity claims remain unverified and absolute anonymity is not promised.
 
@@ -150,7 +150,7 @@ The linked guidance explains the rules; the retention targets described as propo
 
 ## Development foundation
 
-A separate [local backend](backend/README.md) now implements persistent accounts, district-based discovery and private text conversations. The connected member lounge at `http://127.0.0.1:8080/members.html` supports signup, sign-in, profile editing, schematic district discovery, accepted conversation requests, private text and image messages, keepsakes, blocking, local reports, recovery and deletion. **31 automated tests** cover the core and HTTP journey, including cookies, access isolation, static-file boundaries, scheduled membership, invitation-code pricing/expiry/redemption and saved mouse configurations. Production use is disabled; the public mockup remains fictional.
+A separate [local backend](backend/README.md) now implements persistent accounts, district-based discovery and private text conversations. The connected member lounge at `http://127.0.0.1:8080/members.html` supports signup, sign-in, profile editing, schematic district discovery, accepted conversation requests, private text and image messages, keepsakes, blocking, local reports, recovery and deletion. **32 automated tests** cover the core and HTTP journey, including cookies, access isolation, static-file boundaries, scheduled membership, invitation-code pricing/expiry/redemption and saved mouse configurations. Production use is disabled; the public mockup remains fictional.
 
 See the [foundation review](docs/foundation-review.md) for hosting, payment, age assurance and privacy findings and unresolved provider requirements.
 

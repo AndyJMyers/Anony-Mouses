@@ -159,3 +159,6 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 - [ ] Set a genuine end condition for the general website offer before advertising a deadline.
 
 - [x] Expanded to eighteen mouse presets with stronger masculine faces, beards/moustaches, athletic builds, shirts and leather jackets; shared public/member renderer and backend validation.
+
+- [x] Simplified profile to two open introduction prompts; removed body-size/bust selectors and retired stored avatar fields.
+- [ ] Decide and review end-to-end messaging encryption before promising the operator cannot read conversations; current encryption is at rest.

@@ -8,7 +8,7 @@ This is the Android development track, not a released app. No Android binary, si
 
 - Two main destinations: **Sparks** and **Conversations**. Keepsakes sit with conversations; profile details and visibility sit behind the chosen-name control.
 - One clear primary action per screen: find a spark, send a hello, accept, or send a message.
-- The first interaction is a shared mouse-avatar creator (hair, fur, build, bust/chest, outfit and accessories). Public profile portraits are always mice, never real-photo uploads. Private permitted pictures remain a separate conversation feature.
+- The first interaction is a shared mouse-avatar creator (hair, fur, face shape, facial hair, outfit and accessories). Public profile portraits are always mice, never real-photo uploads. Private permitted pictures remain a separate conversation feature.
 - Entry remains one page of details followed by one page for the paid monthly entrance. Login and recovery remain separate utilities.
 - The postcode district is the only location input. Map positions represent district centres with decorative offsets, never home/GPS locations or live activity.
 - Cream cards, midnight navy, warm gold and small rose accents. Use the established mice artwork, readable type and generous spacing.
@@ -35,4 +35,6 @@ Two fictional adults on separate devices create profiles, discover by district, 
 
 The Android app must not ship a client-only age assertion, production credentials or an unreviewed payment workaround. The present loopback service is development-only and cannot be exposed as a mobile production server.
 
-Avatar parity: use the shared eighteen presets and enum contract, including strong/rugged jaws, clean-shaven/stubble/moustache/beard choices, crew/swept cuts, athletic builds, open-neck shirts and leather jackets. These are styling choices, not verified sex or gender information. Existing saved avatars default to soft face/clean shaven.
+Avatar parity: use the shared eighteen presets and enum contract, including strong/rugged jaws, clean-shaven/stubble/moustache/beard choices, crew/swept cuts, open-neck shirts and leather jackets. These are styling choices, not verified sex or gender information. Existing saved avatars default to soft face/clean shaven.
+
+Current profile scope: shared avatar creator has no body-size or bust/chest fields. Use the same two open introduction prompts as the website; do not add a partner-measurement questionnaire. No routine reading of conversations is policy; technical server blindness is not implemented.
