@@ -4,6 +4,7 @@ const mapZoom=AnonyMapZoom.attach($('memberMap'),$('memberMapWorld'));
 const signupMouse=AnonyMouse.builder($('memberSignupMouse'));
 const editMouse=AnonyMouse.builder($('memberEditMouse'));
 let session = null, draft = null, activeThread = null, threads = [], matches = [], districts = [], refreshTimer = null, epoch = 0;
+let discoveryCursor=null,inboxCursor=null,messageCursor=null,historyMode=false;
 let entranceAction = null, busy = false, previewUrl = null, renderedSignature = '';
 const revealedImages = new Set();
 function clearImageDraft(){if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('sendImage').reset();$('imagePreview').removeAttribute('src');$('imagePreview').hidden=true;}
@@ -17,7 +18,7 @@ async function api(path, method = 'GET', data) {
   if (method !== 'GET' && session) headers['X-CSRF-Token'] = session.csrf;
   const res = await fetch('/api/' + path, { method, credentials: 'same-origin', cache: 'no-store', headers, body: data === undefined ? undefined : binary ? data : JSON.stringify(data) });
   const result = await res.json();
-  if (!res.ok) { if (res.status === 401 && session) signedOut(); throw new Error(result.error || 'Please try again.'); }
+  if (!res.ok) { if (res.status === 401 && session) signedOut(); const error=new Error(result.error || 'Please try again.');error.status=res.status;throw error; }
   return result;
 }
 async function run(action) {
@@ -31,6 +32,7 @@ function tab(name) {
   if (name !== 'trial') draft = null;
 }
 function signedOut() {
+  discoveryCursor=null;inboxCursor=null;messageCursor=null;historyMode=false;for(const id of ['moreMatches','moreThreads','olderMessages','latestMessages'])$(id).hidden=true;
   epoch++; revealedImages.clear(); renderedSignature=''; clearImageDraft(); clearInterval(refreshTimer); refreshTimer = null; session = null; activeThread = null; threads = []; matches = []; draft = null; entranceAction = null;
   for (const id of ['matches','memberMap','threads','messages','kept']) $(id).replaceChildren();
   $('recoveryCode').textContent = ''; $('messageBody').value = ''; $('account').hidden = true; $('entrance').hidden = false; $('logout').hidden = true; $('chat').hidden = true; $('keepCount').textContent = '0';
@@ -50,7 +52,7 @@ async function enter() {
   status('Your local test account is signed in. A hello is only a hello.');
   await view('discover'); await refreshKeepsakes();
   clearInterval(refreshTimer);
-  refreshTimer = setInterval(() => { if (session && !busy && document.visibilityState === 'visible' && !$('inbox').hidden) run(async () => { await refreshInbox(); if (activeThread) await readMessages(); }); }, 10000);
+  refreshTimer = setInterval(() => { if (session && !busy && document.visibilityState === 'visible' && !$('inbox').hidden) run(async () => { await refreshInbox(); if (activeThread && !historyMode) await readMessages(); }); }, 10000);
 }
 async function view(name) {
   for (const id of ['discover','inbox','keepsakes','settings']) $(id).hidden = id !== name;
@@ -76,8 +78,8 @@ $('startTrial').addEventListener('click', () => run(async () => {
 $('continueEntrance').addEventListener('click', () => run(async () => { const action = entranceAction; entranceAction = null; $('recoveryCode').textContent = ''; if (action) await action(); else tab('signin'); }));
 $('recovery').addEventListener('submit', e => { e.preventDefault(); run(async () => { const result = await api('recover','POST',formData(e.target)); e.target.reset(); showCode(result.recovery_code, async () => { tab('signin'); status('Access recovered. Sign in with your new password.'); }); status('Recovery succeeded. Save the replacement code.'); }); });
 $('logout').addEventListener('click', () => run(async () => { await api('logout','POST',{}); signedOut(); status('Signed out.'); }));
-async function search() {
-  const values = formData($('search')); const found = await api('discover','POST',{district:values.district,radius_km:Number(values.radius_km)});
+async function search(cursor=null) {
+  const values=formData($('search')),page=await api('discover/page','POST',{district:values.district,radius_km:Number(values.radius_km),cursor,limit:24});discoveryCursor=page.next_cursor;const found=cursor?[...matches,...page.items]:page.items;$('moreMatches').hidden=!discoveryCursor;
   matches = found; $('matches').replaceChildren(); $('memberMapWorld').replaceChildren();mapZoom.reset();
   const centre = districts.find(d => d.code === values.district);mapZoom.setDistrict(values.district,centre);mapZoom.setCount(found.length);const positions=AnonyMapLayout.local(found,centre||{lat:51.24,lon:-.59},$('memberMap').clientWidth,$('memberMap').clientHeight);
   if (!found.length) $('matches').append(node('p','No sparks here yet. Create another fictional adult account in a separate browser session.'));
@@ -93,22 +95,24 @@ async function search() {
   }
   status(found.length + ' test profile' + (found.length === 1 ? '' : 's') + ' near ' + values.district + '.');
 }
+$('moreMatches').addEventListener('click',()=>run(()=>search(discoveryCursor)));
 $('search').addEventListener('submit', e => { e.preventDefault(); run(search); });
 $('still').addEventListener('change', e => $('memberMap').classList.toggle('still',e.target.checked));
-async function refreshInbox() {
-  threads = await api('conversations'); $('threads').replaceChildren();
+async function refreshInbox(cursor=null) {
+  const page=await api('conversations/page?limit=24'+(cursor?'&cursor='+encodeURIComponent(cursor):''));inboxCursor=page.next_cursor;$('moreThreads').hidden=!inboxCursor;threads=cursor?[...threads,...page.items]:page.items; $('threads').replaceChildren();
   if (!threads.length) $('threads').append(node('p','No conversations yet. Find a spark and send a hello.'));
   for (const t of threads) { const b = button(t.other_alias + ' · ' + (t.status === 'accepted' ? 'Conversation open' : t.incoming ? 'Would like to say hello' : 'Awaiting their hello'), () => openThread(t.id),'thread'); b.setAttribute('aria-pressed',String(activeThread?.id===t.id)); $('threads').append(b); }
-  if (activeThread) { const current = threads.find(t => t.id === activeThread.id); if (!current) { activeThread = null; revealedImages.clear(); clearImageDraft(); renderedSignature=''; $('chat').hidden = true; $('messages').replaceChildren(); } else activeThread = current; }
+  if (activeThread) { const current = threads.find(t => t.id === activeThread.id); if (current) activeThread = current; }
 }
 async function openThread(id) { activeThread = threads.find(t => t.id === id); if (!activeThread) throw new Error('Conversation unavailable.'); $('messageBody').value = ''; clearImageDraft(); renderedSignature=''; await readMessages(); }
-async function readMessages() {
+async function readMessages(cursor=null) {
   if (!activeThread) return;
-  const current = activeThread; const version = epoch; const messages = await api('conversations/' + current.id + '/messages');
+  const current=activeThread,version=epoch;let page;try{page=await api('conversations/'+current.id+'/messages/page?limit=50'+(cursor?'&cursor='+encodeURIComponent(cursor):''));}catch(error){if(version===epoch&&activeThread?.id===current.id&&[403,404].includes(error.status)){$('chat').hidden=true;$('messages').replaceChildren();activeThread=null;revealedImages.clear();}throw error;}const messages=page.items;
   if (version !== epoch || activeThread?.id !== current.id) return;
+  messageCursor=page.next_cursor;historyMode=Boolean(cursor);$('olderMessages').hidden=!messageCursor;$('latestMessages').hidden=!historyMode;
   $('chat').hidden = false; $('chatTitle').textContent = current.other_alias;
   $('chatNote').textContent = current.status === 'accepted' ? 'Private text and picture conversation · messages expire after 14 days unless you keep your copy. Refreshes every 10 seconds while this view is open.' : current.incoming ? 'Accept only if you fancy a conversation. You can block at any time.' : 'Your hello is waiting for their acceptance.';
-  $('accept').hidden = current.status === 'accepted' || !current.incoming; $('send').hidden = current.status !== 'accepted'; $('sendImage').hidden=current.status!=='accepted'; const signature=JSON.stringify([current.id,current.status,messages]);if(signature===renderedSignature)return;renderedSignature=signature; $('messages').replaceChildren();
+  $('accept').hidden = current.status === 'accepted' || !current.incoming; $('send').hidden = current.status !== 'accepted'; $('sendImage').hidden=current.status!=='accepted'; const signature=JSON.stringify([current.id,current.status,cursor,messages]);if(signature===renderedSignature)return;renderedSignature=signature; $('messages').replaceChildren();
   for (const m of messages) {
     const bubble = node('article',undefined,'bubble' + (m.sender === session.profile.id ? ' mine' : '')); if(m.body)bubble.append(node('p',m.body));appendImage(bubble,m);bubble.append(node('small',m.saved ? 'Kept by you' : 'Expires ' + date(m.expires)));
     bubble.append(button(m.saved ? 'Remove keepsake' : '♡ Keep this', async () => { await api('keepsakes/' + m.id,m.saved?'DELETE':'POST',m.saved?undefined:{}); await readMessages(); await refreshKeepsakes(); }));
@@ -116,6 +120,9 @@ async function readMessages() {
     $('messages').append(bubble);
   }
 }
+$('moreThreads').addEventListener('click',()=>run(()=>refreshInbox(inboxCursor)));
+$('olderMessages').addEventListener('click',()=>run(()=>readMessages(messageCursor)));
+$('latestMessages').addEventListener('click',()=>run(()=>readMessages()));
 $('refreshInbox').addEventListener('click', () => run(async () => { await refreshInbox(); if (activeThread) await readMessages(); }));
 $('accept').addEventListener('click', () => run(async () => { await api('conversations/'+activeThread.id+'/accept','POST',{}); await refreshInbox(); await readMessages(); status('Conversation accepted. Say hello when you fancy.'); }));
 $('send').addEventListener('submit', e => { e.preventDefault(); run(async () => { const body = $('messageBody').value.trim(); if (!body) return; await api('conversations/'+activeThread.id+'/messages','POST',{body}); $('messageBody').value = ''; await readMessages(); status('Message sent.'); }); });

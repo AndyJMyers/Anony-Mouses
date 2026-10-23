@@ -1,3 +1,4 @@
+from support import service_for_test
 import io,json,tempfile,unittest
 from pathlib import Path
 from datetime import datetime,timezone
@@ -6,7 +7,7 @@ from backend.service import Service,Problem,DAY,advance_month
 from backend.server import App
 class CoreTests(unittest.TestCase):
     def setUp(self):
-        self.tmp=tempfile.TemporaryDirectory();self.now=1769853600;self.s=Service(Path(self.tmp.name)/'db.sqlite3',Fernet.generate_key(),lambda:self.now)
+        self.tmp=tempfile.TemporaryDirectory();self.now=1769853600;self.s=service_for_test(self,Path(self.tmp.name)/'db.sqlite3',Fernet.generate_key(),lambda:self.now)
         self.s.seed_districts([('GU2',51.24,-.59),('GU1',51.24,-.56),('SW1A',51.50,-.14)])
         self.a=self.register('alice','GU2');self.b=self.register('bob','GU1');self.c=self.register('carol','SW1A')
     def tearDown(self):self.tmp.cleanup()
@@ -192,7 +193,9 @@ class CoreTests(unittest.TestCase):
         old.seed_districts([('GU2',51.24,-.59)])
         uid=old.register(dict(login='oldmouse',password='A-long-test-passphrase',alias='Old Mouse',bio='Test adult',wants='Test conversation',district='GU2',age_range='40s',adult=True,consent=True))['user_id']
         avatar=old.profile(uid)['avatar'];avatar.update(face='rugged',facialHair='beard',build='athletic',chest='full')
-        with old.db() as db:db.execute('UPDATE profiles SET avatar=? WHERE user_id=?',(json.dumps(avatar),uid))
+        with old.db() as db:
+            db.execute('UPDATE profiles SET avatar=? WHERE user_id=?',(json.dumps(avatar),uid))
+            db.execute('DELETE FROM schema_migrations WHERE version=2')
         reopened=Service(path,key,lambda:self.now)
         profile=reopened.profile(uid)
         self.assertEqual(profile['avatar']['facialHair'],'beard')

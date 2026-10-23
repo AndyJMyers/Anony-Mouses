@@ -1,3 +1,4 @@
+from support import service_for_test
 import io
 import json
 import tempfile
@@ -18,7 +19,7 @@ def picture(metadata=True):
 class ImageTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.now=1791980000
-        self.s=Service(Path(self.tmp.name)/'db',Fernet.generate_key(),lambda:self.now)
+        self.s=service_for_test(self,Path(self.tmp.name)/'db',Fernet.generate_key(),lambda:self.now)
         self.s.seed_districts([('GU2',51.24,-.59)])
         self.users=[]
         for name in ['alice','bob','carol']:

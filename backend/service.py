@@ -13,7 +13,9 @@ import hmac
 import math
 import re
 import secrets
-import sqlite3
+from .database import Database, IntegrityError
+from .paging import page_limit, encode_cursor, decode_cursor
+import base64
 from datetime import datetime, timezone
 from pathlib import Path
 from cryptography.fernet import Fernet
@@ -53,70 +55,10 @@ class Service:
         if current_offer not in OFFER_PRICES: raise ValueError('Unknown membership offer')
         self.current_offer = current_offer
         self.db_path, self.clock, self.cipher = str(db_path), clock, Fernet(key)
-        Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
-        with self.db() as db:
-            db.executescript('''
-            CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY, login TEXT UNIQUE NOT NULL, salt TEXT NOT NULL,
-                password TEXT NOT NULL, recovery TEXT NOT NULL, joined INTEGER NOT NULL, trial_end INTEGER NOT NULL,
-                paid_until INTEGER NOT NULL DEFAULT 0, consent_version TEXT NOT NULL);
-            CREATE TABLE IF NOT EXISTS payment_events(provider TEXT NOT NULL, event_id TEXT NOT NULL,
-                user_id TEXT REFERENCES users(id) ON DELETE CASCADE, amount_minor INTEGER NOT NULL,
-                currency TEXT NOT NULL, access_until INTEGER NOT NULL, PRIMARY KEY(provider,event_id));
-            CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY, user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
-                csrf TEXT NOT NULL, expires INTEGER NOT NULL);
-            CREATE TABLE IF NOT EXISTS profiles(user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-                alias TEXT NOT NULL, bio BLOB NOT NULL, wants BLOB NOT NULL, district TEXT NOT NULL,
-                age_range TEXT NOT NULL, visible INTEGER NOT NULL DEFAULT 1);
-            CREATE TABLE IF NOT EXISTS districts(code TEXT PRIMARY KEY, lat REAL NOT NULL, lon REAL NOT NULL);
-            CREATE TABLE IF NOT EXISTS conversations(id TEXT PRIMARY KEY, sender TEXT REFERENCES users(id) ON DELETE CASCADE,
-                recipient TEXT REFERENCES users(id) ON DELETE CASCADE, status TEXT NOT NULL, created INTEGER NOT NULL);
-            CREATE TABLE IF NOT EXISTS messages(id TEXT PRIMARY KEY, conversation TEXT REFERENCES conversations(id) ON DELETE CASCADE,
-                sender TEXT REFERENCES users(id) ON DELETE CASCADE, body BLOB NOT NULL, created INTEGER NOT NULL, expires INTEGER NOT NULL);
-            CREATE TABLE IF NOT EXISTS attachments(message_id TEXT PRIMARY KEY REFERENCES messages(id) ON DELETE CASCADE,
-                data BLOB NOT NULL, width INTEGER NOT NULL, height INTEGER NOT NULL);
-            CREATE TABLE IF NOT EXISTS keepsakes(user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
-                message_id TEXT REFERENCES messages(id) ON DELETE CASCADE, PRIMARY KEY(user_id,message_id));
-            CREATE TABLE IF NOT EXISTS blocks(user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
-                target TEXT REFERENCES users(id) ON DELETE CASCADE, PRIMARY KEY(user_id,target));
-            CREATE TABLE IF NOT EXISTS reports(id TEXT PRIMARY KEY, reporter TEXT, target TEXT,
-                reason BLOB NOT NULL, evidence BLOB, created INTEGER NOT NULL, expires INTEGER NOT NULL);
-            CREATE TABLE IF NOT EXISTS report_attachments(report_id TEXT PRIMARY KEY REFERENCES reports(id) ON DELETE CASCADE,
-                data BLOB NOT NULL, width INTEGER NOT NULL, height INTEGER NOT NULL);
-            CREATE INDEX IF NOT EXISTS message_expiry ON messages(expires);
-            CREATE INDEX IF NOT EXISTS session_expiry ON sessions(expires);
-            ''')
-            profile_columns={r['name'] for r in db.execute('PRAGMA table_info(profiles)')}
-            if 'avatar' not in profile_columns:
-                db.execute("ALTER TABLE profiles ADD COLUMN avatar TEXT NOT NULL DEFAULT '{}'")
-            # Remove retired body-size avatar data from old development profiles.
-            for row in db.execute('SELECT user_id,avatar FROM profiles').fetchall():
-                avatar=json.loads(row['avatar'])
-                if 'build' in avatar or 'chest' in avatar:
-                    avatar.pop('build',None);avatar.pop('chest',None)
-                    db.execute('UPDATE profiles SET avatar=? WHERE user_id=?',(json.dumps(avatar),row['user_id']))
-            # Additive migration: old test payments remain immediately eligible.
-            columns = {r['name'] for r in db.execute('PRAGMA table_info(payment_events)')}
-            if 'starts_at' not in columns:
-                db.execute('ALTER TABLE payment_events ADD COLUMN starts_at INTEGER NOT NULL DEFAULT 0')
-            if 'offer_code' not in columns:
-                db.execute("ALTER TABLE payment_events ADD COLUMN offer_code TEXT NOT NULL DEFAULT 'launch'")
-            if 'requested_start' not in columns:
-                db.execute('ALTER TABLE payment_events ADD COLUMN requested_start INTEGER')
-            if 'voucher_code' not in columns:
-                db.execute("ALTER TABLE payment_events ADD COLUMN voucher_code TEXT NOT NULL DEFAULT ''")
-            db.execute('CREATE UNIQUE INDEX IF NOT EXISTS voucher_once ON payment_events(user_id,voucher_code) WHERE voucher_code != \'\'')
-            db.execute('CREATE INDEX IF NOT EXISTS payment_access ON payment_events(user_id, starts_at, access_until)')
-    @contextmanager
-    def db(self):
-        db = sqlite3.connect(self.db_path, timeout=10)
-        db.row_factory = sqlite3.Row
-        db.execute('PRAGMA foreign_keys=ON')
-        db.execute('PRAGMA secure_delete=ON')
-        try:
-            with db:
-                yield db
-        finally:
-            db.close()
+        self.rate_key=hmac.new(key.encode() if isinstance(key,str) else key,b'anony-rate-key-v1',hashlib.sha256).digest()
+        self.database=Database(self.db_path)
+    def db(self):return self.database.connection()
+    def close(self):self.database.close()
     def enc(self, value): return self.cipher.encrypt(value.encode())
     def dec(self, value): return self.cipher.decrypt(value).decode()
     def seed_districts(self, districts):
@@ -125,7 +67,7 @@ class Service:
             for code, lat, lon in districts:
                 if not re.fullmatch(r'[A-Z]{1,2}\d{1,2}[A-Z]?', code): raise ValueError('Invalid outward postcode')
                 if not (-90 <= lat <= 90 and -180 <= lon <= 180): raise ValueError('Invalid district centre')
-                db.execute('INSERT OR REPLACE INTO districts VALUES(?,?,?)', (code,lat,lon))
+                db.execute('INSERT INTO districts VALUES(?,?,?) ON CONFLICT(code) DO UPDATE SET lat=excluded.lat,lon=excluded.lon', (code,lat,lon))
     def register(self, data):
         login = text(data.get('login'), 'Login', 3, 40).lower()
         if not re.fullmatch(r'[a-z0-9_-]+', login): raise Problem(400, 'Use letters, digits, hyphens or underscores for login')
@@ -139,7 +81,7 @@ class Service:
             try:
                 db.execute('INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?)',
                     (uid,login,salt,password_hash(pw,salt),digest(recovery),now,0,0,'development-v2'))
-            except sqlite3.IntegrityError: raise Problem(409,'That login is unavailable')
+            except IntegrityError: raise Problem(409,'That login is unavailable')
             db.execute('INSERT INTO profiles(user_id,alias,bio,wants,district,age_range,avatar,visible) VALUES(?,?,?,?,?,?,?,1)', (uid,*profile))
         return {'user_id':uid,'recovery_code':recovery,'payment_required':True,'development_only':True}
     def validate_profile(self, data):
@@ -162,6 +104,7 @@ class Service:
         if not isinstance(remember,bool): raise Problem(400,'Choose whether to stay signed in')
         login = text(login,'Login',3,40).lower(); password = text(password,'Password',1,128)
         with self.db() as db:
+            db.lock('account-login:'+login)
             row = db.execute('SELECT * FROM users WHERE login=?',(login,)).fetchone()
             # Equal-cost hash even for nonexistent logins.
             actual = password_hash(password, row['salt'] if row else '00'*16)
@@ -180,6 +123,7 @@ class Service:
     def recover(self, login, code, new_password):
         login=text(login,'Login',3,40).lower();code=text(code,'Recovery code',20,100);pw=text(new_password,'Password',12,128)
         with self.db() as db:
+            db.lock('account-login:'+login)
             row=db.execute('SELECT * FROM users WHERE login=?',(login,)).fetchone()
             if not row or not hmac.compare_digest(row['recovery'],digest(code)): raise Problem(401,'Recovery failed')
             new_code,salt=secrets.token_urlsafe(32),secrets.token_hex(16)
@@ -243,7 +187,8 @@ class Service:
         if start_at is not None and type(start_at) is not int:
             raise Problem(400,'Choose a valid membership start time')
         with self.db() as db:
-            db.execute('BEGIN IMMEDIATE')
+            db.lock('payment-event:'+provider+':'+event_id)
+            db.lock('account-id:'+uid)
             existing=db.execute('SELECT * FROM payment_events WHERE provider=? AND event_id=?',(provider,event_id)).fetchone()
             if existing:
                 if (existing['user_id']!=uid or existing['amount_minor']!=amount_minor or existing['currency']!=currency
@@ -265,6 +210,14 @@ class Service:
             db.execute('UPDATE users SET paid_until=? WHERE id=?',(until,uid))
         return {'starts_at':starts,'access_until':until,'duplicate':False}
 
+    def throttle(self,peer,kind,limit):
+        now=int(self.clock());window=now//3600*3600
+        key=hmac.new(self.rate_key,(kind+':'+str(peer)).encode(),hashlib.sha256).hexdigest()
+        with self.db() as db:
+            row=db.execute('''INSERT INTO rate_limits(key,window_start,count) VALUES(?,?,1)
+                ON CONFLICT(key,window_start) DO UPDATE SET count=rate_limits.count+1
+                WHERE rate_limits.count<? RETURNING count''',(key,window,limit)).fetchone()
+        if row is None:raise Problem(429,'Too many attempts; try later')
     def active(self, uid):
         membership=self.membership(uid)
         if not membership['active']:
@@ -272,7 +225,9 @@ class Service:
     def profile(self, uid):
         with self.db() as db: p=db.execute('SELECT * FROM profiles WHERE user_id=?',(uid,)).fetchone()
         if not p: raise Problem(404,'Profile unavailable')
-        return {'id':uid,'alias':p['alias'],'bio':self.dec(p['bio']),'wants':self.dec(p['wants']),
+        return self.profile_row(p)
+    def profile_row(self,p):
+        return {'id':p['user_id'],'alias':p['alias'],'bio':self.dec(p['bio']),'wants':self.dec(p['wants']),
                 'district':p['district'],'age_range':p['age_range'],'avatar':validate_avatar(json.loads(p['avatar'])),'visible':bool(p['visible']),'identity_verified':False,'profile_kind':'demo'}
     def edit_profile(self, uid, data):
         values=self.validate_profile(data)
@@ -283,29 +238,46 @@ class Service:
     def blocked(self, db, a, b):
         return bool(db.execute('SELECT 1 FROM blocks WHERE (user_id=? AND target=?) OR (user_id=? AND target=?)',(a,b,b,a)).fetchone())
     def discover(self, uid, district, radius=25):
+        return self.discover_page(uid,district,radius,limit=100)['items']
+    def discover_page(self,uid,district,radius=25,*,limit=24,cursor=None):
         self.active(uid);district=text(district,'Postcode district',2,4).upper()
         if not isinstance(radius,(int,float)) or isinstance(radius,bool) or not math.isfinite(radius) or not 1<=radius<=200:
             raise Problem(400,'Radius must be between 1 and 200 km')
+        scope='discover:'+district+':'+str(float(radius))
+        try:limit=page_limit(limit);after=decode_cursor(cursor,scope)
+        except ValueError as exc:raise Problem(400,str(exc))
         with self.db() as db:
             centre=db.execute('SELECT lat,lon FROM districts WHERE code=?',(district,)).fetchone()
-            if not centre: raise Problem(400,'District is not in the imported postcode dataset')
-            rows=db.execute('''SELECT p.user_id,p.district,d.lat,d.lon FROM profiles p JOIN districts d ON p.district=d.code
-                JOIN users u ON p.user_id=u.id WHERE p.visible=1 AND p.user_id!=? AND EXISTS (SELECT 1 FROM payment_events e WHERE e.user_id=u.id AND e.starts_at<=? AND e.access_until>?)''',(uid,int(self.clock()),int(self.clock()))).fetchall()
-            found=[]
-            for p in rows:
-                km=distance(centre,(p['lat'],p['lon']))
-                if km>radius or self.blocked(db,uid,p['user_id']): continue
-                profile=self.profile(p['user_id'])
-                # Stable decorative offset from district centre; no home/GPS data is involved.
-                seed=int(hashlib.sha256(p['user_id'].encode()).hexdigest()[:8],16)
-                profile.update({'district_centre':{'lat':p['lat'],'lon':p['lon']},'marker_offset':{'x':(seed%21)-10,'y':((seed//21)%21)-10},'distance_band_km':int(km//5)*5})
-                found.append(profile)
-        return sorted(found,key=lambda p:(p['distance_band_km'],p['id']))
+            if not centre:raise Problem(400,'District is not in the imported postcode dataset')
+            lat,lon=centre['lat'],centre['lon'];lat_span=radius/110.5
+            # A conservative spherical longitude bound. Exact distance is checked in SQL.
+            lon_span=180 if abs(lat)+lat_span>=89.9 else math.degrees(math.asin(min(1,math.sin(radius/6371)/math.cos(math.radians(lat)))))
+            west,east=lon-lon_span,lon+lon_span
+            longitude='lon BETWEEN ? AND ?'
+            if west < -180:longitude='(lon>=? OR lon<=?)';west+=360
+            elif east > 180:longitude='(lon>=? OR lon<=?)';east-=360
+            args=[lat,lon,max(-90,lat-lat_span),min(90,lat+lat_span),west,east,uid,int(self.clock()),int(self.clock()),uid,uid,radius]
+            seek=''
+            if after:
+                seek=' AND (floor(a.km/5)>? OR (floor(a.km/5)=? AND p.user_id>?))';args.extend((after[0],after[0],after[1]))
+            args.append(limit+1)
+            rows=db.execute(f'''WITH areas AS (SELECT code,lat,lon,am_distance(?,?,lat,lon) km FROM districts
+                WHERE lat BETWEEN ? AND ? AND {longitude})
+                SELECT p.*,a.lat,a.lon,CAST(floor(a.km/5) AS INTEGER) band FROM areas a JOIN profiles p ON p.district=a.code
+                WHERE p.visible=1 AND p.user_id!=? AND EXISTS(SELECT 1 FROM payment_events e WHERE e.user_id=p.user_id AND e.starts_at<=? AND e.access_until>?)
+                AND NOT EXISTS(SELECT 1 FROM blocks b WHERE (b.user_id=? AND b.target=p.user_id) OR (b.target=? AND b.user_id=p.user_id))
+                AND a.km<=?{seek} ORDER BY band,p.user_id LIMIT ?''',tuple(args)).fetchall()
+            items=[]
+            for row in rows[:limit]:
+                profile=self.profile_row(row);seed=int(hashlib.sha256(row['user_id'].encode()).hexdigest()[:8],16)
+                profile.update(district_centre={'lat':row['lat'],'lon':row['lon']},marker_offset={'x':seed%21-10,'y':seed//21%21-10},distance_band_km=int(row['band'])*5);items.append(profile)
+            last=rows[limit-1] if len(rows)>limit else None
+            return {'items':items,'next_cursor':encode_cursor(scope,[int(last['band']),last['user_id']]) if last else None}
     def request(self, uid, target):
         self.active(uid);self.active(target)
         if uid==target: raise Problem(400,'Choose another patron')
         with self.db() as db:
-            db.execute('BEGIN IMMEDIATE')
+            db.lock('pair:'+':'.join(sorted((uid,target))))
             p=db.execute('SELECT visible FROM profiles WHERE user_id=?',(target,)).fetchone()
             if not p or not p['visible'] or self.blocked(db,uid,target): raise Problem(404,'Profile unavailable')
             old=db.execute('SELECT id FROM conversations WHERE (sender=? AND recipient=?) OR (sender=? AND recipient=?)',(uid,target,target,uid)).fetchone()
@@ -315,6 +287,7 @@ class Service:
     def conversation(self, db, uid, cid, *, allow_blocked=False):
         c=db.execute('SELECT * FROM conversations WHERE id=?',(cid,)).fetchone()
         if not c or uid not in (c['sender'],c['recipient']): raise Problem(404,'Conversation unavailable')
+        db.lock('pair:'+':'.join(sorted((c['sender'],c['recipient']))))
         if not allow_blocked and self.blocked(db,c['sender'],c['recipient']): raise Problem(403,'Conversation blocked')
         return c
     def accept(self, uid, cid):
@@ -324,12 +297,21 @@ class Service:
             if uid!=c['recipient']: raise Problem(403,'Only the recipient can accept')
             db.execute("UPDATE conversations SET status='accepted' WHERE id=?",(cid,))
         return {'status':'accepted'}
-    def inbox(self, uid):
+    def inbox(self, uid):return self.inbox_page(uid,limit=100)['items']
+    def inbox_page(self,uid,*,limit=24,cursor=None):
+        scope='inbox:'+uid
+        try:limit=page_limit(limit);after=decode_cursor(cursor,scope)
+        except ValueError as exc:raise Problem(400,str(exc))
+        params=[uid,uid,uid,uid,uid];seek=''
+        if after:seek=' AND (c.created<? OR (c.created=? AND c.id<?))';params.extend((after[0],after[0],after[1]))
+        params.append(limit+1)
         with self.db() as db:
-            rows=db.execute('SELECT * FROM conversations WHERE sender=? OR recipient=? ORDER BY created DESC',(uid,uid)).fetchall()
-            return [{'id':c['id'],'status':c['status'],'other':c['recipient'] if c['sender']==uid else c['sender'],
-                'incoming':c['recipient']==uid,
-                'other_alias':db.execute('SELECT alias FROM profiles WHERE user_id=?',(c['recipient'] if c['sender']==uid else c['sender'],)).fetchone()['alias']} for c in rows if not self.blocked(db,c['sender'],c['recipient'])]
+            rows=db.execute('''SELECT c.*,p.alias FROM conversations c JOIN profiles p ON p.user_id=CASE WHEN c.sender=? THEN c.recipient ELSE c.sender END
+                WHERE (c.sender=? OR c.recipient=?) AND NOT EXISTS(SELECT 1 FROM blocks b WHERE
+                (b.user_id=? AND b.target=p.user_id) OR (b.target=? AND b.user_id=p.user_id))'''+seek+' ORDER BY c.created DESC,c.id DESC LIMIT ?',tuple(params)).fetchall()
+            items=[{'id':c['id'],'status':c['status'],'other':c['recipient'] if c['sender']==uid else c['sender'],'incoming':c['recipient']==uid,'other_alias':c['alias']} for c in rows[:limit]]
+            last=rows[limit-1] if len(rows)>limit else None
+            return {'items':items,'next_cursor':encode_cursor(scope,[last['created'],last['id']]) if last else None}
     def send(self, uid, cid, body):
         self.active(uid);body=text(body,'Message',1,2000);now=int(self.clock())
         with self.db() as db:
@@ -345,9 +327,8 @@ class Service:
             if c['status']!='accepted':raise Problem(403,'Wait for the recipient to accept')
         pixels,width,height=normalise_image(raw)
         encrypted=self.cipher.encrypt(pixels);now=int(self.clock());mid=secrets.token_hex(16)
-        self.purge()
         with self.db() as db:
-            db.execute('BEGIN IMMEDIATE')
+            db.lock('account-id:'+uid)
             c=self.conversation(db,uid,cid)
             if c['status']!='accepted':raise Problem(403,'Wait for the recipient to accept')
             used=db.execute('SELECT coalesce(sum(length(a.data)),0) FROM attachments a JOIN messages m ON m.id=a.message_id WHERE m.sender=?',(uid,)).fetchone()[0]
@@ -356,7 +337,6 @@ class Service:
             db.execute('INSERT INTO attachments VALUES(?,?,?,?)',(mid,encrypted,width,height))
         return {'id':mid,'expires':now+14*DAY,'image':{'url':'/api/images/'+mid,'width':width,'height':height}}
     def image(self, uid, mid):
-        self.purge()
         with self.db() as db:
             m=db.execute('SELECT * FROM messages WHERE id=?',(mid,)).fetchone()
             if not m:raise Problem(404,'Image unavailable')
@@ -369,18 +349,27 @@ class Service:
         a=db.execute('SELECT width,height FROM attachments WHERE message_id=?',(mid,)).fetchone()
         return {'url':'/api/images/'+mid,'width':a['width'],'height':a['height']} if a else None
 
-    def messages(self, uid, cid):
-        self.purge()
+    def messages(self,uid,cid):return self.messages_page(uid,cid,limit=100)['items']
+    def messages_page(self,uid,cid,*,limit=50,cursor=None):
+        scope='messages:'+cid
+        try:limit=page_limit(limit,50);before=decode_cursor(cursor,scope)
+        except ValueError as exc:raise Problem(400,str(exc))
+        params=[uid,cid,int(self.clock())];seek=''
+        if before:seek=' AND (m.created<? OR (m.created=? AND m.id<?))';params.extend((before[0],before[0],before[1]))
+        params.append(limit+1)
         with self.db() as db:
             self.conversation(db,uid,cid)
-            rows=db.execute('''SELECT m.*,k.message_id saved FROM messages m LEFT JOIN keepsakes k
-                ON k.message_id=m.id AND k.user_id=? WHERE conversation=? AND (expires>? OR k.message_id IS NOT NULL)
-                ORDER BY created,m.id''',(uid,cid,int(self.clock()))).fetchall()
-            return [{'id':m['id'],'sender':m['sender'],'body':self.dec(m['body']),'expires':m['expires'],'saved':bool(m['saved']),'image':self.image_details(db,m['id'])} for m in rows]
+            rows=db.execute('''SELECT m.*,k.message_id saved,a.width,a.height FROM messages m LEFT JOIN keepsakes k
+                ON k.message_id=m.id AND k.user_id=? LEFT JOIN attachments a ON a.message_id=m.id
+                WHERE m.conversation=? AND (m.expires>? OR k.message_id IS NOT NULL)'''+seek+' ORDER BY m.created DESC,m.id DESC LIMIT ?',tuple(params)).fetchall()
+            items=[{'id':m['id'],'sender':m['sender'],'body':self.dec(m['body']),'expires':m['expires'],'saved':bool(m['saved']),
+                'image':{'url':'/api/images/'+m['id'],'width':m['width'],'height':m['height']} if m['width'] is not None else None} for m in reversed(rows[:limit])]
+            last=rows[limit-1] if len(rows)>limit else None
+            return {'items':items,'next_cursor':encode_cursor(scope,[last['created'],last['id']]) if last else None}
     def keep(self, uid, mid):
         self.active(uid)
         with self.db() as db:
-            db.execute('BEGIN IMMEDIATE')
+            db.lock('account-id:'+uid)
             m=db.execute('SELECT * FROM messages WHERE id=?',(mid,)).fetchone()
             if not m: raise Problem(404,'Message unavailable')
             self.conversation(db,uid,m['conversation'])
@@ -404,8 +393,9 @@ class Service:
     def block(self, uid, target):
         if uid==target: raise Problem(400,'Cannot block yourself')
         with self.db() as db:
+            db.lock('pair:'+':'.join(sorted((uid,target))))
             if not db.execute('SELECT 1 FROM users WHERE id=?',(target,)).fetchone(): raise Problem(404,'Profile unavailable')
-            db.execute('INSERT OR IGNORE INTO blocks VALUES(?,?)',(uid,target))
+            db.execute('INSERT INTO blocks VALUES(?,?) ON CONFLICT(user_id,target) DO NOTHING',(uid,target))
         return {'blocked':True}
     def report(self, uid, target, reason, message_id=None):
         reason=text(reason,'Reason',1,1000);evidence=None;attachment=None
@@ -426,15 +416,19 @@ class Service:
         return {'id':rid,'retention_days':90}
     def delete_account(self, uid):
         with self.db() as db:
-            db.execute('BEGIN IMMEDIATE')
+            db.lock('account-id:'+uid)
             db.execute('DELETE FROM users WHERE id=?',(uid,))
             db.execute('UPDATE reports SET reporter=NULL WHERE reporter=?',(uid,))
             db.execute('UPDATE reports SET target=NULL WHERE target=?',(uid,))
         self.purge();return {'deleted':True,'note':'Reported evidence follows the separate development retention rule; backups are not managed by this service.'}
-    def purge(self):
+    def purge(self,limit=500):
+        try:limit=page_limit(limit,500,5000)
+        except ValueError as exc:raise Problem(400,str(exc))
         with self.db() as db:
-            now=int(self.clock())
-            result=db.execute('DELETE FROM messages WHERE expires<=? AND NOT EXISTS(SELECT 1 FROM keepsakes WHERE message_id=messages.id)',(now,)).rowcount
-            db.execute('DELETE FROM sessions WHERE expires<=?',(now,))
-            db.execute('DELETE FROM reports WHERE expires<=?',(now,))
-        return {'deleted_messages':result}
+            db.lock('expiry-cleanup');now=int(self.clock())
+            messages=db.execute('''DELETE FROM messages WHERE id IN(SELECT id FROM messages m WHERE expires<=?
+                AND NOT EXISTS(SELECT 1 FROM keepsakes WHERE message_id=m.id) ORDER BY expires,id LIMIT ?)''',(now,limit)).rowcount
+            sessions=db.execute('DELETE FROM sessions WHERE token IN(SELECT token FROM sessions WHERE expires<=? ORDER BY expires,token LIMIT ?)',(now,limit)).rowcount
+            db.execute('DELETE FROM rate_limits WHERE (key,window_start) IN(SELECT key,window_start FROM rate_limits WHERE window_start<? ORDER BY window_start,key LIMIT ?)',(now-86400,limit))
+            reports=db.execute('DELETE FROM reports WHERE id IN(SELECT id FROM reports WHERE expires<=? ORDER BY expires,id LIMIT ?)',(now,limit)).rowcount
+        return {'deleted_messages':messages,'deleted_sessions':sessions,'deleted_reports':reports}

@@ -1,3 +1,4 @@
+from support import service_for_test
 """Exercise the member journey through HTTP, including cookies and isolation."""
 import json
 import tempfile
@@ -15,7 +16,7 @@ from backend.service import Service
 class MemberHTTPTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.service = Service(Path(self.tmp.name)/'test.sqlite3', Fernet.generate_key(), lambda: 1791980000)
+        self.service = service_for_test(self,Path(self.tmp.name)/'test.sqlite3', Fernet.generate_key(), lambda: 1791980000)
         self.service.seed_districts([('GU2',51.24,-.59),('GU1',51.24,-.56)])
         self.server = make_server('127.0.0.1',0,lambda env,start: self.app(env,start),handler_class=QuietHandler)
         self.origin = 'http://127.0.0.1:' + str(self.server.server_port)

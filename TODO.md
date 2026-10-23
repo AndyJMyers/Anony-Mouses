@@ -2,6 +2,20 @@
 
 Current offer updated 23 October 2026; earlier checkpoints below are dated history. See [the membership decision](docs/membership-offer.md).
 
+## Current technical work — 23 October 2026
+
+Marketing preparation is deferred while the technical work proceeds. The dated checkpoints below remain history; current pricing is £50 planned standard, £20 website offer and the planned £10 student campaign, with no automatic renewal.
+
+- [x] Implement a pooled PostgreSQL adapter alongside SQLite development storage, versioned migrations and per-operation transaction locks. PostgreSQL execution is being verified in CI before acceptance.
+- [x] Bound discovery, inbox and message queries with keyset pages; filter district distance and blocks in SQL; add supporting indexes and member UI page controls.
+- [x] Share rate limits in the database across app instances; store keyed hashes rather than raw peer addresses in rate records.
+- [x] Remove expiry sweeps from chat reads and image fetches; implement bounded cleanup batches. Scheduled cleanup and migration/restore rehearsal are next.
+- [ ] Verify all storage/HTTP tests against actual PostgreSQL and complete a SQLite-to-PostgreSQL rehearsal.
+- [ ] Import the nationwide outward-district index into the connected lounge; distinguish approximate development data from a maintained production source.
+- [ ] Portable private media, isolated image processing, scheduled retention and tested encrypted backup/restore.
+- [ ] Production HTTP/TLS deployment, final provider adapters, payment reconciliation/refunds, age assurance, operator report/review and applicable evidence/rights controls.
+- [ ] Hosted pilot, load tests and launch readiness gates. Real public access remains disabled.
+
 ## Goal
 
 Keep the established atmosphere: **adult, playful and a little louche**. Build a small real adult dating service behind the prototype, then launch nationally with distinctive creative and tailored outreach. Making it is part of the pleasure; revenue and notoriety are possible bonuses.

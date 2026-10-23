@@ -1,3 +1,5 @@
 # Local backend only; GitHub Pages needs no Python runtime.
 cryptography==50.0.2
 Pillow==12.3.0
+psycopg[binary,pool]==3.3.6
+psycopg-pool==3.3.3

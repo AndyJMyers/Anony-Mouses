@@ -1,25 +1,24 @@
 """Loopback-only development API; deliberately cannot run as production."""
 import argparse, json, os, re, secrets, threading, time
 from pathlib import Path
-from collections import defaultdict, deque
 from http.cookies import SimpleCookie
+from urllib.parse import parse_qs
 from wsgiref.simple_server import make_server, WSGIRequestHandler
 from .service import Service, Problem, digest, OFFER_PRICES
 
 class App:
     def __init__(self,service,origin='http://127.0.0.1:8080'):
         self.web_root=Path(__file__).resolve().parent.parent
-        self.service,self.origin=service,origin;self.attempts=defaultdict(deque);self.lock=threading.Lock()
-    def throttle(self,peer,kind,limit):
-        now=time.monotonic()
-        with self.lock:
-            for key in list(self.attempts):
-                q=self.attempts[key]
-                while q and q[0]<now-3600:q.popleft()
-                if not q:del self.attempts[key]
-            q=self.attempts[(peer,kind)]
-            if len(q)>=limit:raise Problem(429,'Too many attempts; try later')
-            q.append(now)
+        self.service,self.origin=service,origin
+    def throttle(self,peer,kind,limit):self.service.throttle(peer,kind,limit)
+    @staticmethod
+    def paging(env):
+        try:
+            values=parse_qs(env.get('QUERY_STRING',''),max_num_fields=4,keep_blank_values=True)
+            if set(values)-{'limit','cursor'} or any(len(v)!=1 for v in values.values()):raise ValueError()
+            limit=int(values['limit'][0]) if 'limit' in values else None
+        except ValueError:raise Problem(400,'Invalid page parameters')
+        return {'limit':limit,'cursor':values.get('cursor',[None])[0]}
     def __call__(self,env,start):
         headers=[]
         try:
@@ -90,6 +89,9 @@ class App:
                 s.logout(token);headers.append(('Set-Cookie','am_session=; Path=/api; HttpOnly; SameSite=Strict; Max-Age=0'));result={'logged_out':True}
             elif path=='/api/profile' and method=='GET':result=s.profile(uid)
             elif path=='/api/profile' and method=='POST':result=s.edit_profile(uid,data)
+            elif path=='/api/discover/page' and method=='POST':result=s.discover_page(uid,data.get('district'),data.get('radius_km',25),limit=data.get('limit',24),cursor=data.get('cursor'))
+            elif path=='/api/conversations/page' and method=='GET':result=s.inbox_page(uid,**self.paging(env))
+            elif (m:=re.fullmatch(r'/api/conversations/([a-f0-9]{32})/messages/page',path)) and method=='GET':result=s.messages_page(uid,m[1],**self.paging(env))
             elif path=='/api/discover' and method=='POST':result=s.discover(uid,data.get('district'),data.get('radius_km',25))
             elif path=='/api/conversations' and method=='GET':result=s.inbox(uid)
             elif path=='/api/conversations' and method=='POST':result=s.request(uid,data.get('target'))
@@ -116,7 +118,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--db',default='runtime/anony-mouse.sqlite3');p.add_argument('--port',type=int,default=8080);p.add_argument('--purge',action='store_true');p.add_argument('--seed-test-districts',action='store_true');p.add_argument('--grant-test-month',metavar='LOGIN',help='Operator-only fictional monthly payment fixture; no money moves');p.add_argument('--voucher',default='',help='Development invitation code');p.add_argument('--offer',choices=['website','launch','standard'],default='website');p.add_argument('--start-in-days',type=int,choices=range(8),default=0);args=p.parse_args()
     key=os.environ.get('ANONY_MOUSE_DATA_KEY')
     if not key:raise SystemExit('Set ANONY_MOUSE_DATA_KEY through your environment; never commit it.')
-    s=Service(args.db,key,time.time,current_offer=args.offer)
+    s=Service(os.environ.get('ANONY_MOUSE_DATABASE_URL') or args.db,key,time.time,current_offer=args.offer)
     if args.seed_test_districts:s.seed_districts([('GU2',51.24,-.59),('GU1',51.24,-.56),('SW1A',51.50,-.14)])
     if args.purge:print(s.purge());return
     if args.grant_test_month:

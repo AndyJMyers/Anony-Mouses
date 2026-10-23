@@ -1,0 +1,4 @@
+CREATE OR REPLACE FUNCTION am_distance(a DOUBLE PRECISION,b DOUBLE PRECISION,c DOUBLE PRECISION,d DOUBLE PRECISION)
+RETURNS DOUBLE PRECISION LANGUAGE SQL IMMUTABLE STRICT PARALLEL SAFE AS $$
+SELECT 6371.0*2*asin(least(1.0,sqrt(power(sin(radians(c-a)/2),2)+cos(radians(a))*cos(radians(c))*power(sin(radians(d-b)/2),2))))
+$$;
