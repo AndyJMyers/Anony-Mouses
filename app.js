@@ -41,3 +41,14 @@ $('startDelay').addEventListener('change',showEntranceDates);showEntranceDates()
 // Preview only. Production must price and validate a server-created order.
 function applyVoucher(){const code=$('voucherCode').value.trim().toUpperCase();let price=20;let message='Website offer: £20 for one calendar month.';if(code){if(code==='KEELE_SU_10'&&Date.now()<Date.parse('2026-12-01T00:00:00Z')){price=10;message='Example code applied: £10 for one calendar month. Purchase by 30 November 2026, 23:59 UK time. One use per account; no stacking. No affiliation implied.';}else{message='That code is unavailable or expired. Website offer remains £20; clear or replace the code to continue.';}}$('ticketPrice').textContent='£'+price;$('demoPay').textContent='Preview the £'+price+' entrance ↗';$('voucherStatus').textContent=message;$('demoPay').disabled=Boolean(code&&price!==10);}
 $('applyVoucher').addEventListener('click',applyVoucher);$('voucherCode').addEventListener('input',applyVoucher);applyVoucher();
+
+// Recognition uses the authenticated member service, never a browser-stored identity.
+$('returningCustomer').addEventListener('click',()=>{
+  if(location.protocol==='http:'&&location.hostname==='127.0.0.1') location.href='members.html';
+  else openDialog('returningDialog');
+});
+$('returningExplore').addEventListener('click',()=>{$('returningDialog').close();$('explore').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});});
+if(location.protocol==='http:'&&location.hostname==='127.0.0.1'){
+  fetch('/api/session',{credentials:'same-origin',cache:'no-store'})
+    .then(r=>r.ok?r.json():null).then(s=>{if(s&&s.profile){$('returningCustomer').textContent='Welcome back · Continue ↗';$('returningCustomer').setAttribute('aria-label','Continue to your member lounge');}}).catch(()=>{});
+}

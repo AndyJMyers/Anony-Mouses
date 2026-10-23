@@ -158,7 +158,8 @@ class Service:
         try: avatar=validate_avatar(data.get('avatar'))
         except ValueError as exc: raise Problem(400,str(exc))
         return alias,self.enc(bio),self.enc(wants),district,age,json.dumps(avatar,sort_keys=True)
-    def login(self, login, password):
+    def login(self, login, password, remember=False):
+        if not isinstance(remember,bool): raise Problem(400,'Choose whether to stay signed in')
         login = text(login,'Login',3,40).lower(); password = text(password,'Password',1,128)
         with self.db() as db:
             row = db.execute('SELECT * FROM users WHERE login=?',(login,)).fetchone()
@@ -166,7 +167,7 @@ class Service:
             actual = password_hash(password, row['salt'] if row else '00'*16)
             if not row or not hmac.compare_digest(row['password'],actual): raise Problem(401,'Incorrect login or password')
             token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
-            db.execute('INSERT INTO sessions VALUES(?,?,?,?)',(digest(token),row['id'],csrf,int(self.clock())+7*DAY))
+            db.execute('INSERT INTO sessions VALUES(?,?,?,?)',(digest(token),row['id'],csrf,int(self.clock())+(30 if remember else 7)*DAY))
             return token, {'csrf':csrf,'user_id':row['id']}
     def authenticate(self, token, csrf=None, mutation=False):
         with self.db() as db:

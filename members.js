@@ -34,14 +34,14 @@ function signedOut() {
   epoch++; revealedImages.clear(); renderedSignature=''; clearImageDraft(); clearInterval(refreshTimer); refreshTimer = null; session = null; activeThread = null; threads = []; matches = []; draft = null; entranceAction = null;
   for (const id of ['matches','memberMap','threads','messages','kept']) $(id).replaceChildren();
   $('recoveryCode').textContent = ''; $('messageBody').value = ''; $('account').hidden = true; $('entrance').hidden = false; $('logout').hidden = true; $('chat').hidden = true; $('keepCount').textContent = '0';
-  $('signup').reset(); $('signin').reset(); $('recovery').reset(); tab('signin');
+  $('signupRemember').checked=false; $('signup').reset(); $('signin').reset(); $('recovery').reset(); tab('signin');
 }
 function date(ts) { return new Date(ts * 1000).toLocaleDateString(undefined, { day:'numeric', month:'short', year:'numeric' }); }
 async function enter() {
   session = await api('session'); epoch++;
   $('entrance').hidden = true; $('account').hidden = false; $('logout').hidden = false;
   $('recoveryCode').textContent = ''; draft = null;
-  $('welcome').textContent = 'Welcome, ' + session.profile.alias + '.';
+  $('welcome').textContent = 'Welcome back, ' + session.profile.alias + '.';
   $('membership').textContent = session.membership.active ? 'Access until ' + date(session.membership.access_until) : session.membership.scheduled ? 'Your paid month starts ' + date(session.membership.starts_at) + ' · until ' + date(session.membership.access_until) : 'Payment required · website month £20, planned standard £50 · checkout not connected';
   for (const field of ['alias','bio','wants','district','age_range']) $('editProfile').elements[field].value = session.profile[field];
   editMouse.set(session.profile.avatar);
@@ -62,14 +62,14 @@ async function view(name) {
 function showCode(code, action) { $('recoveryCode').textContent = code; tab('recoveryResult'); entranceAction = action; }
 document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => tab(b.dataset.tab)));
 document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => run(() => view(b.dataset.view))));
-$('signin').addEventListener('submit', e => { e.preventDefault(); run(async () => { const data = formData(e.target); await api('login','POST',data); e.target.reset(); await enter(); }); });
+$('signin').addEventListener('submit', e => { e.preventDefault(); run(async () => { const data = {...formData(e.target),remember:e.target.elements.remember.checked}; await api('login','POST',data); e.target.reset(); await enter(); }); });
 $('signup').addEventListener('submit', e => { e.preventDefault(); draft = { ...formData(e.target), avatar:signupMouse.get(), adult:true, consent:true }; $('trialAlias').textContent = draft.alias; tab('trial'); });
 $('backSignup').addEventListener('click', () => tab('signup'));
 $('startTrial').addEventListener('click', () => run(async () => {
   if (!draft) throw new Error('Please complete your details first.');
   const result = await api('register','POST',draft);
   // Once registration succeeds, never offer a second submission, even if login fails.
-  const credentials = { login:draft.login, password:draft.password }; draft = null; $('signup').reset();
+  const credentials = { login:draft.login, password:draft.password, remember:$('signupRemember').checked }; draft = null; $('signup').reset();
   showCode(result.recovery_code, async () => { await api('login','POST',credentials); await enter(); });
   status('Unpaid test account created. Save your recovery code. The operator can add a fictional paid-month fixture locally.');
 }));

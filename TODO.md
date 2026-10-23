@@ -174,3 +174,6 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 - [ ] Replace approximate postcode centres as needed with a maintained production district index; validate real member classification and operational privacy before live access.
 
 - [x] Organic map layout: stable irregular local placements, geographic centroid clusters, variable badge sizes, overlap relief and dial clearance; coverage data unchanged.
+
+- [x] Returning-member entrance and optional 30-day remembered sign-in in the local service; session restoration, logout/recovery revocation and independent membership checks. Public sign-in honestly explains the preview limitation.
+- [ ] Connect returning-member flow to production backend over HTTPS before live accounts.

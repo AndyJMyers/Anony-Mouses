@@ -117,3 +117,7 @@ Signup starts with the mouse creator. Profiles persist only enumerated avatar ch
 ### Development invitation codes
 
 Authenticated `POST /api/quote` with `{"voucher_code":"KEELE_SU_10"}` returns £10 before 1 December 2026 UTC, or rejects an expired/already-redeemed code. This sample implies no union affiliation and is not a reserved order. `python -m backend.server --grant-test-month LOGIN --offer website --voucher KEELE_SU_10` records a fictional discounted payment; it never charges money. Codes are one use per account, cannot stack, and do not enable access before the chosen start. `launch` is retained for historical fixtures only. See the membership offer for real-order, reversal and retention work still required.
+
+## Returning members
+
+The lounge restores authenticated sessions on load. Optional “Keep me signed in on this device” on signup/sign-in uses an opaque HttpOnly, SameSite=Strict cookie and matching server-side expiry of 30 days. Without it, the cookie is session-only with a seven-day server limit (browser session-restore features may restore session cookies). Sign out revokes the current token; recovery revokes all tokens. The homepage checks the same local API to offer Continue; no identity or credentials enter localStorage. Remembered sign-in does not grant or renew paid access. Production HTTPS must set Secure cookies (the adapter adds Secure for an HTTPS origin); production remains disabled.

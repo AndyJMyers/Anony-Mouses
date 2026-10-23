@@ -51,6 +51,24 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(self.s.authenticate(token,session['csrf'],True),self.a['user_id'])
         self.s.recover('alice',self.a['recovery_code'],'A-new-test-passphrase');self.problem(401,self.s.authenticate,token)
         self.problem(401,self.s.recover,'alice',self.a['recovery_code'],'Another-test-passphrase');self.s.login('alice','A-new-test-passphrase')
+    def test_remembered_session_expiry_revocation_and_paid_access(self):
+        token,session=self.s.login('alice','A-long-test-passphrase',True)
+        ordinary,_=self.s.login('alice','A-long-test-passphrase')
+        self.problem(400,self.s.login,'alice','A-long-test-passphrase','false')
+        self.now+=7*DAY
+        self.problem(401,self.s.authenticate,ordinary)
+        self.assertEqual(self.s.authenticate(token),self.a['user_id'])
+        with self.s.db() as db:db.execute('DELETE FROM payment_events WHERE user_id=?',(self.a['user_id'],))
+        self.assertFalse(self.s.membership(self.a['user_id'])['active'])
+        self.problem(402,self.s.discover,self.a['user_id'],'GU2')
+        self.now+=23*DAY
+        self.problem(401,self.s.authenticate,token)
+        token,_=self.s.login('alice','A-long-test-passphrase',True)
+        self.s.logout(token);self.problem(401,self.s.authenticate,token)
+        token,_=self.s.login('alice','A-long-test-passphrase',True)
+        self.s.recover('alice',self.a['recovery_code'],'New-long-test-password')
+        self.problem(401,self.s.authenticate,token)
+
     def test_expiry_and_individual_keepsake_visibility(self):
         cid=self.conversation();a,b=self.a['user_id'],self.b['user_id'];mid=self.s.send(a,cid,'Saved by Bob')['id'];self.s.keep(b,mid);self.now+=14*DAY
         self.assertEqual(self.s.messages(a,cid),[]);self.assertEqual(len(self.s.messages(b,cid)),1);self.s.unkeep(b,mid)

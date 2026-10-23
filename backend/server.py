@@ -76,8 +76,12 @@ class App:
             elif path=='/api/quote' and method=='POST':self.throttle(uid,'quote',30);result=s.quote_month(uid,data.get('voucher_code',''))
             elif path=='/api/register' and method=='POST':self.throttle(peer,'register',10);result=s.register(data)
             elif path=='/api/login' and method=='POST':
-                self.throttle(peer,'login',30);token,result=s.login(data.get('login'),data.get('password'))
-                headers.append(('Set-Cookie',f'am_session={token}; Path=/api; HttpOnly; SameSite=Strict; Max-Age=604800'))
+                self.throttle(peer,'login',30);remember=data.get('remember',False)
+                token,result=s.login(data.get('login'),data.get('password'),remember)
+                cookie=f'am_session={token}; Path=/api; HttpOnly; SameSite=Strict'
+                if remember:cookie+='; Max-Age=2592000'
+                if self.origin.startswith('https://'):cookie+='; Secure'
+                headers.append(('Set-Cookie',cookie))
             elif path=='/api/recover' and method=='POST':self.throttle(peer,'recover',10);result=s.recover(data.get('login'),data.get('recovery_code'),data.get('password'))
             elif path=='/api/session' and method=='GET':
                 with s.db() as db:row=db.execute('SELECT csrf FROM sessions WHERE token=?',(digest(token),)).fetchone()

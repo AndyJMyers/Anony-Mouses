@@ -64,6 +64,23 @@ class MemberHTTPTests(unittest.TestCase):
         self.assertEqual(self.request(bob,'/api/report','POST',dict(target=aid,reason='Fictional concern',message_id=mid),bc)[0],200)
         self.assertEqual(self.request(alice,'/api/logout','POST',{},ac)[0],200)
         self.assertEqual(self.request(alice,'/api/session')[0],401)
+    def test_opt_in_cookie_restores_access_and_signout_forgets_it(self):
+        client=self.clients[0]
+        self.create(client,'alice','GU2')
+        credentials=dict(login='alice',password='Invented-test-password')
+        _,_,headers=self.request(client,'/api/login','POST',credentials)
+        self.assertNotIn('Max-Age',headers['Set-Cookie'])
+        code,_,headers=self.request(client,'/api/login','POST',{**credentials,'remember':True})
+        self.assertEqual(code,200)
+        self.assertIn('Max-Age=2592000',headers['Set-Cookie'])
+        self.assertIn('HttpOnly',headers['Set-Cookie']);self.assertIn('SameSite=Strict',headers['Set-Cookie'])
+        code,session,_=self.request(client,'/api/session');self.assertEqual(code,200)
+        self.assertEqual(session['profile']['alias'],'Alice')
+        _,_,headers=self.request(client,'/api/logout','POST',{},session['csrf'])
+        self.assertIn('Max-Age=0',headers['Set-Cookie'])
+        self.assertEqual(self.request(client,'/api/session')[0],401)
+        self.assertEqual(self.request(client,'/api/login','POST',{**credentials,'remember':'false'})[0],400)
+
     def test_assets_are_allowlisted_and_no_secrets_are_served(self):
         client=self.clients[0]
         for path in ['/members.html','/members.js','/members.css','/style.css','/assets/anony-mouses-masthead.png']:
