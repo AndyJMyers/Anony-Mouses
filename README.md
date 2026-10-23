@@ -70,6 +70,16 @@ Start now, or choose a start **up to seven days after purchase**. The full calen
 
 The preview demonstrates code entry and start/expiry dates without taking money. The local backend validates invitation prices, expiry and prior redemption, and records fictional payment fixtures idempotently. Codes alone never grant access. Real server-created orders, verified provider callbacks, refunds and cancellation handling remain to be implemented. See [the membership offer and voucher rules](docs/membership-offer.md).
 
+## First marketing campaign: university student unions
+
+**Agreed 23 October 2026:** approach student unions at major universities across the UK as the first national campaign audience, seeking distribution of an offer to their eligible **18+ students**. The proposed student launch offer is **£10 for one calendar month, paid upfront, with no automatic renewal**. Position it around mouse portraits, discretion, nearby introductions and freedom to choose how far a conversation goes.
+
+Campaign line: **“A little chemistry on campus. £10 for your launch month. Mouse portraits. People nearby. No automatic renewal.”**
+
+Prepare a prioritised union contact list, a short tailored pitch and shareable campaign material. Use union-specific invitation codes to measure registrations, purchases and cost; do not imply endorsement or partnership without agreement. Confirm eligibility, the purchase window and activation rules before publishing the live offer. This decision does not activate or extend the expired-by-launch `KEELE_SU_10` example, and does not change the existing £20 general website offer or £50 planned standard price.
+
+**Commercial ambition, not a forecast:** 5% paid take-up of the earlier 2.7-million target audience would mean 135,000 purchases and £1.35 million gross at £10. Track actual union distribution/reach separately from the total student population, then registrations, paid conversion, accepted hellos and conversations. Release the campaign once the live service passes the launch checks above.
+
 ## What works today
 
 | Area | Current implementation |

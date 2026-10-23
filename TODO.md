@@ -177,3 +177,10 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 
 - [x] Returning-member entrance and optional 30-day remembered sign-in in the local service; session restoration, logout/recovery revocation and independent membership checks. Public sign-in honestly explains the preview limitation.
 - [ ] Connect returning-member flow to production backend over HTTPS before live accounts.
+
+## 23 October — first national marketing campaign
+
+- [x] First campaign audience agreed: student unions at major UK universities, with a £10 launch-month offer for eligible adults and no automatic renewal. See the README campaign brief.
+- [ ] Prepare a prioritised, verified union contact list, tailored outreach and shareable campaign material.
+- [ ] Agree student eligibility, actual campaign dates/activation rules and union-specific codes; obtain permission before implying affiliation. The old Keele example is not a live launch offer.
+- [ ] Measure distribution/reach, paid conversion, acquisition/servicing cost and meaningful conversations; 5% of the national target is an ambition, not a forecast. Launch outreach after service readiness.
