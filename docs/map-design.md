@@ -17,3 +17,7 @@ Bundled `map-geography.js` contains a clipped/rounded SVG-path subset of Natural
 - The browser loads these files from the same website. No third-party map tiles, geocoder, map API key or external map tracking request is introduced. Existing hosting/font privacy disclosures still apply.
 
 Controls keep portraits readable locally. At broader scales the grouped badge is used instead of overlapping individual pins. The map retains fictional/approximate location notices and offers keyboard controls through the slider, +/− and reset.
+
+## Organic placement
+
+Local profile positions use deterministic decorative offsets around approximate district centres, with spacing checks and a reserved area for the dial. They are not exact people locations. Positions are repeatable for the same profiles, district and viewport; mood/result changes may cause a little reflow. Wider badges are radius-based groups at population-of-the-demo weighted geographic centroids, with small bounded offsets only to reduce overlap. Their sizes vary with demo counts. A spatial lookup grid speeds neighbour queries but never supplies display positions. Coverage is still measured from the unchanged geographic demo locations, not these decorative offsets.

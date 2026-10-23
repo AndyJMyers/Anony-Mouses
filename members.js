@@ -79,7 +79,7 @@ $('logout').addEventListener('click', () => run(async () => { await api('logout'
 async function search() {
   const values = formData($('search')); const found = await api('discover','POST',{district:values.district,radius_km:Number(values.radius_km)});
   matches = found; $('matches').replaceChildren(); $('memberMapWorld').replaceChildren();mapZoom.reset();
-  const centre = districts.find(d => d.code === values.district);mapZoom.setDistrict(values.district,centre);mapZoom.setCount(found.length);
+  const centre = districts.find(d => d.code === values.district);mapZoom.setDistrict(values.district,centre);mapZoom.setCount(found.length);const positions=AnonyMapLayout.local(found,centre||{lat:51.24,lon:-.59},$('memberMap').clientWidth,$('memberMap').clientHeight);
   if (!found.length) $('matches').append(node('p','No sparks here yet. Create another fictional adult account in a separate browser session.'));
   for (const p of found) {
     const card = node('article',undefined,'match profile-demo'); const avatar=node('div',undefined,'mouse-mini');AnonyMouse.mountPortrait(avatar,p.avatar,p.profile_kind);card.append(avatar,node('h3',p.alias),node('small','DEMO · fictional test account · '+p.age_range+' · '+p.district),node('p',p.bio),node('strong','What I’m looking for'),node('p',p.wants));
@@ -87,11 +87,8 @@ async function search() {
     $('matches').append(card);
     const pin = button('', async () => { card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'}); },'pin profile-demo');
     pin.setAttribute('aria-label','DEMO, '+p.alias+', '+p.district+', '+p.wants);
-    // District centre only; decorative offsets avoid stacking. This is deliberately a schematic.
-    const latScale = 111, lonScale = 111 * Math.cos((centre?.lat || 51) * Math.PI / 180), span = Number(values.radius_km);
-    const x = centre ? (p.district_centre.lon-centre.lon)*lonScale/span*32 : 0;
-    const y = centre ? -(p.district_centre.lat-centre.lat)*latScale/span*32 : 0;
-    pin.style.left = Math.max(15,Math.min(85,50+x+p.marker_offset.x)) + '%'; pin.style.top = Math.max(20,Math.min(80,50+y+p.marker_offset.y)) + '%';
+    // Stable decorative spacing uses district centres, never a home position.
+    const pos=positions.get(p.id);pin.style.left=pos.x+'%';pin.style.top=pos.y+'%';
     const pinPortrait=node('span',undefined,'pin-avatar');AnonyMouse.mountPortrait(pinPortrait,p.avatar,p.profile_kind);pin.append(pinPortrait,node('span','DEMO · '+p.alias + ' · ' + p.wants.slice(0,55),'pin-hint')); $('memberMapWorld').append(pin);
   }
   status(found.length + ' test profile' + (found.length === 1 ? '' : 's') + ' near ' + values.district + '.');

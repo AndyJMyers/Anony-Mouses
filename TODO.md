@@ -172,3 +172,5 @@ Twenty-two tests now cover the local core/HTTP interface. The real service remai
 
 - [x] Nationwide fictional atlas: 5,988 demo adults; blue demos/red reserved for real members; optional gold/sparkles. Approximate 30-mile straight-line coverage checked against 53,962 UK land/coast samples (furthest 20.19 miles). See docs/demo-atlas.md for limits.
 - [ ] Replace approximate postcode centres as needed with a maintained production district index; validate real member classification and operational privacy before live access.
+
+- [x] Organic map layout: stable irregular local placements, geographic centroid clusters, variable badge sizes, overlap relief and dial clearance; coverage data unchanged.
