@@ -1,6 +1,6 @@
 # Six-month cost scenarios — 25 October 2026
 
-**Planning model, not supplier quotes or a sales forecast.** “Users” below means paying, active members during the month, not free signups, website visitors or cumulative accounts. The three scenarios ramp to 10, 300 and 10,000 active paid members by month six. They are alternative demand assumptions, not evidence of conversion or capacity. Month one is the first trading month; pre-launch development is excluded.
+**Planning model, not supplier quotes or a sales forecast.** Cost and P&L review updated 25 October 2026. “Users” below means paying, active members during the month, not free signups, website visitors or cumulative accounts. The three scenarios ramp to 10, 300 and 10,000 active paid members by month six. They are alternative demand assumptions, not evidence of conversion or capacity. Month one is the first trading month; pre-launch development is excluded.
 
 ## Assumptions you can challenge
 
@@ -38,6 +38,70 @@ For a level population rather than the ramp above, keep the same pricing, 50% re
 | 10,000 | £18,108 | £41,532 | £225,768 |
 
 Month two's payment provision rises because half the members now pay £50 instead of the new-buyer £10. This is a price-mix effect, not a sudden increase in the cost of sending a message. No renewal is automatic. The same excluded upfront fees, taxes, reserves, refunds and people costs apply.
+
+## Projected P&L: steady paying populations
+
+### Executive summary
+
+The projections suggest attractive operating margins if Anony-Mouses can acquire adults cheaply and persuade them to renew at the planned £50 monthly price. Although the website introductory offer is £20, the model conservatively prices every new customer at a hypothetical £10 invitation rate and assumes 50% of the previous month's members explicitly renew at £50, with replacements maintaining the active population. At a steady 300 paying members, this produces about £6,300 monthly operating profit before tax from month two, or £6,100 after a separate contingency allowance; at 10,000 members the corresponding figures are £211,200 and £204,300. These figures deduct assumed VAT, infrastructure, age checks, provisional payment fees and a modest support/safety labour allowance, but exclude marketing, development, professional costs, refunds and conditional card registration. They describe potential unit economics, not a validated sales forecast: renewal at £50, acquisition cost, actual provider fees and operational workload remain the decisive unknowns.
+
+This P&L uses **10, 300 or 10,000 active paying members from month one**, matching the level-population cost comparison above. It is distinct from the growing-population scenarios. No sales or renewal is guaranteed and none is automatic. £50 is the planned standard price, not a claim that it has already been charged.
+
+For comparability, assume VAT registration and standard-rated, VAT-inclusive consumer prices throughout: revenue is gross payments divided by 1.2. Smaller businesses may initially be below the registration threshold. Existing supplier-cost budgets are carried through unchanged, with no input-VAT recovery assumed; actual invoiced VAT and recovery must be reconciled. The support/safety allowance is one minute per active member per month at £25/hour. It is not a measured staffing requirement and excludes founder/development time. Payment provision remains an unquoted 10% of gross receipts plus 30p per purchase.
+
+### Month one
+
+All patrons buy the hypothetical £10 introductory month; no £50 renewal receipts are assumed yet.
+
+| Monthly P&L | 10 members | 300 members | 10,000 members |
+| --- | ---: | ---: | ---: |
+| Customer payments | £100 | £3,000 | £100,000 |
+| Assumed output VAT | £17 | £500 | £16,667 |
+| Revenue excluding VAT | £83 | £2,500 | £83,333 |
+| Infrastructure, age and payment costs | £44 | £484 | £15,090 |
+| Support/safety labour allowance | £4 | £125 | £4,167 |
+| **Operating profit before tax** | £35 | £1,891 | £64,077 |
+| Separate contingency allowance | £9 | £97 | £3,018 |
+| **Surplus after contingency** | £26 | £1,794 | £61,059 |
+
+### Each month from two to six
+
+Half the previous month's patrons explicitly buy a £50 renewal; the remaining places are filled with new £10 buyers. This gives **£30 average gross receipts per active member**, not £50. The increase from month one is a price-mix effect, not a jump in messaging costs.
+
+| Monthly P&L | 10 members | 300 members | 10,000 members |
+| --- | ---: | ---: | ---: |
+| Customer payments | £300 | £9,000 | £300,000 |
+| Assumed output VAT | £50 | £1,500 | £50,000 |
+| Revenue excluding VAT | £250 | £7,500 | £250,000 |
+| Infrastructure, age and payment costs | £64 | £1,069 | £34,610 |
+| Support/safety labour allowance | £4 | £125 | £4,167 |
+| **Operating profit before tax** | £182 | £6,306 | £211,223 |
+| Separate contingency allowance | £13 | £214 | £6,922 |
+| **Surplus after contingency** | £169 | £6,092 | £204,301 |
+
+### Six-month totals
+
+| Six-month P&L | 10 members | 300 members | 10,000 members |
+| --- | ---: | ---: | ---: |
+| Customer payments | £1,600 | £48,000 | £1,600,000 |
+| Revenue excluding assumed VAT | £1,333 | £40,000 | £1,333,333 |
+| Infrastructure, age and payment costs | £364 | £5,831 | £188,140 |
+| Support/safety labour allowance | £25 | £750 | £25,000 |
+| **Operating profit before tax** | £944 | £33,419 | £1,120,193 |
+| Separate contingency allowance | £73 | £1,166 | £37,628 |
+| **Surplus after contingency** | £871 | £32,253 | £1,082,565 |
+
+Contingency is a planning reserve, **not an incurred accounting expense**. Operating profit and surplus after contingency are therefore separate lines. The same applies to merchant reserves: withheld cash is not automatically a cost. Figures are rounded only for display.
+
+**Conditional registration:** the £1,560 equivalent of the two published annual card registrations is excluded above. If both apply and cover twelve months from launch, a planning allocation of £130/month would reduce six-month operating profit by £780, while the initial cash outflow would still be £1,560. Confirm applicability, coverage and accounting treatment; do not double-count an overlapping Visa application charge.
+
+**Excluded costs and uncertainty:** acquisition/advertising, founder and developer work, professional services, refunds/disputes beyond the fee provision, extra age workflows, incident response and profit taxes remain outside these figures. One minute of human work per member is a sensitivity, not proof that it covers required operations. Actual costs could exceed the contingency. The existing [HMRC sources](#cash-needed-outside-that-table) explain the tax assumptions; provider prices and open questions are in the [due-diligence review](due-diligence-2026-10-25.md).
+
+### Acquisition and renewal sensitivity
+
+At a steady 10,000 members, 50% renewal needs **5,000 replacement customers each month**. Paying £10 to acquire each adds £50,000/month, reducing the month-two surplus after contingency from about £204,300 to £154,300 before the other excluded costs. At 300 members the same assumption needs 150 replacements and £1,500 monthly acquisition spend. These acquisition prices are sensitivities, not quotes or evidence of demand.
+
+The £10-to-£50 renewal step is the principal revenue assumption to test in a pilot. For reference, 10,000 entirely new £10 customers in a month generate £100,000 gross receipts and about **£61,100 surplus after the same VAT, cost, labour and contingency assumptions**, before acquisition and other excluded costs. Strong renewal cannot be inferred from cheap initial signup. National contact coverage is not proof of conversions, conversations or willing £50 renewals.
 
 ## Members, components and implied receipts
 

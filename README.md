@@ -46,6 +46,12 @@ See the [research, official sources and unresolved questions](docs/due-diligence
 
 See the [full assumptions, monthly breakdowns, liquidity and sensitivities](docs/cost-projection-2026-10-25.md). Payment classification/fees and actual usage can change these numbers substantially; this is not a £100 risk cap or a sub-£1-per-user promise.
 
+### Financial executive summary
+
+The projections suggest attractive operating margins if Anony-Mouses can acquire adults cheaply and persuade them to renew at the planned £50 monthly price. Although the website introductory offer is £20, the model conservatively prices every new customer at a hypothetical £10 invitation rate and assumes 50% of the previous month's members explicitly renew at £50, with replacements maintaining the active population. At a steady 300 paying members, this produces about £6,300 monthly operating profit before tax from month two, or £6,100 after a separate contingency allowance; at 10,000 members the corresponding figures are £211,200 and £204,300. These figures deduct assumed VAT, infrastructure, age checks, provisional payment fees and a modest support/safety labour allowance, but exclude marketing, development, professional costs, refunds and conditional card registration. They describe potential unit economics, not a validated sales forecast: renewal at £50, acquisition cost, actual provider fees and operational workload remain the decisive unknowns.
+
+The [projected P&L](docs/cost-projection-2026-10-25.md#projected-pl-steady-paying-populations) gives month-one, months-two-to-six and six-month totals for steady populations of 10, 300 and 10,000 paying members. It separates operating profit from contingency, distinguishes annual registration expense from upfront cash, and shows acquisition sensitivity. These steady-population figures are separate from the growth scenarios above.
+
 ## Christmas launch target board
 
 **Target: Friday 11 December 2026. Christmas contingency: 25 December 2026.** These are delivery targets, not an announcement that memberships are already available. The website is the first release; Android follows after the website is working reliably.
