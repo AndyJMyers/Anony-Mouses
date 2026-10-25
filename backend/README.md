@@ -136,4 +136,4 @@ Rate limits use fixed UTC-hour windows shared through the selected database. Key
 
 See [storage operations](../docs/storage-operations.md) for encrypted snapshots, empty-destination restore, the SQLite-to-PostgreSQL drill, nationwide district import and remaining production limits.
 
-Verification: the 47-test checkpoint passed on both SQLite and PostgreSQL 16 in GitHub Actions, including cross-engine encrypted restore, concurrency and paged HTTP access controls. This does not certify production capacity or provider readiness.
+Verification: the 48-test suite passed on both SQLite and PostgreSQL 16 in [GitHub Actions](https://github.com/AndyJMyers/Anony-Mouses/actions/runs/40018803519), including cross-engine encrypted restore, concurrency and paged HTTP access controls. This does not certify production capacity or provider readiness.

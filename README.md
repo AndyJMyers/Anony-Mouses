@@ -10,6 +10,42 @@ A deliberately simple introductions service for consenting adults seeking flirta
 
 > **Current status:** a public, fictional concept preview, plus a separate local development backend. No real memberships, payments or production messages are handled by the public website. The features below describe the intended service; the status table explains what works today.
 
+## Due diligence — checked 25 October 2026
+
+**The base server is affordable; provider acceptance and data handling are the remaining commercial gates.** Official-source research is complete for the findings below. No supplier has approved this service, and no enquiry, account application or purchase has been submitted. Published terms are not a quote or regulatory clearance.
+
+| Item | Finding | Before launch |
+| --- | --- | --- |
+| Hosting | IO Zoom lists a self-managed **4GB / 40GB VPS at $18/month**; its VPS content policy is a plausible fit. Cancellation is through the portal before renewal; the limited refund guarantee has exclusions. | Confirm our exact scope, London availability, full charges, data terms, logs and recovery. Host billing renews automatically even though patron membership does not. |
+| Age checks | Didit lists **$0.10 age estimation**. Its announced **1 November** pricing replaces the 500-check allowance with $10 shared monthly credit. | Validate effectiveness/fallback and all workflow costs. Obtain short, complete deletion terms; an app receiving only an adult result does not mean the provider retains nothing. |
+| Payments | CCBill supports dating, but fees depend on our UK classification. Published conditional card registrations are **$950 Visa + $1,000 Mastercard annually**, before processing and possible reserves. | Written scope acceptance and an all-in £50/£20/£10 one-off quote. Do not assume these registrations apply, or double-count an initial Visa charge. Stripe's sexual-dating restrictions prevent assuming ordinary checkout eligibility. |
+| Commercial hosting | GitHub Pages' terms exclude running a commercial SaaS/business on Pages. | Move the commercial website/member journey before paid launch; keep GitHub for source. This is a terms issue, not just a traffic limit. |
+| Privacy and safety | Keep the agreed minimal-data 18+ gate, non-explicit policy and report-led review. | Complete assessments, controller/contact details, consent, provider/transfer checks, restricted evidence handling, rights and tested deletion/backup expiry. |
+| Consumer terms | Manual renewal and a deferred start do not remove applicable cancellation rights. | Clear checkout and durable confirmation, required early-start request, and working cancellation/refund handling. |
+| Android | Google Play restricts sexually gratifying services as well as explicit content. | Assess distribution eligibility separately; website first, no store approval assumed. |
+
+**Budget conclusion:** $18/month is the server component, not a complete operating cost. Payment fees/reserves, age-check attempts, email, private media, independent backups and taxes remain to be priced. Public information cannot settle our exact merchant classification, contractual deletion deadlines or provider acceptance.
+
+See the [research, official sources and unresolved questions](docs/due-diligence-2026-10-25.md), [provider decision](docs/provider-decision.md), [prepared enquiries](docs/provider-enquiries.md) and [current priorities](TODO.md). Recheck Didit's 1 November changes and the October-issued Ofcom code amendments before onboarding. No provider contact is sent by this documentation update.
+
+## Six-month cost scenarios
+
+**Illustrative running cash budgets, not quotes or a sales forecast.** Paid-member ramps by month are **0/5/10/10/10/10**, **50/100/150/200/250/300**, and **500/1,500/3,000/5,000/7,500/10,000**. Assume 50% of the previous month renew at £50; new buyers get a hypothetical £10 invitation month. Payment fees are provisioned at 10% + 30p, age estimation at $0.10 with 1.2 attempts/new buyer, FX at £0.80/$, plus infrastructure/media/email/backups and 20% contingency. These are modelling choices, not a permanent discount or measured conversion.
+
+| Month | Almost no customers | A few hundred | Growing to 10,000 |
+| --- | ---: | ---: | ---: |
+| 1 | £36 | £123 | £952 |
+| 2 | £45 | £327 | £3,930 |
+| 3 | £65 | £555 | £8,995 |
+| 4 | £77 | £758 | £16,099 |
+| 5 | £77 | £962 | £25,302 |
+| 6 | £77 | £1,166 | £35,676 |
+| **Six months** | **£376** | **£3,891** | **£90,954** |
+
+**Additional cash:** £1,560 for the two published card registrations **if both apply**, plus any other quoted onboarding charges, reserves/refunds, tax, marketing, professional costs and bought-in labour. Those are excluded above. An illustrative one minute of paid support/safety work per member at £25/hour adds £4,167/month at 10,000 members. Founder time is not costless. The large scenario also needs VAT planning and load-tested infrastructure.
+
+See the [full assumptions, monthly breakdowns, liquidity and sensitivities](docs/cost-projection-2026-10-25.md). Payment classification/fees and actual usage can change these numbers substantially; this is not a £100 risk cap or a sub-£1-per-user promise.
+
 ## Christmas launch target board
 
 **Target: Friday 11 December 2026. Christmas contingency: 25 December 2026.** These are delivery targets, not an announcement that memberships are already available. The website is the first release; Android follows after the website is working reliably.
@@ -96,7 +132,7 @@ Prepare a prioritised union contact list, a short tailored pitch and shareable c
 
 The public preview uses **no analytics**. The chemistry page keeps only its explicitly chosen style, portrait blend and postcode district in tab-scoped `sessionStorage`; use “Forget my choice” to remove them. No credentials, profile descriptions or chats are stored there. Demo form details, mouse choices, messages and keepsakes remain in page memory and disappear on reload. Hosting and external font requests still disclose technical information to their providers, as explained in the privacy statement below.
 
-GitHub Pages publishes the root of `main`; open `index.html` for the static preview. For persistent fictional-account tests, follow the [local backend instructions](backend/README.md) and open `http://127.0.0.1:8080/members.html`. Use invented details. The commercial member service needs suitable backend hosting; GitHub Pages remains the public preview host.
+GitHub Pages publishes the root of `main`; open `index.html` for the static preview. For persistent fictional-account tests, follow the [local backend instructions](backend/README.md) and open `http://127.0.0.1:8080/members.html`. Use invented details. The commercial member service needs suitable backend hosting; GitHub Pages currently hosts the fictional preview; move the commercial website/member journey before paid launch.
 
 [Product brief](docs/product-brief.md) · [Priorities and TODOs](TODO.md) · [Membership decision](docs/membership-offer.md) · [Backend setup](backend/README.md) · [Android track](docs/android-track.md)
 
@@ -115,7 +151,7 @@ These are the agreed operating rules. Production reporting, operator review, enf
 
 ## Data and privacy statement
 
-**Policy decision updated 23 October 2026; legal-source review dated 17 October 2026 — UK launch plan.** The public site is a fictional preview. The separate member service runs only in local development; live age checks, payments and production retention are not operating. The planned rules below are implementation requirements, not claims that the prototype already complies. Before real registration, we must publish the finished notice in the website and Android app as well as here.
+**Policy decision updated 23 October 2026; privacy statement prepared 17 October, supplemented by the linked 25 October due-diligence review — UK launch plan.** The public site is a fictional preview. The separate member service runs only in local development; live age checks, payments and production retention are not operating. The planned rules below are implementation requirements, not claims that the prototype already complies. Before real registration, we must publish the finished notice in the website and Android app as well as here.
 
 **Our principle: comply with the law while collecting and retaining as little personal data as possible.** Every retained field must have a stated purpose, recipient and deletion rule. Discreet introductions should not require an unnecessary identity history. Use a pseudonym. We do not plan to require a real name, full postcode, address book, phone number, exact date of birth or GPS location for a dating profile. An age or payment provider may need some of those details for its own job. Pseudonyms do not make data legally anonymous. Membership will require an account, payment and a validated over-18 check before access to real profiles or messaging. We have accepted this age-only launch design; the provider, method, lawful basis and retention terms still need validation before collection. Our intended integration receives only the adult result and minimum verification reference/timing, rather than identity documents, a selfie, legal name or exact birth date. Any checking material processed by the provider must be explained separately, with its recipients and verified deletion deadlines. Optional profile disclosures and marketing consent must remain optional.
 
@@ -186,15 +222,13 @@ The linked guidance explains the rules; the retention targets described as propo
 
 ## Development foundation
 
-A separate [local backend](backend/README.md) now implements persistent accounts, district-based discovery and private text conversations. The connected member lounge at `http://127.0.0.1:8080/members.html` supports signup, sign-in, profile editing, schematic district discovery, accepted conversation requests, private text and image messages, keepsakes, blocking, local reports, recovery and deletion. **48 automated tests** cover the core and HTTP journey, including cookies, access isolation, static-file boundaries, scheduled membership, invitation-code pricing/expiry/redemption and saved mouse configurations. The storage foundation now includes a pooled PostgreSQL adapter, versioned migrations, bounded/paginated discovery and conversations, and database-shared rate limits. The 47-test checkpoint passed on SQLite and actual PostgreSQL 16 in CI, including the SQLite-to-PostgreSQL restore drill; the expanded 48-test suite passes locally on SQLite, including private Squeaked discovery markers. Encrypted portable snapshots, bounded expiry workers and nationwide staging district import are implemented; see [storage operations](docs/storage-operations.md). Production use is disabled and the public mockup remains fictional.
+A separate [local backend](backend/README.md) now implements persistent accounts, district-based discovery and private text conversations. The connected member lounge at `http://127.0.0.1:8080/members.html` supports signup, sign-in, profile editing, schematic district discovery, accepted conversation requests, private text and image messages, keepsakes, blocking, local reports, recovery and deletion. **48 automated tests** cover the core and HTTP journey, including cookies, access isolation, static-file boundaries, scheduled membership, invitation-code pricing/expiry/redemption and saved mouse configurations. The storage foundation now includes a pooled PostgreSQL adapter, versioned migrations, bounded/paginated discovery and conversations, and database-shared rate limits. The full 48-test suite passed on SQLite and actual PostgreSQL 16 in [CI](https://github.com/AndyJMyers/Anony-Mouses/actions/runs/40018803519), including the SQLite-to-PostgreSQL restore drill and private Squeaked discovery markers. These are functional checks, not production load-test results. Encrypted portable snapshots, bounded expiry workers and nationwide staging district import are implemented; see [storage operations](docs/storage-operations.md). Production use is disabled and the public mockup remains fictional.
 
 See the [foundation review](docs/foundation-review.md) for hosting, payment, age assurance and privacy findings and unresolved provider requirements.
 
-## Provider selection and deployment
+## Deployment and supporting documents
 
-The [17 October age/access assessment](docs/age-access-assessment.md) concludes that our planned ungated member service is likely to attract under-18s despite its non-explicit rule. An age-only 18+ gate is the agreed launch design (accepted 23 October), subject to effectiveness/privacy review; a checkbox/payment-only alternative has not been established as adequate. See the [initial illegal-risk register](docs/illegal-risk-register.md), [commercial findings and outstanding acceptance gates](docs/commercial-readiness.md), and [prepared provider enquiries](docs/provider-enquiries.md). These are pre-launch findings: no real service, provider approval, purchase or enquiry submission is claimed.
-
-See [the provider decision and cost model](docs/provider-decision.md) and [the deployment plan](docs/deployment-plan.md). Accounts now start unpaid; an internal monthly-payment ledger is tested, but real provider verification/checkout and production deployment are pending.
+The [deployment plan](docs/deployment-plan.md) sets out the proposed production topology and integration order. The [age/access assessment](docs/age-access-assessment.md) records the minimal-data over-18 gate accepted on 23 October; the [initial illegal-risk register](docs/illegal-risk-register.md) still needs operational validation. Accounts start unpaid; the tested ledger uses fictional payment fixtures. Age/payment adapters and production deployment remain pending. The due-diligence section above and [current TODO](TODO.md) supersede older provider/cost checkpoints.
 
 ## Android track
 

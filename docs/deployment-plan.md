@@ -2,13 +2,13 @@
 
 This plan uses the provisional selections in [provider-decision.md](provider-decision.md). No server has been provisioned. The current service remains loopback-only and production-disabled; do not reverse-proxy it onto the Internet.
 
-## Policy prerequisite — 17 October 2026
+## Policy prerequisite — updated 25 October 2026
 
-Follow the [agreed non-explicit conduct/reporting policy](../README.md#conduct-privacy-and-reporting-policy). The former explicit-image scope is superseded. Assess children's access and risks under the actual revised design before deciding whether/how to retain age assurance; do not remove safeguards on the strength of a terms-only ban. References to the age provider below remain conditional design work, not a finding that a specific check is mandatory for the revised service. Add restricted report review, prompt removal/suspension, documented decisions and appeals, malicious-report handling and statutory NCA evidence/reporting workflows before real users. Do not routinely read private conversations; access to investigate credible concerns must be necessary and controlled.
+Follow the [agreed non-explicit conduct/reporting policy](../README.md#conduct-privacy-and-reporting-policy). The former explicit-image scope is superseded. The minimal-data over-18 gate was accepted on 23 October. Validate its effectiveness, accessible fallback and provider privacy/deletion terms and complete the service-specific assessments; a terms-only ban is not an exemption. A particular supplier or method has not been approved. Add restricted report review, prompt removal/suspension, documented decisions and appeals, malicious-report handling and statutory NCA evidence/reporting workflows before real users. Do not routinely read private conversations; access to investigate credible concerns must be necessary and controlled.
 
 ## Topology
 
-- **anonymouses.com:** existing GitHub Pages showcase. Retain its current DNS/HTTPS configuration.
+- **anonymouses.com:** existing fictional GitHub Pages preview. Move the commercial website/member journey to suitable hosting before paid launch; Pages is not the production commercial SaaS host. Plan DNS/TLS cutover and any genuinely non-transactional preview separately.
 - **app.anonymouses.com:** proposed member UI plus authenticated API, served by one production app origin. Create DNS only after the backend and TLS are ready.
 - **PostgreSQL:** private service/network, outside individual app processes; indexed/paginated accounts, conversations and messages.
 - **Private media:** storage abstraction with authenticated delivery and bounded uploads. Select a compatible external object store when its content policy, minimum cost and region are confirmed. The 40GB VPS disk is not a permanent media solution or a capacity promise.
@@ -31,6 +31,8 @@ A server-validated offer-bound £50 standard or £20 website introductory purcha
 7. Invite a limited adult cohort only after provider acceptance and all above behavior is verified on the actual host. Measure spending/verification attempts, latency, errors and restore results; no scalability claim from customer counts alone.
 
 ## Existing implementation checkpoint
+
+**25 October:** PostgreSQL pooling/migrations, shared rate limits, bounded queries/expiry and encrypted portable backups/cross-engine restore are implemented and covered by the 48-test SQLite/PostgreSQL CI suite. Steps below describe production acceptance, not a claim that these foundations must be rebuilt. External media, isolated decoding, hosted retention/backup pruning, provider adapters and operational controls remain outstanding.
 
 The local core now creates unpaid accounts and tracks £50 standard / £20 website introductory calendar months and scheduled starts through an internal, idempotent payment ledger. The ledger is not a payment verification adapter. An operator-only local fixture command exercises it; no public API can grant access. Historical `trial_end` database fields are retained for compatibility but no longer confer membership.
 

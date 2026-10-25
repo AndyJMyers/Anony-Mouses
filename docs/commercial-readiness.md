@@ -1,6 +1,6 @@
 # Commercial readiness: age, hosting and payments — 17 October 2026
 
-> **Commercial update, 23 October 2026:** [Current offer](membership-offer.md) is £50 for one month, introductory launch price £10, all core features/ordinary messaging included, optional start within seven days, no automatic renewal. Earlier £10-standard and £1/day-ceiling assumptions below are superseded. Provider quotes must cover both £10 and £50 transactions.
+> **Historical research checkpoint.** The [25 October review](due-diligence-2026-10-25.md) and [current provider decision](provider-decision.md) supersede this assessment. Current offer: £50 planned standard / £20 website introductory / £10 invitation month; manual renewal, optional start within seven days. Age-only gate accepted 23 October; provider/method still unvalidated.
 
 ## Outcome
 
