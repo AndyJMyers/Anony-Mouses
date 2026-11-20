@@ -55,6 +55,12 @@
           <label class="toggle-line"><input name="memory" type="checkbox" checked> Propose memories from our conversations</label>
           <small>Proposals are visible before they enter the prototype memory list.</small>
         </div>
+        <div class="form-card picture-calibration">
+          <p class="index">PICTURE LANGUAGE</p>
+          <label class="toggle-line"><input name="pictures" type="checkbox" checked> Let pictures surface during our evening</label>
+          <label>Give the first picture a hint<input name="pictureHint" maxlength="100" placeholder="Rain at the window, candlelight, playful…"></label>
+          <small>Picture beats are always fictional and labelled. You can redirect or pause them at any time.</small>
+        </div>
         <div class="consent-card">
           <label><input id="adultCheck" type="checkbox" required> I am 18 or over.</label>
           <label><input id="artificialCheck" type="checkbox" required> I understand this companion is fictional software, not human or conscious.</label>
@@ -80,12 +86,22 @@
           <div><span>MEMORY PROPOSED</span><p id="memoryText"></p></div>
           <button type="button" id="acceptMemory">Keep</button><button type="button" id="rejectMemory">Forget</button>
         </div>
+        <div class="picture-director" id="pictureDirector" hidden>
+          <div class="director-heading"><div><span>DIRECT THE NEXT PICTURE</span><p>Give your mouse a visual suggestion. It becomes part of the production prompt.</p></div><button type="button" id="closeDirector" aria-label="Close picture director">×</button></div>
+          <div class="director-fields">
+            <label>Mood<select id="pictureMood"><option value="warm">Warm</option><option value="playful">Playful</option><option value="mysterious">Mysterious</option><option value="quiet">Quiet</option></select></label>
+            <label>Setting<select id="pictureSetting"><option value="rainy lounge">Rainy lounge</option><option value="neon window">Neon window</option><option value="fireside nook">Fireside nook</option><option value="surprise me">Surprise me</option></select></label>
+            <label class="director-note">Your detail<input id="pictureDetail" maxlength="100" placeholder="A glass of red, green velvet, direct eye contact…"></label>
+          </div>
+          <div class="director-actions"><button class="ghost-button" type="button" id="pausePictures">Pause pictures</button><button class="send-button" type="button" id="saveDirection">Use this direction</button></div>
+        </div>
         <form class="composer" id="composer">
           <label class="sr-only" for="messageInput">Message your companion</label>
+          <button class="picture-button" id="openDirector" type="button" aria-label="Direct the next picture" title="Direct the next picture">◇</button>
           <textarea id="messageInput" maxlength="500" rows="2" placeholder="Say what is on your mind…" required></textarea>
           <button class="send-button" type="submit">Transmit</button>
         </form>
-        <p class="prototype-note">Scripted, non-graphic product prototype. A future contracted adult-dialogue provider controls the permitted intensity. Messages remain in this tab only and disappear when it closes. It cannot provide emergency, medical or therapeutic support.</p>
+        <p class="prototype-note">Scripted, non-graphic product prototype. Picture beats use a labelled local concept library; the prompt shown beneath each picture demonstrates how participant direction would inform live generation. Messages remain in this tab only and disappear when it closes.</p>
       </div>
     </section>
   </main>

@@ -14,6 +14,8 @@ The current public build is a transparent, scripted product prototype. It does n
 - User-entered boundaries.
 - Chatbot-shaped scripted conversation with a 100-message meter.
 - Cinematic, fully clothed picture beats.
+- Participant-directed picture language: mood, setting and free-text cues shape periodic visual prompts.
+- Every prototype image is labelled as a local concept-library scene and exposes its proposed production prompt.
 - Proposed memories that the patron must accept before retention.
 - A visible memory drawer with item-by-item and complete erasure.
 - A “leave no memory” mode.
@@ -55,6 +57,8 @@ The production companion requires a new service layer:
 - one-day order, verified payment callback, quota and expiry;
 - companion configuration and versioned consent/boundaries;
 - provider-neutral model gateway with explicit contractual adult-content eligibility;
+- a separate image gateway that receives only a minimal structured visual cue, never the raw private transcript;
+- prompt and output moderation, companion-appearance continuity and an immediate picture opt-out;
 - prompt/policy versioning and evaluation fixtures;
 - bounded context, summarisation and cost controls;
 - encrypted conversation storage with patron-selected retention;
@@ -84,6 +88,7 @@ The public prototype stores its active conversation only in page memory and lose
 - `mouse-avatar.js` — reusable SVG mouse renderer.
 - `assets/bio-cyber-mouse-hero.webp` — landing hero generated for the pivot.
 - `assets/companion-*-signal.webp` — non-explicit chat picture beats.
+- `assets/scene-*.webp` — arrival, spark and afterglow concept-library scenes for participant-directed beats.
 - `backend/`, `tests/` — legacy dating foundation pending extraction of reusable infrastructure.
 - `docs/history/` and the dated dating documents — historical research, not the current product decision.
 
