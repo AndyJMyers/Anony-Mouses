@@ -1,4 +1,6 @@
-# Local backend foundation
+# Legacy local dating backend foundation
+
+> **Hard pivot — 20 November 2026:** Anony-Mouses is now an adults-only synthetic companion concept. This service is retained temporarily for its reusable authentication, storage, encryption, migration, payment-event and backup foundations. District discovery and human-to-human conversations are legacy functionality and are not the current product. Do not deploy or market this backend. See the repository root README and TODO for the companion architecture.
 
 This Python API is for fictional adult test accounts on your own computer. The member lounge connects to it locally; it is not connected to the public GitHub Pages demo and is not a public production service.
 

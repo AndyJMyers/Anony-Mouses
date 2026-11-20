@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07090f">
+  <meta name="robots" content="noindex">
+  <title>Anony-Mouses — companion chamber</title>
+  <link rel="stylesheet" href="style.css?v=cyber-1">
+  <link rel="stylesheet" href="companion.css?v=cyber-1">
+</head>
+<body class="chamber-body">
+  <div class="signal-bar"><span class="pulse"></span> SCRIPTED PROTOTYPE <b>No model provider, account, memory server or payment is connected.</b></div>
+  <header class="chamber-header">
+    <a class="wordmark" href="index.html">ANONY—MOUSES <small>COMPANION CHAMBER</small></a>
+    <div class="quota"><span id="quotaNumber">100</span><small>MESSAGES<br>REMAIN</small></div>
+    <button class="ghost-button" id="openMemory" type="button">Memory / <span id="memoryCount">0</span></button>
+  </header>
+
+  <main class="chamber">
+    <section class="builder-panel" id="builderPanel">
+      <div class="builder-intro">
+        <p class="index">CALIBRATION / 01</p>
+        <h1>Make contact.</h1>
+        <p>Choose a shell and tune an intimate evening: arrival, unwinding, erotic possibility and a warm afterglow. This browser-only prototype uses a non-graphic demonstration script without pretending a live intelligence exists.</p>
+      </div>
+
+      <div class="shell-picker" role="radiogroup" aria-label="Choose a synthetic mouse shell">
+        <button class="shell active" type="button" data-shell="velvet" role="radio" aria-checked="true">
+          <span class="shell-image" id="shellVelvet"></span><b>VELVET / A—01</b><small>Warm · poised · exacting</small>
+        </button>
+        <button class="shell" type="button" data-shell="cipher" role="radio" aria-checked="false">
+          <span class="shell-image" id="shellCipher"></span><b>CIPHER / B—17</b><small>Cool · witty · direct</small>
+        </button>
+        <button class="shell" type="button" data-shell="moss" role="radio" aria-checked="false">
+          <span class="shell-image" id="shellMoss"></span><b>MOSS / C—04</b><small>Patient · strange · tender</small>
+        </button>
+      </div>
+
+      <form id="calibrationForm" class="calibration-form">
+        <div class="form-card">
+          <p class="index">IDENTITY</p>
+          <label>What will you call them?<input id="companionName" name="name" maxlength="24" value="Velvet" required></label>
+          <label>How should they address you?<input id="patronName" name="patron" maxlength="24" placeholder="Your chosen name" required></label>
+        </div>
+        <div class="form-card sliders">
+          <p class="index">TEMPERAMENT</p>
+          <label>Warmth <output id="warmthOutput">70</output><input name="warmth" type="range" min="0" max="100" value="70"></label>
+          <label>Directness <output id="directOutput">65</output><input name="direct" type="range" min="0" max="100" value="65"></label>
+          <label>Strangeness <output id="strangeOutput">55</output><input name="strange" type="range" min="0" max="100" value="55"></label>
+        </div>
+        <div class="form-card">
+          <p class="index">BOUNDARIES</p>
+          <label>Never introduce<textarea name="limits" maxlength="180" placeholder="Topics, names or dynamics that are off limits"></textarea></label>
+          <label class="toggle-line"><input name="memory" type="checkbox" checked> Propose memories from our conversations</label>
+          <small>Proposals are visible before they enter the prototype memory list.</small>
+        </div>
+        <div class="consent-card">
+          <label><input id="adultCheck" type="checkbox" required> I am 18 or over.</label>
+          <label><input id="artificialCheck" type="checkbox" required> I understand this companion is fictional software, not human or conscious.</label>
+          <button class="button" type="submit">Open the channel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="chat-panel" id="chatPanel" hidden>
+      <aside class="companion-rail">
+        <div class="live-portrait" id="livePortrait"></div>
+        <p class="connection"><span class="pulse"></span> SCRIPT CHANNEL OPEN</p>
+        <h2 id="liveName">Velvet</h2>
+        <p id="liveTraits">Warm · direct · strange</p>
+        <dl><div><dt>NATURE</dt><dd>Artificial</dd></div><div><dt>MEMORY</dt><dd id="memoryMode">Review first</dd></div><div><dt>SESSION</dt><dd>Browser only</dd></div></dl>
+        <button class="ghost-button wide" id="recalibrate" type="button">Recalibrate</button>
+      </aside>
+      <div class="conversation">
+        <div class="conversation-top"><div><p class="index">PRIVATE CHANNEL / SCRIPTED</p><h1 id="conversationTitle">Velvet is listening.</h1></div><button class="ghost-button" id="quietMode" type="button" aria-pressed="false">Leave no memory</button></div>
+        <div class="evening-arc" id="eveningArc" aria-label="Evening progression"><span class="active">ARRIVE</span><span>UNWIND</span><span>SPARK</span><span>AFTERGLOW</span></div>
+        <div class="messages" id="messages" role="log" aria-live="polite"></div>
+        <div class="memory-proposal" id="memoryProposal" hidden>
+          <div><span>MEMORY PROPOSED</span><p id="memoryText"></p></div>
+          <button type="button" id="acceptMemory">Keep</button><button type="button" id="rejectMemory">Forget</button>
+        </div>
+        <form class="composer" id="composer">
+          <label class="sr-only" for="messageInput">Message your companion</label>
+          <textarea id="messageInput" maxlength="500" rows="2" placeholder="Say what is on your mind…" required></textarea>
+          <button class="send-button" type="submit">Transmit</button>
+        </form>
+        <p class="prototype-note">Scripted, non-graphic product prototype. A future contracted adult-dialogue provider controls the permitted intensity. Messages remain in this tab only and disappear when it closes. It cannot provide emergency, medical or therapeutic support.</p>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="memoryDialog" class="memory-dialog">
+    <button class="dialog-close" id="closeMemory" type="button" aria-label="Close memory">×</button>
+    <p class="index">VISIBLE MEMORY</p>
+    <h2>What your mouse remembers.</h2>
+    <p>Nothing is hidden here. Remove any item without negotiation.</p>
+    <div id="memoryList" class="memory-list"></div>
+    <button class="danger-button" id="clearMemory" type="button">Erase every memory</button>
+  </dialog>
+
+  <script src="mouse-avatar.js?v=cyber-1"></script>
+  <script src="companion.js?v=cyber-1"></script>
+</body>
+</html>

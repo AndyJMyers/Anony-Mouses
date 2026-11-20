@@ -1,56 +1,72 @@
-# Anony-Mouses — current priorities
+# Anony-Mouses — hard-pivot priorities
 
-**Reviewed 25 October 2026.** Public fictional preview is live; the real member service is local development and production-disabled. Website target: **11 December 2026**, conditional on readiness; Android follows. [README](README.md) · [Due diligence and sources](docs/due-diligence-2026-10-25.md) · [Launch board](README.md#christmas-launch-target-board)
+**Pivot recorded 20 November 2026.** Current product: an adults-only, day-long synthetic mouse companion. Proposed offer: £1 for 24 hours, up to 100 patron messages, no automatic renewal.
 
-## Agreed scope
+## MVP definition
 
-Adult, playful and a little louche. Minimal-data validated 18+ access, clothed mouse portraits in public, approximate outward districts, two open descriptions, mutually accepted private conversations, no sexually explicit content anywhere. Reports/credible concerns receive controlled prompt review; no routine reading of private exchanges. Ordinary messages expire after 14 days; up to 100 keepsakes, with separate lawful evidence exceptions. At-rest encryption is not end-to-end encryption.
+One adult patron creates one synthetic mouse companion, sets boundaries, pays for a day, exchanges up to 100 text messages, receives occasional non-explicit cinematic picture beats, reviews proposed memories, and can erase the conversation/account. The companion always discloses that it is artificial.
 
-**£50 planned standard / £20 website introductory / £10 invitation month**, paid upfront, manual renewal, activation now or within seven days. No automatic renewal or free public trial. The example university voucher is not a live partnership. [Membership rules](docs/membership-offer.md)
+## 1. Commercial feasibility — release blockers
 
-## 1. Close commercial and privacy dependencies
+- [ ] Obtain written model-provider acceptance of the exact adults-only erotic companion scope and permitted dialogue boundary.
+- [ ] Confirm whether model outputs may include adult sexual dialogue, what moderation is mandatory, and what provider data is retained or used for training.
+- [ ] Benchmark 100 real conversations with bounded context/summaries; model p50/p95 cost per paid day.
+- [ ] Obtain written payment-provider classification and full quote for £1, £7 and £30 one-off purchases, including fixed fees, registration, reserves, refunds and chargebacks.
+- [ ] Decide whether £1 is a literal transaction or the unit price of a minimum multi-day pack.
+- [ ] Obtain age-assurance scope, effectiveness, deletion and fallback terms for an adult chatbot service.
+- [ ] Complete current UK regulatory analysis for one-to-one text, any future generated images/audio, and announced chatbot-rule changes.
 
-- [x] Recheck hosting, age-check and payment published terms and upcoming pricing; record evidence and unknowns on 25 October.
-- [x] Accept minimal-data age-only launch design (23 October); retain non-explicit/report-led policy.
-- [x] Prepare truthful scope-specific provider enquiries; **not sent**.
-- [ ] Obtain written hosting scope/region/data terms; verify cancellation, full initial/renewal cost and restore access.
-- [ ] Obtain CCBill UK scope/classification and full one-off £50/£20/£10 quote, card registrations, reserves and privacy/content conditions. Do not presume Stripe eligibility.
-- [ ] Validate age method, effectiveness, fallback/appeals, all charges and contractually bounded upstream erasure without retained biometric templates.
-- [ ] Confirm operator/legal entity, controller/contact details, DPIA, Article 6/9 bases, explicit-consent controls, providers/transfers and ICO/DPO assessments.
-- [ ] Finish service-specific illegal-risk and children's access/risk assessments and applicable code review; check October-issued amendments before launch.
+## 2. Companion service
 
-## 2. Finish the production member journey
+- [ ] Extract reusable identity, sessions, encryption, PostgreSQL, migrations, payment-event and backup code from the legacy dating service.
+- [ ] Add companion, configuration, consent-version, session-day, quota, message, summary, memory-proposal and safety-event models.
+- [ ] Implement a provider-neutral model gateway; keep provider credentials and raw diagnostic payloads out of the repository.
+- [ ] Enforce the 100-patron-message allowance transactionally; do not count failed requests or internal retries.
+- [ ] Bound response length and context; summarise without silently converting sensitive details into permanent memory.
+- [ ] Add memory review, correction, per-item deletion, incognito conversations and complete erasure.
+- [ ] Add account-bound age result and gate every companion/message/media route.
+- [ ] Add one-day entitlement, verified callbacks, refunds/reversals and durable purchase confirmation.
+- [ ] Add model timeouts, retry policy, circuit breaker and a truthful unavailable state.
 
-- [ ] Provision suitable commercial hosting; production HTTP/TLS, secrets, secure proxy/cookie settings, monitoring and incident contacts. Move commercial UI off Pages before paid launch.
-- [ ] Add account-bound age sessions with authenticated/replay-safe results and minimal retained fields, before real discovery/messages and before charging.
-- [ ] Implement server-created single-payment orders, verified callbacks/reconciliation, refunds/chargebacks, retained financial event IDs and manual renewals.
-- [ ] Implement clear seller/price/start/end/cancellation terms, lawful early-service request and durable purchase confirmations. A seven-day delayed start does not erase cancellation rights.
-- [ ] Approve portable private-media storage and isolated image processing; remove external font requests or self-host fonts for the live member journey.
+## 3. Dialogue and safety evaluation
 
-## 3. Make the service operable
+- [ ] Write the product dialogue policy: permitted seduction/roleplay, exclusions, crisis behaviour and provider boundary.
+- [ ] Prohibit minor-coded characters/scenarios, coercive exploitation, real-person sexual impersonation and illegal content.
+- [ ] Prohibit consciousness claims, abandonment guilt, manufactured emergencies, social isolation and vulnerable-moment upselling.
+- [ ] Build adversarial tests for age evasion, character age drift, coercion, self-harm, dependency, medical/therapy claims and boundary overrides.
+- [ ] Test persona consistency, consent changes, memory accuracy, deletion and “leave no memory.”
+- [ ] Create an operator incident/complaint queue, model-event replay with redaction, decisions and appeals.
+- [ ] Define when automated refusal, account restriction, human review or emergency signposting is appropriate.
 
-- [ ] Restricted operator report/review queue, prompt actions, reasons, appeals and lawful escalation; protect good-faith reporters.
-- [ ] Implement applicable NCA reporting and separate statutory evidence retention; prototype 90-day reports are insufficient.
-- [ ] Settle sender withdrawal/account closure versus recipient keepsakes and explain it before messaging; implement rights requests and age-decision appeals.
-- [ ] Deploy/monitor retention workers; implement bounded backup expiry, key custody and deletion reapplication after restore. Proposed backup limit remains unproven.
-- [ ] Test production-host restores, deletion/evidence separation, failures/retries and a second app instance; measure load and costs, not speculative customer capacity.
+## 4. Privacy and operations
 
-## 4. Pilot and launch
+- [ ] Decide operator/legal entity and publish controller/contact details.
+- [ ] Complete DPIA, Article 6 basis, Article 9 condition and explicit-consent records for intimate information.
+- [ ] Ban training on patron conversations by default; verify provider terms technically and contractually.
+- [ ] Set conversation, summary, memory, log, complaint, payment and backup retention separately.
+- [ ] Implement export, deletion, consent withdrawal and deletion reapplication after restore.
+- [ ] Deploy TLS, Secure cookies, secrets management, monitoring, independent encrypted backups and restoration drills.
+- [ ] Load-test at twice the first pilot's planned concurrency and cap registrations.
 
-- [ ] Invited adult pilot with working support, payment/age failure cases, report handling and monitored spending.
-- [ ] Load-test twice intended initial peak and set measured registration limits; resolve launch blockers.
-- [ ] Launch readiness decision 7–10 December; defer if a required gate fails. No guaranteed-date/sex or absolute-anonymity claims.
-- [ ] Only after readiness: agree union distribution/advertising permissions, adult audience, lawful contact basis, opt-out/suppression, real offers and deadlines; recheck old contact entries. No outreach sent.
-- [ ] Android: assess store/distribution, dating/UGC, child-safety and billing eligibility before a native release. Shared contract exists; no build released.
+## 5. Pilot
 
-## Implemented evidence
+- [ ] Recruit invited adults; do not advertise a live erotic AI until provider and payment scope are accepted.
+- [ ] Run an unpaid internal scripted/model sandbox before real charges.
+- [ ] Pilot the £1 day with explicit no-renewal terms and working support/refunds.
+- [ ] Measure paid-day completion, messages/day, model cost, return purchase, memory use/deletion, complaints and safety interventions.
+- [ ] Interview patrons about what felt seductive, repetitive, manipulative, private and worth paying for.
+- [ ] Decide on £7/£30 packs only from processor economics and observed repeat purchases.
 
-- [x] Public GitHub/HTTPS fictional preview, Technicolor masthead, 18 configurable mouse presets, organic nationwide demo atlas, district-to-country brass zoom dial, chemistry introductions and clearly labelled scripted chats.
-- [x] Returning-member local sign-in and private Squeaked markers derived from existing conversations; demo markers last only until reload.
-- [x] Local accounts/recovery, profiles, district discovery, accepted hellos, private text/non-explicit images, keepsakes, block/report and deletion.
-- [x] Unpaid accounts, scheduled calendar-month ledger, price/voucher validation and idempotent fictional payment fixtures; no real charge.
-- [x] Pooled PostgreSQL and SQLite, migrations, bounded/keyset queries, shared rate limits, bounded expiry worker, encrypted portable snapshots and cross-engine restore; 2,988 approximate district centres imported for staging.
-- [x] **48 tests passed on SQLite and actual PostgreSQL 16 in [CI](https://github.com/AndyJMyers/Anony-Mouses/actions/runs/40018803519)**. Functional evidence is not a production capacity/security certification.
-- [x] Student-union contact workbook prepared privately; addresses are not published in this repository and no campaign was sent.
+## Deferred
 
-Earlier completed tasks and superseded proposals are preserved in [dated history](docs/history/todo-through-2026-10-23.md). That record is not a second current task list.
+Voice, video, generated explicit imagery, autonomous outbound messages, multiple simultaneous companions, native Android, user-created public bots, user-to-user sharing, automatic renewal and therapy/wellness positioning.
+
+## Implemented in the pivot prototype
+
+- [x] New bio-cyber proposition and visual system.
+- [x] Companion calibration for shell, name, temperament and boundaries.
+- [x] Chatbot-shaped scripted conversation with a 100-message counter.
+- [x] Cinematic non-explicit picture beats.
+- [x] Visible memory proposals, memory drawer, erasure and no-memory mode.
+- [x] Artificial/non-conscious disclosure and non-therapy limitation.
+- [x] New product documentation with the dating backend clearly marked legacy.
