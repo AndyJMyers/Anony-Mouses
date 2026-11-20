@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#07090f">
   <meta name="robots" content="noindex">
+  <meta name="anony-ai-endpoint" content="">
   <title>Anony-Mouses — companion chamber</title>
   <link rel="stylesheet" href="style.css?v=cyber-1">
   <link rel="stylesheet" href="companion.css?v=simple-2">
 </head>
 <body class="chamber-body">
-  <div class="signal-bar"><span class="pulse"></span> SCRIPTED PROTOTYPE <b>No live AI, payment or permanent memory.</b></div>
   <header class="chamber-header">
     <a class="wordmark" href="index.html">ANONY—MOUSES <small>PRIVATE EVENING</small></a>
     <div class="quota"><span id="quotaNumber">100</span><small>MESSAGES<br>LEFT</small></div>
@@ -48,19 +48,13 @@
     </section>
 
     <section class="chat-panel" id="chatPanel" hidden>
-      <aside class="companion-rail"><div class="live-portrait" id="livePortrait"></div><div class="identity"><p><span class="pulse"></span> SCRIPT CHANNEL OPEN</p><h2 id="liveName">Velvet</h2><small id="liveTraits">Warm · poised</small></div></aside>
+      <aside class="companion-rail"><div class="live-portrait" id="livePortrait"></div><div class="identity"><h2 id="liveName">Velvet</h2><small id="liveTraits">Warm · poised</small></div></aside>
       <div class="conversation">
-        <div class="conversation-top"><div><p class="index">PRIVATE CHANNEL</p><h1 id="conversationTitle">Velvet is listening.</h1></div><div class="top-actions"><button class="ghost-button" id="openMemory" type="button">Memory <span id="memoryCount">0</span></button><button class="ghost-button" id="openSettings" type="button">Settings</button></div></div>
-        <div class="evening-arc" id="eveningArc" aria-label="Evening progression"><span class="active">ARRIVE</span><span>UNWIND</span><span>SPARK</span><span>AFTERGLOW</span></div>
+        <div class="conversation-top"><div><p class="index">JUST THE TWO OF YOU</p><h1 id="conversationTitle">Velvet</h1></div><button class="more-button" id="openSettings" type="button" aria-label="Conversation controls">•••</button></div>
         <div class="messages" id="messages" role="log" aria-live="polite"></div>
         <div class="memory-proposal" id="memoryProposal" hidden><p><span>REMEMBER THIS?</span> <b id="memoryText"></b></p><button type="button" id="acceptMemory">Yes</button><button type="button" id="rejectMemory">No</button></div>
-        <div class="picture-cue" id="pictureCue" hidden>
-          <label for="pictureDetail">What should the next picture feel like?</label>
-          <div class="cue-presets"><button type="button" data-cue="rain at the window, a glass of red, warm eye contact">Rainy and warm</button><button type="button" data-cue="neon city lights, playful confidence, one cocktail">Neon and playful</button><button type="button" data-cue="fireside, soft knitwear, quiet closeness">Soft afterglow</button></div>
-          <div class="cue-entry"><input id="pictureDetail" maxlength="120" placeholder="Or write your own suggestion…"><button class="send-button" type="button" id="savePictureCue">Use</button></div>
-        </div>
-        <form class="composer" id="composer"><button class="picture-button" id="openPictureCue" type="button" aria-label="Suggest a picture">Picture</button><label class="sr-only" for="messageInput">Message your companion</label><textarea id="messageInput" maxlength="500" rows="2" placeholder="Say what’s on your mind…" required></textarea><button class="send-button" type="submit">Send</button></form>
-        <p class="prototype-note">Scripted prototype with 100 conversation directions and session-only callbacks. Picture beats use a local concept library. This tab forgets when it closes.</p>
+        <form class="composer" id="composer"><label class="sr-only" for="messageInput">Message your companion</label><textarea id="messageInput" maxlength="500" rows="2" placeholder="Say what’s on your mind…" required></textarea><button class="send-button" type="submit">Send</button></form>
+        <p class="prototype-note">Fictional software · session-only context · this tab forgets when it closes</p>
       </div>
     </section>
   </main>
@@ -70,6 +64,7 @@
     <label>Conversation style<select id="settingsTone"><option value="warm">Warm and attentive</option><option value="playful">Playful and teasing</option><option value="direct">Direct and confident</option><option value="strange">Strange and poetic</option></select></label>
     <label>Never introduce<textarea id="settingsLimits" maxlength="180" placeholder="Topics or dynamics that are off limits"></textarea></label>
     <label class="toggle-line"><input id="settingsMemory" type="checkbox"> Offer visible memory suggestions</label><label class="toggle-line"><input id="settingsPictures" type="checkbox"> Let pictures appear naturally</label>
+    <button class="ghost-button memory-review" id="openMemory" type="button">Review remembered details <span id="memoryCount">0</span></button>
     <button class="button dialog-save" id="saveSettings" type="button">Save settings</button>
   </dialog>
   <dialog id="memoryDialog" class="sheet-dialog">
@@ -78,6 +73,7 @@
 
   <script src="mouse-avatar.js?v=cyber-1"></script>
   <script src="conversation-engine.js?v=history-1"></script>
-  <script src="companion.js?v=history-1"></script>
+  <script src="ai-client.js?v=gateway-1"></script>
+  <script src="companion.js?v=intimate-2"></script>
 </body>
 </html>

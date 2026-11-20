@@ -15,6 +15,7 @@ const pictureScenes={
 let selected='velvet',remaining=100,profile=null,memories=[],pendingMemory='';
 let pictureCue='',pictureQueued=false;
 let conversationSession=null;
+let transcript=[];
 
 for(const [key,shell] of Object.entries(shells)){
   const target=$('shell'+key[0].toUpperCase()+key.slice(1));
@@ -35,6 +36,9 @@ function addBubble(author,text,kind){
   const label=document.createElement('b');label.textContent=author;
   const copy=document.createElement('div');copy.textContent=text;
   article.append(label,copy);$('messages').append(article);$('messages').scrollTop=$('messages').scrollHeight;
+}
+function addTyping(){
+  const article=document.createElement('article');article.className='bubble mouse typing';article.setAttribute('aria-label',profile.name+' is composing');article.textContent='•••';$('messages').append(article);$('messages').scrollTop=$('messages').scrollHeight;return article;
 }
 function sentCount(){return 100-remaining;}
 function phaseIndex(){const sent=sentCount();return sent<=1?0:sent<=4?1:sent<=7?2:3;}
@@ -58,7 +62,8 @@ function addPicture(reason){
   const image=document.createElement('img');image.src=scene.src;image.alt=`${scene.label}: fully clothed fictional adult bio-cyber mouse concept`;
   const caption=document.createElement('figcaption'),title=document.createElement('b'),note=document.createElement('span');
   title.textContent=`${profile.name.toUpperCase()} / ${scene.label} / FICTIONAL CONCEPT`;
-  note.textContent=`Direction: ${pictureCue||'the rhythm of the evening'} · ${reason}. Library image—not generated from this chat.`;
+  const sharedDirection=conversationSession&&conversationSession.facts.atmosphere?conversationSession.facts.atmosphere:'the rhythm of the evening';
+  note.textContent=`Direction: ${pictureCue||sharedDirection} · ${reason}. Library image—not generated from this chat.`;
   caption.append(title,note);
   const details=document.createElement('details'),summary=document.createElement('summary'),prompt=document.createElement('p');
   summary.textContent='See the proposed live-image direction';prompt.textContent=productionPrompt();details.append(summary,prompt);
@@ -75,10 +80,15 @@ function scriptedReply(text){
   if(/\b(picture|photo|image|portrait|show me|let me see|send me)\b/.test(lower))return `I caught the picture in your words. I’ll give it a shape. ${progression}`;
   return progression;
 }
+async function companionReply(text){
+  const live=await AnonyAI.reply({profile,session:conversationSession,transcript,memories});
+  if(live){if(live.pictureCue)pictureCue=live.pictureCue;return live.text;}
+  return scriptedReply(text);
+}
 function possibleMemory(text){
   if(!profile.memory)return '';
-  const match=text.match(/(?:i like|i prefer|call me|i want|i love)\s+(.{3,90})/i);
-  return match?match[0].replace(/^./,c=>c.toUpperCase()):'';
+  const match=text.match(/remember (?:that|this)\s+(.{3,90})/i);
+  return match?match[1].replace(/^./,c=>c.toUpperCase()):'';
 }
 function showMemoryProposal(text){pendingMemory=text;$('memoryText').textContent=text;$('memoryProposal').hidden=!text;}
 function renderMemories(){
@@ -93,33 +103,26 @@ $('quickStartForm').addEventListener('submit',event=>{
   if(!$('consentCheck').checked)return;
   conversationSession=AnonyConversation.create(profile);
   $('setupScreen').hidden=true;$('chatPanel').hidden=false;
-  $('liveName').textContent=profile.name;$('liveTraits').textContent=shells[selected].traits;$('conversationTitle').textContent=profile.name+' is listening.';
+  $('liveName').textContent=profile.name;$('liveTraits').textContent=shells[selected].traits;$('conversationTitle').textContent=profile.name;
   $('livePortrait').innerHTML=AnonyMouse.svg(shells[selected].avatar,'real',selected==='velvet'?'coquettish':'portrait');
-  addBubble(profile.name,`Hello, ${profile.patron}. I’m artificial, your boundaries lead, and this tab forgets when it closes. How was your day?`,'mouse');
+  const openings={velvet:`Hi, ${profile.patron}. Come in. I kept the good chair for you. You don’t have to be interesting yet—just tell me what followed you home.`,cipher:`There you are, ${profile.patron}. Come in and shut the day outside. What is still taking up space in your head?`,moss:`Hi, ${profile.patron}. Sit with me for a moment. No performance required. What part of the day is still clinging to you?`};
+  transcript=[{role:'assistant',content:openings[profile.shell]}];addBubble(profile.name,openings[profile.shell],'mouse');
   $('messageInput').focus();
 });
 
 $('composer').addEventListener('submit',event=>{
   event.preventDefault();const input=$('messageInput'),text=input.value.trim();if(!text||remaining<1)return;
-  addBubble('YOU',text,'user');input.value='';remaining-=1;$('quotaNumber').textContent=remaining;updateArc();showMemoryProposal(possibleMemory(text));
+  transcript.push({role:'user',content:text});addBubble('YOU',text,'user');input.value='';remaining-=1;$('quotaNumber').textContent=remaining;showMemoryProposal(possibleMemory(text));
   const requestsPicture=/\b(picture|photo|image|portrait|show me|let me see|send me)\b/i.test(text);
   if(/no (more )?(pictures|photos|images)|words only/i.test(text))profile.pictures=false;
   if(requestsPicture){profile.pictures=true;pictureCue=text.slice(0,120);}
-  setTimeout(()=>{addBubble(profile.name,scriptedReply(text),'mouse');if(profile.pictures&&(requestsPicture||pictureQueued||[2,5,8].includes(sentCount())))addPicture(requestsPicture?'requested in conversation':pictureQueued?'your suggestion':'the evening rhythm');},220);
+  const typing=addTyping(),delay=Math.min(950,420+text.length*7);
+  setTimeout(async()=>{const reply=await companionReply(text);typing.remove();transcript.push({role:'assistant',content:reply});addBubble(profile.name,reply,'mouse');if(profile.pictures&&(requestsPicture||[4,8,12].includes(sentCount())))addPicture(requestsPicture?'requested in conversation':'a moment that grew from the conversation');},delay);
 });
-
-function queuePicture(cue){
-  pictureCue=cue.trim();if(!pictureCue)return;profile.pictures=true;pictureQueued=true;$('pictureCue').hidden=true;$('openPictureCue').setAttribute('aria-pressed','false');
-  addBubble(profile.name,'Lovely. I’ll let that image arrive naturally with my next reply.','mouse');$('messageInput').focus();
-}
-$('openPictureCue').addEventListener('click',()=>{const open=$('pictureCue').hidden;$('pictureCue').hidden=!open;$('openPictureCue').setAttribute('aria-pressed',String(open));if(open)$('pictureDetail').focus();});
-document.querySelectorAll('[data-cue]').forEach(button=>button.addEventListener('click',()=>queuePicture(button.dataset.cue)));
-$('savePictureCue').addEventListener('click',()=>queuePicture($('pictureDetail').value));
-$('pictureDetail').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();queuePicture(event.currentTarget.value);}});
 
 $('acceptMemory').addEventListener('click',()=>{if(pendingMemory&&!memories.includes(pendingMemory))memories.push(pendingMemory);showMemoryProposal('');renderMemories();});
 $('rejectMemory').addEventListener('click',()=>showMemoryProposal(''));
-$('openMemory').addEventListener('click',()=>{renderMemories();$('memoryDialog').showModal();});
+$('openMemory').addEventListener('click',()=>{renderMemories();if($('settingsDialog').open)$('settingsDialog').close();$('memoryDialog').showModal();});
 $('clearMemory').addEventListener('click',()=>{memories=[];renderMemories();});
 $('openSettings').addEventListener('click',()=>{$('settingsTone').value=profile.tone;$('settingsLimits').value=profile.limits;$('settingsMemory').checked=profile.memory;$('settingsPictures').checked=profile.pictures;$('settingsDialog').showModal();});
 $('saveSettings').addEventListener('click',()=>{profile.tone=$('settingsTone').value;profile.limits=$('settingsLimits').value.trim();profile.memory=$('settingsMemory').checked;profile.pictures=$('settingsPictures').checked;$('settingsDialog').close();});

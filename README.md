@@ -13,7 +13,9 @@ The current public build is a transparent, scripted product prototype. It does n
 - Chat-first entry: choose a mouse, give a name and begin; no mandatory calibration sequence.
 - Optional tone, boundaries, memory and picture controls stay behind Fine-tune and Settings.
 - Chatbot-shaped scripted conversation with a 100-message meter.
-- A 100-direction conversation engine that progresses from arrival through flirtation, intimacy and afterglow.
+- A 100-direction conversation engine used as invisible subtext, not a patron-facing menu or questionnaire.
+- Organic pacing: attentive responses and companion self-disclosure between occasional, purposeful questions.
+- A provider-neutral `ai-client.js` adapter: production can use the strongest contractually eligible model through a same-origin server gateway, while the scripted engine remains an offline fallback.
 - Session-only fact extraction and shared-moment callbacks, so later replies refer specifically to earlier answers without inventing history.
 - Cinematic, fully clothed picture beats.
 - Participant-directed picture language: one-click moods, a free-text cue or an ordinary chat request shapes periodic visual prompts.
@@ -59,6 +61,7 @@ The production companion requires a new service layer:
 - one-day order, verified payment callback, quota and expiry;
 - companion configuration and versioned consent/boundaries;
 - provider-neutral model gateway with explicit contractual adult-content eligibility;
+- a stable `anony-companion-v1` response contract so the underlying model can be replaced without changing the intimate interface;
 - a separate image gateway that receives only a minimal structured visual cue, never the raw private transcript;
 - prompt and output moderation, companion-appearance continuity and an immediate picture opt-out;
 - prompt/policy versioning and evaluation fixtures;
