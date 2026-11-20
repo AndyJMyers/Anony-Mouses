@@ -7,115 +7,76 @@
   <meta name="robots" content="noindex">
   <title>Anony-Mouses — companion chamber</title>
   <link rel="stylesheet" href="style.css?v=cyber-1">
-  <link rel="stylesheet" href="companion.css?v=cyber-1">
+  <link rel="stylesheet" href="companion.css?v=simple-2">
 </head>
 <body class="chamber-body">
-  <div class="signal-bar"><span class="pulse"></span> SCRIPTED PROTOTYPE <b>No model provider, account, memory server or payment is connected.</b></div>
+  <div class="signal-bar"><span class="pulse"></span> SCRIPTED PROTOTYPE <b>No live AI, payment or permanent memory.</b></div>
   <header class="chamber-header">
-    <a class="wordmark" href="index.html">ANONY—MOUSES <small>COMPANION CHAMBER</small></a>
-    <div class="quota"><span id="quotaNumber">100</span><small>MESSAGES<br>REMAIN</small></div>
-    <button class="ghost-button" id="openMemory" type="button">Memory / <span id="memoryCount">0</span></button>
+    <a class="wordmark" href="index.html">ANONY—MOUSES <small>PRIVATE EVENING</small></a>
+    <div class="quota"><span id="quotaNumber">100</span><small>MESSAGES<br>LEFT</small></div>
   </header>
 
   <main class="chamber">
-    <section class="builder-panel" id="builderPanel">
-      <div class="builder-intro">
-        <p class="index">CALIBRATION / 01</p>
-        <h1>Make contact.</h1>
-        <p>Choose a shell and tune an intimate evening: arrival, unwinding, erotic possibility and a warm afterglow. This browser-only prototype uses a non-graphic demonstration script without pretending a live intelligence exists.</p>
+    <section class="quick-start" id="setupScreen">
+      <div class="setup-copy">
+        <p class="index">YOUR EVENING</p>
+        <h1>Who would you like to meet?</h1>
+        <p>Choose a mouse, tell them your name, and start talking. Everything else can wait.</p>
       </div>
 
-      <div class="shell-picker" role="radiogroup" aria-label="Choose a synthetic mouse shell">
-        <button class="shell active" type="button" data-shell="velvet" role="radio" aria-checked="true">
-          <span class="shell-image" id="shellVelvet"></span><b>VELVET / A—01</b><small>Warm · poised · exacting</small>
-        </button>
-        <button class="shell" type="button" data-shell="cipher" role="radio" aria-checked="false">
-          <span class="shell-image" id="shellCipher"></span><b>CIPHER / B—17</b><small>Cool · witty · direct</small>
-        </button>
-        <button class="shell" type="button" data-shell="moss" role="radio" aria-checked="false">
-          <span class="shell-image" id="shellMoss"></span><b>MOSS / C—04</b><small>Patient · strange · tender</small>
-        </button>
+      <div class="shell-picker" role="radiogroup" aria-label="Choose your companion">
+        <button class="shell active" type="button" data-shell="velvet" role="radio" aria-checked="true"><span class="shell-image" id="shellVelvet"></span><b>VELVET</b><small>Warm · poised</small></button>
+        <button class="shell" type="button" data-shell="cipher" role="radio" aria-checked="false"><span class="shell-image" id="shellCipher"></span><b>CIPHER</b><small>Witty · direct</small></button>
+        <button class="shell" type="button" data-shell="moss" role="radio" aria-checked="false"><span class="shell-image" id="shellMoss"></span><b>MOSS</b><small>Patient · tender</small></button>
       </div>
 
-      <form id="calibrationForm" class="calibration-form">
-        <div class="form-card">
-          <p class="index">IDENTITY</p>
-          <label>What will you call them?<input id="companionName" name="name" maxlength="24" value="Velvet" required></label>
-          <label>How should they address you?<input id="patronName" name="patron" maxlength="24" placeholder="Your chosen name" required></label>
-        </div>
-        <div class="form-card sliders">
-          <p class="index">TEMPERAMENT</p>
-          <label>Warmth <output id="warmthOutput">70</output><input name="warmth" type="range" min="0" max="100" value="70"></label>
-          <label>Directness <output id="directOutput">65</output><input name="direct" type="range" min="0" max="100" value="65"></label>
-          <label>Strangeness <output id="strangeOutput">55</output><input name="strange" type="range" min="0" max="100" value="55"></label>
-        </div>
-        <div class="form-card">
-          <p class="index">BOUNDARIES</p>
-          <label>Never introduce<textarea name="limits" maxlength="180" placeholder="Topics, names or dynamics that are off limits"></textarea></label>
-          <label class="toggle-line"><input name="memory" type="checkbox" checked> Propose memories from our conversations</label>
-          <small>Proposals are visible before they enter the prototype memory list.</small>
-        </div>
-        <div class="form-card picture-calibration">
-          <p class="index">PICTURE LANGUAGE</p>
-          <label class="toggle-line"><input name="pictures" type="checkbox" checked> Let pictures surface during our evening</label>
-          <label>Give the first picture a hint<input name="pictureHint" maxlength="100" placeholder="Rain at the window, candlelight, playful…"></label>
-          <small>Picture beats are always fictional and labelled. You can redirect or pause them at any time.</small>
-        </div>
-        <div class="consent-card">
-          <label><input id="adultCheck" type="checkbox" required> I am 18 or over.</label>
-          <label><input id="artificialCheck" type="checkbox" required> I understand this companion is fictional software, not human or conscious.</label>
-          <button class="button" type="submit">Open the channel</button>
-        </div>
+      <form id="quickStartForm" class="quick-start-form">
+        <label class="name-field"><span>What should they call you?</span><input id="patronName" name="patron" maxlength="24" placeholder="Your chosen name" autocomplete="nickname" required autofocus></label>
+        <label class="compact-consent"><input id="consentCheck" type="checkbox" required><span>I’m 18+ and understand this is fictional software, not a human or conscious being.</span></label>
+        <button class="button start-button" type="submit">Meet <span id="startName">Velvet</span></button>
+        <details class="fine-tune">
+          <summary>Fine-tune first <small>optional</small></summary>
+          <div class="fine-tune-grid">
+            <label>Rename your mouse<input id="companionName" name="name" maxlength="24" value="Velvet"></label>
+            <label>Conversation style<select name="tone"><option value="warm">Warm and attentive</option><option value="playful">Playful and teasing</option><option value="direct">Direct and confident</option><option value="strange">Strange and poetic</option></select></label>
+            <label class="wide-field">Never introduce<textarea name="limits" maxlength="180" placeholder="Any topics or dynamics that are off limits"></textarea></label>
+            <label class="toggle-line"><input name="memory" type="checkbox" checked> Offer visible memory suggestions</label>
+            <label class="toggle-line"><input name="pictures" type="checkbox" checked> Let pictures appear naturally</label>
+          </div>
+        </details>
       </form>
     </section>
 
     <section class="chat-panel" id="chatPanel" hidden>
-      <aside class="companion-rail">
-        <div class="live-portrait" id="livePortrait"></div>
-        <p class="connection"><span class="pulse"></span> SCRIPT CHANNEL OPEN</p>
-        <h2 id="liveName">Velvet</h2>
-        <p id="liveTraits">Warm · direct · strange</p>
-        <dl><div><dt>NATURE</dt><dd>Artificial</dd></div><div><dt>MEMORY</dt><dd id="memoryMode">Review first</dd></div><div><dt>SESSION</dt><dd>Browser only</dd></div></dl>
-        <button class="ghost-button wide" id="recalibrate" type="button">Recalibrate</button>
-      </aside>
+      <aside class="companion-rail"><div class="live-portrait" id="livePortrait"></div><div class="identity"><p><span class="pulse"></span> SCRIPT CHANNEL OPEN</p><h2 id="liveName">Velvet</h2><small id="liveTraits">Warm · poised</small></div></aside>
       <div class="conversation">
-        <div class="conversation-top"><div><p class="index">PRIVATE CHANNEL / SCRIPTED</p><h1 id="conversationTitle">Velvet is listening.</h1></div><button class="ghost-button" id="quietMode" type="button" aria-pressed="false">Leave no memory</button></div>
+        <div class="conversation-top"><div><p class="index">PRIVATE CHANNEL</p><h1 id="conversationTitle">Velvet is listening.</h1></div><div class="top-actions"><button class="ghost-button" id="openMemory" type="button">Memory <span id="memoryCount">0</span></button><button class="ghost-button" id="openSettings" type="button">Settings</button></div></div>
         <div class="evening-arc" id="eveningArc" aria-label="Evening progression"><span class="active">ARRIVE</span><span>UNWIND</span><span>SPARK</span><span>AFTERGLOW</span></div>
         <div class="messages" id="messages" role="log" aria-live="polite"></div>
-        <div class="memory-proposal" id="memoryProposal" hidden>
-          <div><span>MEMORY PROPOSED</span><p id="memoryText"></p></div>
-          <button type="button" id="acceptMemory">Keep</button><button type="button" id="rejectMemory">Forget</button>
+        <div class="memory-proposal" id="memoryProposal" hidden><p><span>REMEMBER THIS?</span> <b id="memoryText"></b></p><button type="button" id="acceptMemory">Yes</button><button type="button" id="rejectMemory">No</button></div>
+        <div class="picture-cue" id="pictureCue" hidden>
+          <label for="pictureDetail">What should the next picture feel like?</label>
+          <div class="cue-presets"><button type="button" data-cue="rain at the window, a glass of red, warm eye contact">Rainy and warm</button><button type="button" data-cue="neon city lights, playful confidence, one cocktail">Neon and playful</button><button type="button" data-cue="fireside, soft knitwear, quiet closeness">Soft afterglow</button></div>
+          <div class="cue-entry"><input id="pictureDetail" maxlength="120" placeholder="Or write your own suggestion…"><button class="send-button" type="button" id="savePictureCue">Use</button></div>
         </div>
-        <div class="picture-director" id="pictureDirector" hidden>
-          <div class="director-heading"><div><span>DIRECT THE NEXT PICTURE</span><p>Give your mouse a visual suggestion. It becomes part of the production prompt.</p></div><button type="button" id="closeDirector" aria-label="Close picture director">×</button></div>
-          <div class="director-fields">
-            <label>Mood<select id="pictureMood"><option value="warm">Warm</option><option value="playful">Playful</option><option value="mysterious">Mysterious</option><option value="quiet">Quiet</option></select></label>
-            <label>Setting<select id="pictureSetting"><option value="rainy lounge">Rainy lounge</option><option value="neon window">Neon window</option><option value="fireside nook">Fireside nook</option><option value="surprise me">Surprise me</option></select></label>
-            <label class="director-note">Your detail<input id="pictureDetail" maxlength="100" placeholder="A glass of red, green velvet, direct eye contact…"></label>
-          </div>
-          <div class="director-actions"><button class="ghost-button" type="button" id="pausePictures">Pause pictures</button><button class="send-button" type="button" id="saveDirection">Use this direction</button></div>
-        </div>
-        <form class="composer" id="composer">
-          <label class="sr-only" for="messageInput">Message your companion</label>
-          <button class="picture-button" id="openDirector" type="button" aria-label="Direct the next picture" title="Direct the next picture">◇</button>
-          <textarea id="messageInput" maxlength="500" rows="2" placeholder="Say what is on your mind…" required></textarea>
-          <button class="send-button" type="submit">Transmit</button>
-        </form>
-        <p class="prototype-note">Scripted, non-graphic product prototype. Picture beats use a labelled local concept library; the prompt shown beneath each picture demonstrates how participant direction would inform live generation. Messages remain in this tab only and disappear when it closes.</p>
+        <form class="composer" id="composer"><button class="picture-button" id="openPictureCue" type="button" aria-label="Suggest a picture">Picture</button><label class="sr-only" for="messageInput">Message your companion</label><textarea id="messageInput" maxlength="500" rows="2" placeholder="Say what’s on your mind…" required></textarea><button class="send-button" type="submit">Send</button></form>
+        <p class="prototype-note">Scripted prototype. Picture beats use a local concept library and show the direction a live image service would receive. This tab forgets when it closes.</p>
       </div>
     </section>
   </main>
 
-  <dialog id="memoryDialog" class="memory-dialog">
-    <button class="dialog-close" id="closeMemory" type="button" aria-label="Close memory">×</button>
-    <p class="index">VISIBLE MEMORY</p>
-    <h2>What your mouse remembers.</h2>
-    <p>Nothing is hidden here. Remove any item without negotiation.</p>
-    <div id="memoryList" class="memory-list"></div>
-    <button class="danger-button" id="clearMemory" type="button">Erase every memory</button>
+  <dialog id="settingsDialog" class="sheet-dialog">
+    <button class="dialog-close" data-close="settingsDialog" type="button" aria-label="Close settings">×</button><p class="index">EVENING SETTINGS</p><h2>Keep it yours.</h2>
+    <label>Conversation style<select id="settingsTone"><option value="warm">Warm and attentive</option><option value="playful">Playful and teasing</option><option value="direct">Direct and confident</option><option value="strange">Strange and poetic</option></select></label>
+    <label>Never introduce<textarea id="settingsLimits" maxlength="180" placeholder="Topics or dynamics that are off limits"></textarea></label>
+    <label class="toggle-line"><input id="settingsMemory" type="checkbox"> Offer visible memory suggestions</label><label class="toggle-line"><input id="settingsPictures" type="checkbox"> Let pictures appear naturally</label>
+    <button class="button dialog-save" id="saveSettings" type="button">Save settings</button>
+  </dialog>
+  <dialog id="memoryDialog" class="sheet-dialog">
+    <button class="dialog-close" data-close="memoryDialog" type="button" aria-label="Close memory">×</button><p class="index">VISIBLE MEMORY</p><h2>What stays.</h2><p>Remove anything without negotiation.</p><div id="memoryList" class="memory-list"></div><button class="danger-button" id="clearMemory" type="button">Erase every memory</button>
   </dialog>
 
   <script src="mouse-avatar.js?v=cyber-1"></script>
-  <script src="companion.js?v=cyber-1"></script>
+  <script src="companion.js?v=simple-2"></script>
 </body>
 </html>

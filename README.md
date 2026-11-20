@@ -10,11 +10,11 @@ The current public build is a transparent, scripted product prototype. It does n
 
 - Bio-cyber landing page with a generated adult synthetic-mouse art direction.
 - Three configurable companion shells and chosen names.
-- Warmth, directness and strangeness calibration.
-- User-entered boundaries.
+- Chat-first entry: choose a mouse, give a name and begin; no mandatory calibration sequence.
+- Optional tone, boundaries, memory and picture controls stay behind Fine-tune and Settings.
 - Chatbot-shaped scripted conversation with a 100-message meter.
 - Cinematic, fully clothed picture beats.
-- Participant-directed picture language: mood, setting and free-text cues shape periodic visual prompts.
+- Participant-directed picture language: one-click moods, a free-text cue or an ordinary chat request shapes periodic visual prompts.
 - Every prototype image is labelled as a local concept-library scene and exposes its proposed production prompt.
 - Proposed memories that the patron must accept before retention.
 - A visible memory drawer with item-by-item and complete erasure.
