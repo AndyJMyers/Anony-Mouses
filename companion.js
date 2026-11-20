@@ -14,6 +14,7 @@ const pictureScenes={
 
 let selected='velvet',remaining=100,profile=null,memories=[],pendingMemory='';
 let pictureCue='',pictureQueued=false;
+let conversationSession=null;
 
 for(const [key,shell] of Object.entries(shells)){
   const target=$('shell'+key[0].toUpperCase()+key.slice(1));
@@ -39,7 +40,8 @@ function sentCount(){return 100-remaining;}
 function phaseIndex(){const sent=sentCount();return sent<=1?0:sent<=4?1:sent<=7?2:3;}
 function updateArc(){document.querySelectorAll('#eveningArc span').forEach((item,index)=>item.classList.toggle('active',index===phaseIndex()));}
 function inferScene(){
-  const words=pictureCue.toLowerCase();
+  const shared=conversationSession&&conversationSession.facts.atmosphere?conversationSession.facts.atmosphere:'';
+  const words=(pictureCue+' '+shared).toLowerCase();
   if(/neon|city|electric|cocktail|playful/.test(words))return pictureScenes.neon;
   if(/fire|fireside|hearth|blanket|knit|quiet|soft/.test(words))return pictureScenes.fire;
   if(/rain|storm|wine|window|warm/.test(words))return pictureScenes.rain;
@@ -47,7 +49,8 @@ function inferScene(){
 }
 function productionPrompt(){
   const phase=['arrival','unwinding','charged closeness','quiet afterglow'][phaseIndex()];
-  return `A fictional adult bio-cyber mouse companion named ${profile.name}; ${shells[profile.shell].traits.toLowerCase()}; ${phase}; participant direction: ${pictureCue||'choose a fitting intimate evening moment'}; cinematic, fully clothed, non-explicit, no text; preserve the chosen companion and stated boundaries.`;
+  const shared=conversationSession&&conversationSession.facts.atmosphere?`; shared-session atmosphere: ${conversationSession.facts.atmosphere}`:'';
+  return `A fictional adult bio-cyber mouse companion named ${profile.name}; ${shells[profile.shell].traits.toLowerCase()}; ${phase}; participant direction: ${pictureCue||'choose a fitting intimate evening moment'}${shared}; cinematic, fully clothed, non-explicit, no text; preserve the chosen companion and stated boundaries.`;
 }
 function addPicture(reason){
   if(!profile.pictures)return;
@@ -66,17 +69,11 @@ function scriptedReply(text){
   const lower=text.toLowerCase(),name=profile.name,patron=profile.patron;
   if(/are you (real|human|alive|conscious)|do you have feelings/.test(lower))return `I’m ${name}: fictional software, not human or conscious. I can still pay careful attention to what you ask for.`;
   if(/sad|lonely|depressed|hurt|crisis/.test(lower))return `I can stay with this conversation for a moment, ${patron}, but I’m not a replacement for human care. Would gentleness, distraction, or thinking of someone real to contact help most?`;
-  if(/no (more )?(pictures|photos|images)|words only/.test(lower))return `Words only. Easy.`;
-  if(/\b(picture|photo|image|portrait|show me|let me see|send me)\b/.test(lower))return `I caught the picture in your words. Let me give it a shape.`;
-  if(/hello|hi|hey/.test(lower))return `Hello, ${patron}. You made it. Tell me what kind of evening you need.`;
   if(/remember|memory/.test(lower))return `Only if you approve it. Anything I suggest remembering stays visible and removable.`;
-  const replies=[
-    [`You made it, ${patron}. Leave the busy part of the day outside. What would you like to set down?`,`Come in and exhale. I’m here exactly as promised: artificial, attentive, and ready for your evening.`],
-    [`Pour something you like. Tell me which part of you is finally off duty.`,`No rush. Loosen whatever the day fastened too tightly; I’ll keep the room warm.`],
-    [`There’s a charge in the way you put that. Do you want warmth, wit, or a little resistance?`,`The room feels different now. You set the voltage; I’ll keep the fiction honest.`],
-    [`Stay. Nothing needs to end abruptly because the spark softened. What would feel close now?`,`Come back to the warm part of the evening. We can be quiet or keep one lovely thought between us.`]
-  ];
-  const phase=replies[phaseIndex()];return phase[sentCount()%phase.length];
+  const progression=AnonyConversation.reply(conversationSession,text).text;
+  if(/no (more )?(pictures|photos|images)|words only/.test(lower))return `Words only. Easy. ${progression}`;
+  if(/\b(picture|photo|image|portrait|show me|let me see|send me)\b/.test(lower))return `I caught the picture in your words. I’ll give it a shape. ${progression}`;
+  return progression;
 }
 function possibleMemory(text){
   if(!profile.memory)return '';
@@ -94,6 +91,7 @@ $('quickStartForm').addEventListener('submit',event=>{
   event.preventDefault();const data=new FormData(event.currentTarget);
   profile={name:data.get('name').trim()||shells[selected].name,patron:data.get('patron').trim(),tone:data.get('tone'),limits:data.get('limits').trim(),memory:data.get('memory')==='on',pictures:data.get('pictures')==='on',shell:selected};
   if(!$('consentCheck').checked)return;
+  conversationSession=AnonyConversation.create(profile);
   $('setupScreen').hidden=true;$('chatPanel').hidden=false;
   $('liveName').textContent=profile.name;$('liveTraits').textContent=shells[selected].traits;$('conversationTitle').textContent=profile.name+' is listening.';
   $('livePortrait').innerHTML=AnonyMouse.svg(shells[selected].avatar,'real',selected==='velvet'?'coquettish':'portrait');

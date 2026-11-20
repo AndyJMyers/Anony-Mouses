@@ -13,6 +13,8 @@ The current public build is a transparent, scripted product prototype. It does n
 - Chat-first entry: choose a mouse, give a name and begin; no mandatory calibration sequence.
 - Optional tone, boundaries, memory and picture controls stay behind Fine-tune and Settings.
 - Chatbot-shaped scripted conversation with a 100-message meter.
+- A 100-direction conversation engine that progresses from arrival through flirtation, intimacy and afterglow.
+- Session-only fact extraction and shared-moment callbacks, so later replies refer specifically to earlier answers without inventing history.
 - Cinematic, fully clothed picture beats.
 - Participant-directed picture language: one-click moods, a free-text cue or an ordinary chat request shapes periodic visual prompts.
 - Every prototype image is labelled as a local concept-library scene and exposes its proposed production prompt.
@@ -85,6 +87,7 @@ The public prototype stores its active conversation only in page memory and lose
 
 - `index.html`, `style.css` — pivoted public proposition.
 - `companion.html`, `companion.css`, `companion.js` — interactive scripted companion chamber.
+- `conversation-engine.js` — 100 conversation directions, phase progression, session facts and shared-history callbacks.
 - `mouse-avatar.js` — reusable SVG mouse renderer.
 - `assets/bio-cyber-mouse-hero.webp` — landing hero generated for the pivot.
 - `assets/companion-*-signal.webp` — non-explicit chat picture beats.
